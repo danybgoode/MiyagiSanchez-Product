@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Provision the DB → R2 escrow backup pipeline (Backend Production Readiness,
 # Sprint 2): a Cloud Run JOB (db-backup) on a daily Cloud Scheduler cron that
-# dumps the Supabase + Neon databases to Cloudflare R2.
+# dumps the Supabase (non-commerce) + Medusa (commerce, Cloud SQL) databases to Cloudflare R2.
 #
 # Idempotent — safe to re-run. Mirrors the style of provision.sh / provision-staging.sh.
 # Secret VALUES are read from env and piped via stdin (never echoed). The secret
@@ -9,7 +9,8 @@
 #
 # Prereqs you (Daniel) own first — see infra/gcp/backups/BACKUPS.md:
 #   • An R2 bucket (lock+lifecycle) + a bucket-scoped Object R&W API token → R2_* values below
-#   • A read-only Postgres role on each DB                  → *_BACKUP_DSN values below
+#   • A read-only Postgres role on Supabase                 → SUPABASE_DSN below
+#   • Medusa needs no new credential: the job binds the app's own DATABASE_URL secret (see SECRET_FLAGS)
 #
 # Run:
 #   gcloud config configurations activate lolis-profile     # lolis8755@gmail.com
@@ -17,7 +18,6 @@
 #   export R2_ACCESS_KEY_ID='…' R2_SECRET_ACCESS_KEY='…'
 #   export R2_ENDPOINT='https://<accountid>.r2.cloudflarestorage.com'
 #   export SUPABASE_DSN='postgresql://backup_ro:…@db.<ref>.supabase.co:5432/postgres'
-#   export NEON_DSN='postgresql://backup_ro:…@<neon-host>/neondb?sslmode=require'
 #   bash infra/gcp/backups/provision-db-backup.sh
 
 set -euo pipefail
@@ -32,13 +32,20 @@ BACKUP_SA="${BACKUP_SA:-medusa-backup}"
 BACKUP_SA_EMAIL="${BACKUP_SA}@${PROJECT_ID}.iam.gserviceaccount.com"
 TAG="${TAG:-$(date +%Y%m%d-%H%M%S)}"
 IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${AR_REPO}/db-backup:${TAG}"
-BACKUP_TARGETS="${BACKUP_TARGETS:-supabase,neon}"
+BACKUP_TARGETS="${BACKUP_TARGETS:-supabase,medusa}"
+# Cloud SQL `medusa-pg` has a PRIVATE IP only, so the job egresses through the backend's VPC connector
+# for private ranges and straight out for Supabase/R2 (public).
+VPC_CONNECTOR="${VPC_CONNECTOR:-medusa-conn}"
 R2_BUCKET="${R2_BACKUP_BUCKET:-miyagi-db-escrow}"
 RETENTION_DAYS="${RETENTION_DAYS:-30}"
 
 # Secret shells (values populated from env below, or left empty for later).
-SECRETS=(SUPABASE_BACKUP_DSN NEON_BACKUP_DSN R2_BACKUP_ACCESS_KEY_ID R2_BACKUP_SECRET_ACCESS_KEY R2_BACKUP_ENDPOINT)
-# Reused (already exist): TELEGRAM_BOT_TOKEN, TELEGRAM_CICD_CHAT_ID — accessor granted below.
+SECRETS=(SUPABASE_BACKUP_DSN R2_BACKUP_ACCESS_KEY_ID R2_BACKUP_SECRET_ACCESS_KEY R2_BACKUP_ENDPOINT)
+# Reused (already exist): TELEGRAM_BOT_TOKEN, TELEGRAM_CICD_CHAT_ID, and DATABASE_URL — the Medusa
+# app's own DSN. Binding it rather than copying it into a MEDUSA_BACKUP_DSN secret means a rotation can
+# never leave the backup on a stale password; the trade-off is a read-write role, accepted because the
+# Cloud SQL instance is retired by miyagi-to-oracle-vm S3 (the VM then dumps its own local Postgres).
+REUSED=(TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID DATABASE_URL)
 
 say() { printf '\n\033[1;36m▶ %s\033[0m\n' "$*"; }
 add_version() { printf '%s' "$2" | gcloud secrets versions add "$1" --data-file=- >/dev/null; }
@@ -64,8 +71,15 @@ gcloud iam service-accounts describe "$BACKUP_SA_EMAIL" >/dev/null 2>&1 || \
   done
 
 say "Secret shells + accessor for $BACKUP_SA"
-for s in "${SECRETS[@]}" TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID; do
+for s in "${SECRETS[@]}"; do
   gcloud secrets describe "$s" >/dev/null 2>&1 || gcloud secrets create "$s" --replication-policy=automatic
+done
+# Reused secrets are never created here: an empty DATABASE_URL shell on a fresh or wrong project would
+# provision "fine" and fail only at the first nightly run. Absent ⇒ stop now, naming it.
+for s in "${REUSED[@]}"; do
+  gcloud secrets describe "$s" >/dev/null 2>&1 || { echo "✗ reused secret $s does not exist in $PROJECT_ID — provision the app first" >&2; exit 1; }
+done
+for s in "${SECRETS[@]}" "${REUSED[@]}"; do
   gcloud secrets add-iam-policy-binding "$s" \
     --member="serviceAccount:${BACKUP_SA_EMAIL}" \
     --role="roles/secretmanager.secretAccessor" >/dev/null
@@ -76,7 +90,6 @@ MISSING=0
 maybe() { local v="${!2:-}"; if [ -n "$v" ]; then add_version "$1" "$v"; echo "  ✓ $1 set"; else
   echo "  • $1 NOT set ($2 unset) — set later: printf '%s' '<value>' | gcloud secrets versions add $1 --data-file=-"; MISSING=$((MISSING+1)); fi; }
 maybe SUPABASE_BACKUP_DSN        SUPABASE_DSN
-maybe NEON_BACKUP_DSN            NEON_DSN
 maybe R2_BACKUP_ACCESS_KEY_ID    R2_ACCESS_KEY_ID
 maybe R2_BACKUP_SECRET_ACCESS_KEY R2_SECRET_ACCESS_KEY
 maybe R2_BACKUP_ENDPOINT         R2_ENDPOINT
@@ -85,8 +98,8 @@ say "Building $IMAGE (context infra/gcp/backups)"
 gcloud builds submit infra/gcp/backups --tag "$IMAGE"
 
 say "Creating/updating Cloud Run Job $JOB"
-SECRET_FLAGS="SUPABASE_BACKUP_DSN=SUPABASE_BACKUP_DSN:latest,NEON_BACKUP_DSN=NEON_BACKUP_DSN:latest,R2_BACKUP_ACCESS_KEY_ID=R2_BACKUP_ACCESS_KEY_ID:latest,R2_BACKUP_SECRET_ACCESS_KEY=R2_BACKUP_SECRET_ACCESS_KEY:latest,R2_BACKUP_ENDPOINT=R2_BACKUP_ENDPOINT:latest,TELEGRAM_BOT_TOKEN=TELEGRAM_BOT_TOKEN:latest,TELEGRAM_CICD_CHAT_ID=TELEGRAM_CICD_CHAT_ID:latest"
-# BACKUP_TARGETS itself contains a comma ("supabase,neon"), so use gcloud's
+SECRET_FLAGS="SUPABASE_BACKUP_DSN=SUPABASE_BACKUP_DSN:latest,MEDUSA_BACKUP_DSN=DATABASE_URL:latest,R2_BACKUP_ACCESS_KEY_ID=R2_BACKUP_ACCESS_KEY_ID:latest,R2_BACKUP_SECRET_ACCESS_KEY=R2_BACKUP_SECRET_ACCESS_KEY:latest,R2_BACKUP_ENDPOINT=R2_BACKUP_ENDPOINT:latest,TELEGRAM_BOT_TOKEN=TELEGRAM_BOT_TOKEN:latest,TELEGRAM_CICD_CHAT_ID=TELEGRAM_CICD_CHAT_ID:latest"
+# BACKUP_TARGETS itself contains a comma ("supabase,medusa"), so use gcloud's
 # custom-delimiter syntax (^|^ -> "|" separates the k=v pairs) or the comma is
 # parsed as a dict separator and job create fails with "Bad syntax for dict arg".
 ENV_FLAGS="^|^BACKUP_TARGETS=${BACKUP_TARGETS}|R2_BACKUP_BUCKET=${R2_BUCKET}|RETENTION_DAYS=${RETENTION_DAYS}"
@@ -96,6 +109,7 @@ gcloud run jobs "$JOB_ACTION" "$JOB" \
   --service-account="$BACKUP_SA_EMAIL" \
   --set-env-vars="$ENV_FLAGS" \
   --set-secrets="$SECRET_FLAGS" \
+  --vpc-connector="$VPC_CONNECTOR" --vpc-egress=private-ranges-only \
   --max-retries=1 --task-timeout=900s --memory=512Mi
 
 say "Daily Cloud Scheduler $SCHED_JOB ($CRON UTC) → runs the job"

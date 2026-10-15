@@ -14,9 +14,9 @@
 # NEVER echoed.
 #
 #   Env (required):
-#     BACKUP_TARGETS            comma list: "supabase,neon" (or a subset)
+#     BACKUP_TARGETS            comma list: "supabase,medusa" (or a subset)
 #     SUPABASE_BACKUP_DSN       read-only Postgres DSN  (needed iff target supabase)
-#     NEON_BACKUP_DSN           read-only Postgres DSN  (needed iff target neon)
+#     MEDUSA_BACKUP_DSN         the commerce DB DSN     (needed iff target medusa)
 #     R2_BACKUP_BUCKET          destination bucket name
 #     R2_BACKUP_ACCESS_KEY_ID / R2_BACKUP_SECRET_ACCESS_KEY
 #                               R2 token scoped to ONLY this bucket, "Object Read & Write"
@@ -30,7 +30,7 @@
 
 set -euo pipefail
 
-TARGETS="${BACKUP_TARGETS:?set BACKUP_TARGETS (e.g. supabase,neon)}"
+TARGETS="${BACKUP_TARGETS:?set BACKUP_TARGETS (e.g. supabase,medusa)}"
 BUCKET="${R2_BACKUP_BUCKET:?set R2_BACKUP_BUCKET}"
 STAMP="$(date -u +%Y-%m-%dT%H%M%SZ)"
 DAY="$(date -u +%Y/%m/%d)"
@@ -59,6 +59,13 @@ alert() {
 # back_up TARGET DSN — pg_dump (custom format) | gzip → R2, then verify the object.
 back_up() {
   local target="$1" dsn="$2"
+  # An explicit check, not `${DSN:?}` at the call site: under bash 3.2 the EXIT trap above overrides
+  # that expansion's failure status and the script exits 0 (seen 2026-10-15 — a run that dumped NOTHING
+  # reported success); under bash 5 (the image) it kills the whole run, skipping every later target. Here
+  # a missing DSN fails this target, alerts, and the other targets still get their dump.
+  if [ -z "$dsn" ]; then
+    alert "$target DSN is not set"; return 1
+  fi
   local file="${target}-${STAMP}.dump.gz"
   local local_path="${WORK}/${file}"
   local key="${target}/${DAY}/${file}"
@@ -69,7 +76,7 @@ back_up() {
   if ! pg_dump --format=custom --no-owner --no-privileges --dbname="$dsn" | gzip -c > "$local_path"; then
     alert "$target pg_dump failed"; return 1
   fi
-  local bytes; bytes=$(wc -c < "$local_path")
+  local bytes; bytes=$(wc -c < "$local_path" | tr -d " ")   # BSD wc pads; the size compare is a string compare
   if [ "$bytes" -lt 1000 ]; then
     alert "$target dump suspiciously small (${bytes} bytes)"; return 1
   fi
@@ -90,12 +97,14 @@ RC=0
 IFS=',' read -ra LIST <<< "$TARGETS"
 for t in "${LIST[@]}"; do
   case "$t" in
-    supabase) back_up supabase "${SUPABASE_BACKUP_DSN:?set SUPABASE_BACKUP_DSN}" || RC=1 ;;
-    # `neon` is being RETIRED (BACKUPS.md → "Neon target retirement"): commerce moved to Cloud SQL
-    # (its own native backups + PITR are the backup-of-record), and Neon is demoted to a dev-only
-    # sandbox. Kept here only while the Neon rollback window is open; once dropped from BACKUP_TARGETS
-    # this branch is dead code (left intact — the supabase path still uses this script).
-    neon)     back_up neon     "${NEON_BACKUP_DSN:?set NEON_BACKUP_DSN}"         || RC=1 ;;
+    supabase) back_up supabase "${SUPABASE_BACKUP_DSN:-}" || RC=1 ;;
+    # `medusa` = the live commerce DB (miyagi-to-oracle-vm S1.1). Until 2026-10-15 this job still
+    # dumped `neon` — the abandoned pre-Cloud-SQL copy — so the REAL commerce DB had no copy outside
+    # GCP at all; Cloud SQL's own backups live inside the same project they protect. The DB is about
+    # to leave Cloud SQL for a single VM, where this offsite dump becomes the backup-of-record.
+    # `neon` was removed rather than kept as dead code: an unknown target now fails loud (below),
+    # which is the right outcome for a stale BACKUP_TARGETS that still names it.
+    medusa)   back_up medusa   "${MEDUSA_BACKUP_DSN:-}"   || RC=1 ;;
     *) alert "unknown BACKUP_TARGET '$t'"; RC=1 ;;
   esac
 done

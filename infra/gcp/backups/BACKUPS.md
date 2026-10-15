@@ -7,14 +7,14 @@ The backup story split accordingly:
 
 | Database | Backup-of-record | Mechanism |
 |---|---|---|
-| **Commerce** (Cloud SQL `medusa-pg`) | **Cloud SQL native** | **Automated daily backups + 7-day PITR** (`PITR 7/7`, set at provisioning) + on-demand backup + **instance clone** (the clone is the escrow-drill / point-in-time restore-rehearsal replacement for Neon's branching) |
+| **Commerce** (Cloud SQL `medusa-pg`) | **Cloud SQL native** + **R2 escrow dump** (since 2026-10-15) | **Automated daily backups + 7-day PITR** (`PITR 7/7`, set at provisioning) + on-demand backup + **instance clone**; **plus** the `db-backup` job's `medusa` target — the only copy outside GCP |
 | **Supabase** (non-commerce: conversations, offers, supply) | **R2 escrow dump** (below) | the `db-backup` Cloud Run Job, `supabase` target — **unchanged** |
 
 Cloud SQL keeps its own backups inside GCP (intra-project, no cross-cloud egress); they're managed +
 verifiable from the console / `gcloud sql backups list --instance=medusa-pg`. A confirmed automated backup
 (`gcloud sql backups list`) is the gate for retiring any Neon-side coverage (Story 3.2). The custom R2
-escrow pipeline below is now **Supabase-only of record**; its **`neon` target is being retired** (see
-*Neon target retirement* at the bottom) once the Neon rollback window closes and the project is demoted.
+escrow pipeline below dumps **Supabase and Medusa**; its old `neon` target was retired 2026-10-15 (see
+*Neon target retirement* at the bottom).
 
 ## R2 escrow dump pipeline (Supabase)
 Daily `pg_dump` to a **Cloudflare R2** bucket, as off-platform, vendor-neutral, immutable escrow. Built in
@@ -42,10 +42,10 @@ custom-format dump restorable by any PG17 client) — independent of the runner.
 ## Topology
 | | |
 |---|---|
-| Runner | Cloud Run **Job** `db-backup` (region `us-east4`, SA `medusa-backup`, max-retries 1, 900s, 512Mi) |
+| Runner | Cloud Run **Job** `db-backup` (region `us-east4`, SA `medusa-backup`, max-retries 1, 900s, 512Mi, VPC connector `medusa-conn`, egress `private-ranges-only` — Cloud SQL is private-IP only) |
 | Schedule | Cloud Scheduler `db-backup-daily`, cron `0 9 * * *` UTC (≈ 03:00 CDMX) → `:run` the job |
 | Image | `us-east4-docker.pkg.dev/<project>/medusa-ops/db-backup:<tag>` (`postgres:17-alpine` + rclone) |
-| Targets | `supabase` (+ `neon` **being retired** — see bottom; env `BACKUP_TARGETS`) |
+| Targets | `supabase,medusa` (env `BACKUP_TARGETS`; `neon` retired 2026-10-15 — an unknown target fails the run) |
 | Destination | `r2:<bucket>/<target>/YYYY/MM/DD/<target>-<ts>.dump.gz` |
 | Alerts | non-zero exit → Cloud Run Job failure (S4 alert) + best-effort Telegram |
 
@@ -53,7 +53,7 @@ custom-format dump restorable by any PG17 client) — independent of the runner.
 | Secret | Value |
 |---|---|
 | `SUPABASE_BACKUP_DSN` | a **read-only** role DSN on the Supabase DB (`postgresql://backup_ro:…@db.<ref>.supabase.co:5432/postgres`) |
-| `NEON_BACKUP_DSN` | a **read-only** role DSN on the Neon prod branch (`…?sslmode=require`) |
+| `DATABASE_URL` (reused, bound as `MEDUSA_BACKUP_DSN`) | the Medusa app's own DSN — bound, not copied, so a rotation can't strand the backup on an old password. Read-write, accepted because Cloud SQL is retired by [`miyagi-to-oracle-vm`](../../../Roadmap/09-platform-infra/miyagi-to-oracle-vm/README.md) S3 |
 | `R2_BACKUP_ACCESS_KEY_ID` / `R2_BACKUP_SECRET_ACCESS_KEY` | an R2 API token scoped to **only the escrow bucket**, permission **Object Read & Write** (R2 has no write-only level; the read half powers the job's upload verification — escrow immutability comes from the bucket **lock rule** (WORM): even this credential cannot delete/overwrite objects younger than the retention age) |
 | `R2_BACKUP_ENDPOINT` | `https://<accountid>.r2.cloudflarestorage.com` |
 | `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CICD_CHAT_ID` | reused (already exist) for failure alerts |
@@ -67,21 +67,20 @@ custom-format dump restorable by any PG17 client) — independent of the runner.
 #    rule (expire after the lock window, e.g. 35d). Create an API token scoped to ONLY this
 #    bucket with permission "Object Read & Write" (R2's least object-level grant).
 #    Done 2026-06-12 via wrangler: lock worm-30d + lifecycle expire-after-35d + token.
-# 1. (Supabase + Neon) Create a read-only role on each DB:
+# 1. (Supabase) Create a read-only role (Medusa reuses the app's DATABASE_URL — no new role):
 #       CREATE ROLE backup_ro LOGIN PASSWORD '…';
 #       GRANT pg_read_all_data TO backup_ro;     -- PG14+; else GRANT SELECT on schemas
-#    Build the two DSNs.
+#    Build the Supabase DSN.
 # 2. Provision (creates SA + secret shells + image + Job + Scheduler; idempotent):
 gcloud config configurations activate lolis-profile
 export R2_BACKUP_BUCKET='miyagi-db-escrow'
 export R2_ACCESS_KEY_ID='…' R2_SECRET_ACCESS_KEY='…' R2_ENDPOINT='https://<acct>.r2.cloudflarestorage.com'
 export SUPABASE_DSN='postgresql://backup_ro:…@db.<ref>.supabase.co:5432/postgres'
-export NEON_DSN='postgresql://backup_ro:…@<neon-host>/neondb?sslmode=require'
 bash infra/gcp/backups/provision-db-backup.sh
 # 3. First run on-demand + confirm objects land in R2:
 gcloud run jobs execute db-backup --region=us-east4 --wait
 gcloud run jobs executions list --job=db-backup --region=us-east4 --limit=1   # expect Succeeded
-#    Then confirm r2:miyagi-db-escrow/{supabase,neon}/<today>/… exist (Cloudflare dashboard).
+#    Then confirm r2:miyagi-db-escrow/{supabase,medusa}/<today>/… exist (Cloudflare dashboard).
 ```
 
 ## Restore from an escrow dump
@@ -144,34 +143,24 @@ gcloud run jobs execute cloudsql-backup-check --region=us-east4 --wait          
 gcloud run jobs update  cloudsql-backup-check --region=us-east4 --update-env-vars=INSTANCE=medusa-pg
 ```
 
-## Neon target retirement
-With commerce on Cloud SQL, the R2 pipeline's **`neon` target is redundant** — it would dump the
-read-only Neon rollback copy, which is itself being demoted to a dev-only sandbox
-(`postgres-neon-to-cloudsql` Story 3.3). **Sequencing (don't drop coverage early):**
-1. Keep `neon` in `BACKUP_TARGETS` **during the ~1-week Neon rollback window** so the rollback source stays
-   escrowed.
-2. Once the window closes **and** a Cloud SQL automated backup is confirmed
-   (`gcloud sql backups list --instance=medusa-pg` → at least one `SUCCESSFUL`), drop `neon` — a one-line
-   Cloud Run Job env change (**OWED TO DANIEL — staged, not yet run**; the Cloud SQL backup gate is already
-   met, e.g. backup `1782097256693` 2026-06-22, so this is unblocked the moment the rollback window closes
-   ~2026-06-29):
-   ```bash
-   gcloud run jobs update db-backup --region=us-east4 \
-     --update-env-vars=BACKUP_TARGETS=supabase
-   ```
-   This removes the nightly `🛑 db-backup FAILED: neon pg_dump failed` (×2 via `max-retries 1`) false alarm.
-   Verify with `gcloud run jobs describe db-backup --region=us-east4` → `BACKUP_TARGETS=supabase`. The `neon`
-   branch of [`db-backup.sh`](db-backup.sh) then becomes dead code; it's left intact (harmless — the
-   `supabase` path still uses the script) rather than deleted. **Do not flip the `provision-db-backup.sh`
-   default off `supabase,neon` until after this runs** — a re-provision during the open window must keep
-   escrowing the Neon rollback source.
+## Neon target retirement — done TWICE (2026-06-24, again 2026-10-15)
+`neon` was retired live on **2026-06-24** (`devops-reliability-cleanup` sprint 2: `BACKUP_TARGETS=supabase`).
+It came back on **2026-07-19**, when `gcp-account-migration` rebuilt this job in `miyagisanchez-prod` with
+`provision-db-backup.sh` — whose default was still `supabase,neon` (the live job's previous image is tagged
+`20260719-111533`). From then until 2026-10-15 the job dumped the abandoned Neon copy every night and **never
+the live Cloud SQL commerce DB**. **The provisioner's default IS the live config**: a retirement applied only to
+the running job is undone by the next re-provision (the same family as LEARNINGS' "disabled is not durable").
+[`miyagi-to-oracle-vm`](../../../Roadmap/09-platform-infra/miyagi-to-oracle-vm/README.md) S1.1 fixed it at the
+source: the default is now `supabase,medusa` (pinned by `infra/gcp/test/db-backup.test.mjs`), the `neon` branch
+is deleted from `db-backup.sh` so a stale target fails the run, and `NEON_BACKUP_DSN` is no longer bound (the
+secret itself is deleted with the rest of the GCP footprint in that epic's S3).
 
 ## Status
 Pipeline **LIVE since 2026-06-12** — Cloud Run Job `db-backup` + Cloud Scheduler `db-backup-daily`
 (`0 9 * * *` UTC) provisioned, R2 bucket/token + the read-only DSNs in Secret Manager, first run confirmed.
 **Backup-of-record today:** commerce → Cloud SQL native automated backups + PITR (confirmed
 `SUCCESSFUL`, e.g. backup `1782097256693` 2026-06-22T03:00Z); Supabase → this R2 escrow pipeline (`supabase`
-target). The `neon` target is pending retirement per the section above.
+target); commerce is **also** dumped to R2 nightly (`medusa` target, since 2026-10-15).
 
 **Cloud SQL backup-failure check** (DevOps reliability cleanup, Sprint 2): code-complete (job image +
 idempotent provision script + pure unit-tested predicate). **Owed to Daniel:** run

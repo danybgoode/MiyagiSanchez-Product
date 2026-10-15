@@ -62,7 +62,7 @@ stories:
 
 ## Stories
 
-### Story 1.1 — The live Medusa DB gets an offsite copy — today ✅ PR #206 · live execution `db-backup-88v4l`
+### Story 1.1 — The live Medusa DB gets an offsite copy — today ✅ `6759011` (PR #206) · live execution `db-backup-88v4l`
 **As** the platform owner, **I want** the nightly `db-backup` job to dump the live Cloud SQL Medusa DB to R2 (`BACKUP_TARGETS=supabase,medusa`, `neon` retired), **so that** the one dataset has a copy outside GCP before anything moves.
 **Acceptance:** `db-backup.sh` gains a `medusa` target (same `pg_dump -Fc | gzip → rclone → verify` path); the GCP job reaches the private IP (`medusa-conn` connector) with a DSN from Secret Manager; one run lands a verified `medusa/YYYY/MM/DD/…dump.gz` in `miyagi-db-escrow`; `BACKUPS.md` says so. **Ships first, on its own, ahead of the rest of the epic.**
 **Risk:** high
@@ -89,7 +89,7 @@ stories:
 
 ### Story 1.6 — Crons, backups and a restore drill as VM timers
 **As** the platform, **I want** systemd timers for the 5 `/api/cron/*` jobs, the nightly Medusa dump to R2 **and** the OCI bucket, and a weekly restore drill, **so that** nothing depends on Cloud Scheduler or Cloud SQL backups anymore.
-**Acceptance:** Timers exist but the 5 cron timers stay **disabled** until S2 (no double-run with Cloud Scheduler); the backup lands in both buckets (OCI via instance principal, no keys on host); the drill restores the newest dump into a throwaway container and posts row counts to Telegram; a failure alerts Telegram.
+**Acceptance:** Timers exist but the 5 cron timers stay **disabled** until S2 (no double-run with Cloud Scheduler); the backup lands in both buckets (OCI via instance principal, no keys on host); the drill restores the newest dump into a throwaway container and posts row counts to Telegram; a failure alerts Telegram; the backup connects as a dedicated **read-only** role (`pg_read_all_data`), never the app's role (PR #206 review: the GCP job reuses `DATABASE_URL` only until Cloud SQL is deleted).
 **Risk:** high
 
 ### Story 1.7 — Latency measured, VM vs Cloud Run

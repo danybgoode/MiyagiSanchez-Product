@@ -1,0 +1,8 @@
+[Unit]
+Description=Miyagi: weekly restore drill of the newest Medusa dump (infra/oci/restore-drill.sh)
+After=docker.service miyagi-backup.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/miyagi/infra/oci/restore-drill.sh

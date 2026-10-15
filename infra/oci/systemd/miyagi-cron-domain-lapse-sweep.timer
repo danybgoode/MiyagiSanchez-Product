@@ -1,0 +1,9 @@
+[Unit]
+Description=Miyagi: /api/cron/domain-lapse-sweep daily at 07:00 UTC (was Cloud Scheduler frontend-domain-lapse-sweep)
+
+[Timer]
+OnCalendar=*-*-* 07:00:00 UTC
+Unit=miyagi-cron@domain-lapse-sweep.service
+
+[Install]
+WantedBy=timers.target

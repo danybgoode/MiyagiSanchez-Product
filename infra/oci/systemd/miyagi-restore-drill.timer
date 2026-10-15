@@ -1,0 +1,9 @@
+[Unit]
+Description=Miyagi: weekly restore drill (Sunday 05:30 UTC)
+
+[Timer]
+OnCalendar=Sun *-*-* 05:30:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

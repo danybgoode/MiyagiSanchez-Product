@@ -1,0 +1,8 @@
+[Unit]
+Description=Miyagi: nightly Medusa dump to R2 + OCI (infra/oci/backup.sh)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/miyagi/infra/oci/backup.sh

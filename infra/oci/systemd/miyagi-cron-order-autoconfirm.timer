@@ -1,0 +1,9 @@
+[Unit]
+Description=Miyagi: /api/cron/order-autoconfirm daily at 09:00 UTC (was Cloud Scheduler frontend-order-autoconfirm)
+
+[Timer]
+OnCalendar=*-*-* 09:00:00 UTC
+Unit=miyagi-cron@order-autoconfirm.service
+
+[Install]
+WantedBy=timers.target

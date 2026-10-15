@@ -1,0 +1,56 @@
+# Miyagi Sánchez — site blocks for the shared Caddy on `panfleto-prod`.
+#
+# Installed by update.sh to /opt/edge/sites/miyagi.caddy, which panfleto's Caddyfile imports
+# (`import /etc/caddy/sites/*.caddy`, danybgoode/justread deploy/). It lives OUTSIDE panfleto's git
+# checkout on purpose: panfleto's update.sh runs `git reset --hard`, which silently erased the last route
+# another tenant (aomx) hand-added to that Caddyfile.
+#
+# TLS: Cloudflare sits in front (proxied, SSL mode Full (Strict)), so the origin presents a Cloudflare
+# Origin CA certificate — never Let's Encrypt. That removes the HTTP-01 dance, and it is the only way a
+# wildcard and the Cloudflare-for-SaaS tenant hostnames can terminate here. The certs are issued by
+# bootstrap.sh from a CSR generated ON this VM, so the private keys never leave it.
+#
+# Upstreams are the `edge`-network aliases set in infra/oci/docker-compose.yml.
+
+(miyagi_headers) {
+	encode zstd gzip
+	header {
+		-Server
+		X-Content-Type-Options "nosniff"
+	}
+}
+
+# The commerce API (Medusa): the storefront, agents/UCP clients, Stripe and Clerk webhooks.
+api.miyagisanchez.com {
+	tls /etc/caddy/certs/miyagisanchez.pem /etc/caddy/certs/miyagisanchez.key
+	import miyagi_headers
+	reverse_proxy miyagi-medusa:8080
+}
+
+# The storefront (Next.js): apex, www, every seller subdomain, and the shadow host `oci.` used before
+# the cutover. A more specific block (api. above) wins over the wildcard.
+miyagisanchez.com, *.miyagisanchez.com {
+	tls /etc/caddy/certs/miyagisanchez.pem /etc/caddy/certs/miyagisanchez.key
+	import miyagi_headers
+	reverse_proxy miyagi-web:8080
+}
+
+# mschz.org — the printed-QR short-link redirector, served by the storefront app (its own zone, so its
+# own Origin CA cert).
+mschz.org, www.mschz.org {
+	tls /etc/caddy/certs/mschz.pem /etc/caddy/certs/mschz.key
+	import miyagi_headers
+	reverse_proxy miyagi-web:8080
+}
+
+# Tenant custom domains arrive through Cloudflare for SaaS with the TENANT's hostname as SNI and Host.
+# Any HTTPS host no other block on this Caddy claims lands here and is rewritten by the storefront's own
+# middleware (custom-domain lookup). Cloudflare validates this origin against the fallback origin
+# `cname.miyagisanchez.com`, which the wildcard cert covers; panfleto's Caddyfile sets
+# `fallback_sni cname.miyagisanchez.com` so an unknown SNI is answered with that cert instead of failing
+# the handshake. Verified per host family with openssl before DNS moves (S2.4).
+https:// {
+	tls /etc/caddy/certs/miyagisanchez.pem /etc/caddy/certs/miyagisanchez.key
+	import miyagi_headers
+	reverse_proxy miyagi-web:8080
+}

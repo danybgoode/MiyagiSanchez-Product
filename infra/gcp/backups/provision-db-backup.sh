@@ -71,8 +71,15 @@ gcloud iam service-accounts describe "$BACKUP_SA_EMAIL" >/dev/null 2>&1 || \
   done
 
 say "Secret shells + accessor for $BACKUP_SA"
-for s in "${SECRETS[@]}" "${REUSED[@]}"; do
+for s in "${SECRETS[@]}"; do
   gcloud secrets describe "$s" >/dev/null 2>&1 || gcloud secrets create "$s" --replication-policy=automatic
+done
+# Reused secrets are never created here: an empty DATABASE_URL shell on a fresh or wrong project would
+# provision "fine" and fail only at the first nightly run. Absent ⇒ stop now, naming it.
+for s in "${REUSED[@]}"; do
+  gcloud secrets describe "$s" >/dev/null 2>&1 || { echo "✗ reused secret $s does not exist in $PROJECT_ID — provision the app first" >&2; exit 1; }
+done
+for s in "${SECRETS[@]}" "${REUSED[@]}"; do
   gcloud secrets add-iam-policy-binding "$s" \
     --member="serviceAccount:${BACKUP_SA_EMAIL}" \
     --role="roles/secretmanager.secretAccessor" >/dev/null

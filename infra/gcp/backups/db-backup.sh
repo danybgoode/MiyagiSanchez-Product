@@ -59,10 +59,10 @@ alert() {
 # back_up TARGET DSN — pg_dump (custom format) | gzip → R2, then verify the object.
 back_up() {
   local target="$1" dsn="$2"
-  # An explicit check, not `${DSN:?}` at the call site: that expansion exits 0 under bash 3.2 when it
-  # sits in a `cmd || RC=1` list (seen 2026-10-15 — a run that dumped NOTHING reported success), and
-  # under bash 5 it kills the whole run, skipping every later target. Here a missing DSN fails this
-  # target, alerts, and the other targets still get their dump.
+  # An explicit check, not `${DSN:?}` at the call site: under bash 3.2 the EXIT trap above overrides
+  # that expansion's failure status and the script exits 0 (seen 2026-10-15 — a run that dumped NOTHING
+  # reported success); under bash 5 (the image) it kills the whole run, skipping every later target. Here
+  # a missing DSN fails this target, alerts, and the other targets still get their dump.
   if [ -z "$dsn" ]; then
     alert "$target DSN is not set"; return 1
   fi

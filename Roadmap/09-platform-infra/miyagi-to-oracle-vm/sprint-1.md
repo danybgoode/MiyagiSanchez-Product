@@ -3,7 +3,7 @@ epic: miyagi-to-oracle-vm
 sprint: 1
 title: "The rail, built dark"
 risk: high
-phase: Shaping
+phase: Building
 stories_total: 7
 stories:
   - id: S1.1
@@ -12,7 +12,7 @@ stories:
     i_want: "the nightly `db-backup` job to dump the live Cloud SQL Medusa DB to R2 (`BACKUP_TARGETS=supabase,medusa`, `neon` retired)"
     so_that: "the one dataset has a copy outside GCP before anything moves"
     risk: high
-    status: planned
+    status: done
   - id: S1.2
     title: "arm64 images built in CI, pulled by sha"
     as_a: "the platform"
@@ -58,11 +58,11 @@ stories:
 ---
 # Miyagi on the Oracle VM — Sprint 1: The rail, built dark
 
-**Status:** ⬜ not started
+**Status:** 🏗️ in progress — S1.1 live 2026-10-15 (PR #206)
 
 ## Stories
 
-### Story 1.1 — The live Medusa DB gets an offsite copy — today
+### Story 1.1 — The live Medusa DB gets an offsite copy — today ✅ PR #206 · live execution `db-backup-88v4l`
 **As** the platform owner, **I want** the nightly `db-backup` job to dump the live Cloud SQL Medusa DB to R2 (`BACKUP_TARGETS=supabase,medusa`, `neon` retired), **so that** the one dataset has a copy outside GCP before anything moves.
 **Acceptance:** `db-backup.sh` gains a `medusa` target (same `pg_dump -Fc | gzip → rclone → verify` path); the GCP job reaches the private IP (`medusa-conn` connector) with a DSN from Secret Manager; one run lands a verified `medusa/YYYY/MM/DD/…dump.gz` in `miyagi-db-escrow`; `BACKUPS.md` says so. **Ships first, on its own, ahead of the rest of the epic.**
 **Risk:** high

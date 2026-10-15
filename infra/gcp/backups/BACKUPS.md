@@ -143,13 +143,17 @@ gcloud run jobs execute cloudsql-backup-check --region=us-east4 --wait          
 gcloud run jobs update  cloudsql-backup-check --region=us-east4 --update-env-vars=INSTANCE=medusa-pg
 ```
 
-## Neon target retirement — DONE 2026-10-15
-The `neon` target was still live on 2026-10-15 (`BACKUP_TARGETS=supabase,neon`), four months after the
-rollback window closed: the job dumped the abandoned Neon copy every night and **never the live Cloud SQL
-commerce DB**. [`miyagi-to-oracle-vm`](../../../Roadmap/09-platform-infra/miyagi-to-oracle-vm/README.md)
-S1.1 replaced it with a `medusa` target and deleted the `neon` branch from `db-backup.sh`, so a stale
-`BACKUP_TARGETS` that still names it now fails the run instead of passing. The `NEON_BACKUP_DSN` secret
-is no longer bound; it is deleted with the rest of the GCP footprint in that epic's S3.
+## Neon target retirement — done TWICE (2026-06-24, again 2026-10-15)
+`neon` was retired live on **2026-06-24** (`devops-reliability-cleanup` sprint 2: `BACKUP_TARGETS=supabase`).
+It came back on **2026-07-19**, when `gcp-account-migration` rebuilt this job in `miyagisanchez-prod` with
+`provision-db-backup.sh` — whose default was still `supabase,neon` (the live job's previous image is tagged
+`20260719-111533`). From then until 2026-10-15 the job dumped the abandoned Neon copy every night and **never
+the live Cloud SQL commerce DB**. **The provisioner's default IS the live config**: a retirement applied only to
+the running job is undone by the next re-provision (the same family as LEARNINGS' "disabled is not durable").
+[`miyagi-to-oracle-vm`](../../../Roadmap/09-platform-infra/miyagi-to-oracle-vm/README.md) S1.1 fixed it at the
+source: the default is now `supabase,medusa` (pinned by `infra/gcp/test/db-backup.test.mjs`), the `neon` branch
+is deleted from `db-backup.sh` so a stale target fails the run, and `NEON_BACKUP_DSN` is no longer bound (the
+secret itself is deleted with the rest of the GCP footprint in that epic's S3).
 
 ## Status
 Pipeline **LIVE since 2026-06-12** — Cloud Run Job `db-backup` + Cloud Scheduler `db-backup-daily`

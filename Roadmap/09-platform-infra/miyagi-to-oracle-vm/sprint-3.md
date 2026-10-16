@@ -130,13 +130,17 @@ and `print-pdf`. None of them uses the deleted connector or services.
 - **The two notifiers report Cloud Build events, and no trigger is left**, so they will never fire again. Delete them
   in a later cleanup, or leave them, since they cost nothing at zero requests.
 
-### S3.4 — The GCP projects list (checked 2026-10-16 as lolis8755)
+### S3.4 — The GCP projects list (checked 2026-10-16, each under its own account)
 
-| Project | State |
-|---|---|
-| `miyagisanchez-prod` | ACTIVE, billing on. Holds only the services above plus `db-backup` (Supabase) |
-| `project-32471a48-ac44-413f-b51` | **ACTIVE, billing on: still owed to Daniel to delete** |
-| `gen-lang-client-0305197114`, `loyal-coyote-484117-k9` | no longer listed (deleted by Daniel) |
+| Project | Account (gcloud config) | State |
+|---|---|---|
+| `miyagisanchez-prod` | lolis8755 (`lolis-profile`) | ACTIVE, billing on. Holds only the services above plus `db-backup` (Supabase) |
+| `project-32471a48-ac44-413f-b51` | lolis8755 (`lolis-profile`) | **ACTIVE, billing on: owed to Daniel to delete** |
+| `gen-lang-client-0305197114` | leroytramafat (`bonsai-profile`) | **ACTIVE, billing on: owed to Daniel to delete** |
+| `loyal-coyote-484117-k9` | danielvp1987 (`n8ngcp`) | **ACTIVE, billing on: owed to Daniel to delete** |
+
+A project's absence from one account's `projects list` says nothing about a project that belongs to another
+account. A first draft of this table read that absence as "deleted".
 
 Nothing on this list was deleted by an agent.
 

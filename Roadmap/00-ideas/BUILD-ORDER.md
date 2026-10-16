@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-10-15 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-10-16 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -14,7 +14,7 @@
 
 - [Panfleto — the first premium shop](../../03-selling-and-shops/panfleto-premium-shop/README.md) — 03 Selling & Shops · 5/8 stories · risk: High · Wave 1
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
-- [Miyagi on the Oracle VM — move the always-on stack off GCP](../../09-platform-infra/miyagi-to-oracle-vm/README.md) — 09 Platform-infra · 1/18 stories · risk: High
+- [Miyagi on the Oracle VM — move the always-on stack off GCP](../../09-platform-infra/miyagi-to-oracle-vm/README.md) — 09 Platform-infra · 7/18 stories · risk: High
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
 ## 📋 Ready to build (scaffolded, not started) (2)

@@ -169,3 +169,10 @@ test('no secret reaches argv in update.sh or bootstrap.sh', () => {
   assert.match(read('update.sh'), /\\getenv pw BACKUP_RO_PASSWORD/)
   assert.doesNotMatch(read('bootstrap.sh'), /-H "Authorization: Bearer \$CF_TOKEN"/)
 })
+
+test('bootstrap writes the PROD_-prefixed names image-arm64.yml reads (PR #432 review)', () => {
+  const b = read('bootstrap.sh')
+  assert.match(b, /gh variable set "PROD_\$s" --env production/)
+  assert.match(b, /gh variable set PROD_NEXT_PUBLIC_SUPABASE_URL --env production/)
+  assert.doesNotMatch(b, /gh variable set "\$s"/)
+})

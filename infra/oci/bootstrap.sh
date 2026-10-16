@@ -18,7 +18,8 @@
 #   5. infra/oci/backup.env  — the R2 escrow token + Telegram, for backup.sh / restore-drill.sh;
 #   6. Cloudflare Origin CA certs for miyagisanchez.com (+ wildcard) and mschz.org (+ www) — the key and
 #      CSR are generated ON the VM, only the CSR travels, so the private keys never leave it;
-#   7. the 8 browser-public NEXT_PUBLIC_* keys into the frontend repo's `production` GitHub Environment,
+#   7. the 8 browser-public NEXT_PUBLIC_* keys into the frontend repo's `production` GitHub Environment as
+#      PROD_NEXT_PUBLIC_* (the prefix stops a missing value falling back to the repo-level CI variable),
 #      which image-arm64.yml builds from.
 set -euo pipefail
 
@@ -133,10 +134,10 @@ if want gh; then
   for s in NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY NEXT_PUBLIC_MEDUSA_MXN_REGION_ID \
            NEXT_PUBLIC_MP_PUBLIC_KEY NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY NEXT_PUBLIC_SUPABASE_ANON_KEY \
            NEXT_PUBLIC_VAPID_PUBLIC_KEY; do
-    secret "$s" | gh variable set "$s" --env production -R "$WEB_REPO"
+    secret "$s" | gh variable set "PROD_$s" --env production -R "$WEB_REPO"
   done
   # cloudbuild.yaml feeds NEXT_PUBLIC_SUPABASE_URL from the SUPABASE_URL secret.
-  secret SUPABASE_URL | gh variable set NEXT_PUBLIC_SUPABASE_URL --env production -R "$WEB_REPO"
+  secret SUPABASE_URL | gh variable set PROD_NEXT_PUBLIC_SUPABASE_URL --env production -R "$WEB_REPO"
   echo "  ✓ 8 variables set"
 fi
 

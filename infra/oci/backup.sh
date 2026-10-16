@@ -26,15 +26,17 @@ KEY="medusa/${DAY}/${FILE}"
 alert() {
   echo "ALERT: $*" >&2
   if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_CICD_CHAT_ID:-}" ]; then
-    curl -s -m 10 -o /dev/null --data-urlencode "chat_id=${TELEGRAM_CICD_CHAT_ID}" \
-      --data-urlencode "text=🛑 miyagi VM backup FAILED: $*" \
-      "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" || true
+    printf 'url = "https://api.telegram.org/bot%s/sendMessage"\n' "$TELEGRAM_BOT_TOKEN" \
+      | curl -s -m 10 -o /dev/null -K - --data-urlencode "chat_id=${TELEGRAM_CICD_CHAT_ID}" \
+      --data-urlencode "text=🛑 miyagi VM backup FAILED: $*" || true
   fi
   exit 1
 }
 
 cd "$DEPLOY"
-docker compose exec -T -e PGPASSWORD="$BACKUP_RO_PASSWORD" postgres \
+# `-e PGPASSWORD` with NO value: docker copies it from this process's environment, so the password never
+# appears in argv (readable by every user via /proc/<pid>/cmdline) — PR #209 security review.
+PGPASSWORD="$BACKUP_RO_PASSWORD" docker compose exec -T -e PGPASSWORD postgres \
   pg_dump --format=custom --no-owner --no-privileges -h 127.0.0.1 -U backup_ro medusa \
   | gzip -c > "$LOCAL" || alert "pg_dump failed"
 

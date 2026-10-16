@@ -114,3 +114,12 @@ test('the restore drill fails when EITHER side cannot be counted (PR #209 review
 test('install-host fails loud without the OCI CLI the backup needs (PR #209 review)', () => {
   assert.match(read('install-host.sh'), /command -v oci >\/dev\/null \|\| \{/)
 })
+
+test('no secret reaches argv: PGPASSWORD by name only, the Telegram token via curl -K - (PR #209 security review)', () => {
+  for (const f of ['backup.sh', 'restore-drill.sh']) {
+    const s = read(f)
+    assert.doesNotMatch(s, /api\.telegram\.org\/bot\$\{TELEGRAM_BOT_TOKEN\}[^\n]*\n?[^\n]*curl|curl[^|]*api\.telegram\.org\/bot\$/, `${f} puts the bot token on curl's command line`)
+    assert.match(s, /\| curl [^\n]*-K -/, f)
+  }
+  assert.doesNotMatch(read('backup.sh'), /-e PGPASSWORD="/)
+})

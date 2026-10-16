@@ -17,8 +17,8 @@ TABLES="product product_variant customer cart \"order\" payment_collection"
 
 say() {
   if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_CICD_CHAT_ID:-}" ]; then
-    curl -s -m 10 -o /dev/null --data-urlencode "chat_id=${TELEGRAM_CICD_CHAT_ID}" --data-urlencode "text=$*" \
-      "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" || true
+    printf 'url = "https://api.telegram.org/bot%s/sendMessage"\n' "$TELEGRAM_BOT_TOKEN" \
+      | curl -s -m 10 -o /dev/null -K - --data-urlencode "chat_id=${TELEGRAM_CICD_CHAT_ID}" --data-urlencode "text=$*" || true
   fi
   echo "$*"
 }

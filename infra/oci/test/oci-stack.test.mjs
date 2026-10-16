@@ -180,3 +180,7 @@ test('bootstrap writes the PROD_-prefixed names image-arm64.yml reads (PR #432 r
 test('a missing dump reaches the drill\'s alert instead of dying in pipefail (PR #209 review)', () => {
   assert.match(read('restore-drill.sh'), /DUMP="\$\(ls -1t [^\n]*\| head -1 \|\| true\)"/)
 })
+
+test('Medusa\'s DATABASE_URL disables TLS — Medusa forces TLS on any non-localhost URL otherwise', () => {
+  assert.match(services.medusa, /DATABASE_URL: postgres:\/\/[^\n]*@postgres:5432\/medusa\?sslmode=disable\n/)
+})

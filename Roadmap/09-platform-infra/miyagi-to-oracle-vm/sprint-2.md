@@ -125,7 +125,7 @@ customer 9, cart 77, order 20, payment_collection 52.
 |---|---|
 | 13:58 | `checkout.stripe_enabled` killed (Golden); GCP `medusa-web` → `MEDUSA_WORKER_MODE=server` (rev 00094); the 6 schedulers paused |
 | 13:59 | final dump `medusa/2026/10/16/medusa-2026-10-16T135957Z.dump.gz` (338,342 B) in R2 |
-| ~14:02 | restored onto an empty VM DB (exit 0); Redis `FLUSHALL` **before** `MEDUSA_WORKER_MODE=shared` (D10); `BACKUP_PREFIX='medusa'`; `update.sh` healthy (medusa-web `1502ad4`, miyagi-web `ca61345`); 5 `miyagi-cron-*` timers enabled |
+| ~14:02 | restored onto an empty VM DB (exit 0); Redis `FLUSHALL` **before** `MEDUSA_WORKER_MODE=shared` (D10); `BACKUP_PREFIX='medusa'`; `update.sh` healthy (medusa-web [merge commit](https://github.com/danybgoode/medusa-bonsai-backend/commit/1502ad4), miyagi-web [merge commit](https://github.com/danybgoode/miyagisanchezcommerce/commit/ca61345)); 5 `miyagi-cron-*` timers enabled |
 
 Row-count diff against the rehearsal: **empty** on every counted table (identical numbers), so no write happened between
 the two dumps.

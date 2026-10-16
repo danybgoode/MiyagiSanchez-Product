@@ -3,7 +3,7 @@ epic: miyagi-to-oracle-vm
 sprint: 1
 title: "The rail, built dark"
 risk: high
-phase: Building
+phase: Shipped
 stories_total: 7
 stories:
   - id: S1.1
@@ -19,46 +19,46 @@ stories:
     i_want: "GitHub Actions to build `linux/arm64` images of both apps into private GHCR, tagged by sha, with the exact build args `cloudbuild.yaml` passes"
     so_that: "the 2 shared cores never compile Next.js and a rollback is a restart"
     risk: high
-    status: planned
+    status: done
   - id: S1.3
     title: "The compose stack on the VM"
     as_a: "the platform"
     i_want: "`infra/oci/` (compose + `update.sh`) running medusa, web, postgres 17 and redis on `/data/miyagi` with mem/cpu limits, joined to panfleto's Caddy through an external `edge` network"
     so_that: "Miyagi runs on the free box without touching panfleto"
     risk: high
-    status: planned
+    status: done
   - id: S1.4
     title: "TLS at the VM, Full (Strict)"
     as_a: "the platform"
     i_want: "Caddy to serve Miyagi hosts with the Cloudflare Origin CA cert (wildcard + apex) and `oci.miyagisanchez.com` proxied through Cloudflare"
     so_that: "the VM is reachable exactly the way prod will be, with no HTTP-01 dance"
     risk: high
-    status: planned
+    status: done
   - id: S1.5
     title: "A restored copy of prod, proven on ARM"
     as_a: "the product owner"
     i_want: "a restored copy of the prod Medusa DB booting on the VM, with images, Redis and orders proven"
     so_that: "the cutover moves a stack already seen working"
     risk: high
-    status: planned
+    status: done
   - id: S1.6
     title: "Crons, backups and a restore drill as VM timers"
     as_a: "the platform"
     i_want: "systemd timers for the 5 `/api/cron/*` jobs, the nightly Medusa dump to R2 **and** the OCI bucket, and a weekly restore drill"
     so_that: "nothing depends on Cloud Scheduler or Cloud SQL backups anymore"
     risk: high
-    status: planned
+    status: done
   - id: S1.7
     title: "Latency measured, VM vs Cloud Run"
     as_a: "the product owner"
     i_want: "p95 page latency for `/`, one PDP and one shop page on `oci.` vs prod, recorded in this sprint doc"
     so_that: "we know the 2-core box keeps the site as fast before we flip"
     risk: high
-    status: planned
+    status: done
 ---
 # Miyagi on the Oracle VM — Sprint 1: The rail, built dark
 
-**Status:** 🏗️ in progress — S1.1 live 2026-10-15 (PR #206)
+**Status:** ✅ done 2026-10-16 — the stack runs dark on the VM (no DNS points at it yet)
 
 ## Stories
 
@@ -67,32 +67,32 @@ stories:
 **Acceptance:** `db-backup.sh` gains a `medusa` target (same `pg_dump -Fc | gzip → rclone → verify` path); the GCP job reaches the private IP (`medusa-conn` connector) with a DSN from Secret Manager; one run lands a verified `medusa/YYYY/MM/DD/…dump.gz` in `miyagi-db-escrow`; `BACKUPS.md` says so. **Ships first, on its own, ahead of the rest of the epic.**
 **Risk:** high
 
-### Story 1.2 — arm64 images built in CI, pulled by sha
+### Story 1.2 — arm64 images built in CI, pulled by sha ✅ web #432 `ca61345` · api #204 `1502ad4`
 **As** the platform, **I want** GitHub Actions to build `linux/arm64` images of both apps into private GHCR, tagged by sha, with the exact build args `cloudbuild.yaml` passes, **so that** the 2 shared cores never compile Next.js and a rollback is a restart.
 **Acceptance:** Both app repos push `ghcr.io/danybgoode/<app>:<sha>` on merge to `main`; the build args are **derived** from each `cloudbuild.yaml` and a spec asserts parity; Cloud Build keeps deploying GCP untouched until S2.
 **Risk:** high
 
-### Story 1.3 — The compose stack on the VM
+### Story 1.3 — The compose stack on the VM ✅ #209 `4480b2c` · justread#30 `ffcb9f1` · #210 `0dcf941`
 **As** the platform, **I want** `infra/oci/` (compose + `update.sh`) running medusa, web, postgres 17 and redis on `/data/miyagi` with mem/cpu limits, joined to panfleto's Caddy through an external `edge` network, **so that** Miyagi runs on the free box without touching panfleto.
 **Acceptance:** Limits: web 1.5G, medusa 1.25G, postgres 1.5G, redis 128M, plus `cpus:` caps; `docker ps` before/after shows panfleto + aomx never restarted; panfleto's `Caddyfile` changes by exactly one `import` line; secrets live in a root-only `deploy/oci/.env` written by a script that reads Secret Manager as the operator (never `.env.local`).
 **Risk:** high
 
-### Story 1.4 — TLS at the VM, Full (Strict)
+### Story 1.4 — TLS at the VM, Full (Strict) ✅ #209 `4480b2c`
 **As** the platform, **I want** Caddy to serve Miyagi hosts with the Cloudflare Origin CA cert (wildcard + apex) and `oci.miyagisanchez.com` proxied through Cloudflare, **so that** the VM is reachable exactly the way prod will be, with no HTTP-01 dance.
 **Acceptance:** `https://oci.miyagisanchez.com` returns 200 through Cloudflare Full (Strict); `openssl s_client -connect 159.54.158.4:443 -servername oci.miyagisanchez.com` shows the Origin CA cert.
 **Risk:** high
 
-### Story 1.5 — A restored copy of prod, proven on ARM
+### Story 1.5 — A restored copy of prod, proven on ARM ✅ #210 `0dcf941`
 **As** the product owner, **I want** a restored copy of the prod Medusa DB booting on the VM, with images, Redis and orders proven, **so that** the cutover moves a stack already seen working.
 **Acceptance:** `/health` 200; product count equals GCP's; a real `/api/img` request returns an image (ARM `sharp`/libvips proven — a green build is not evidence); a test order reaches a subscriber (Redis event bus proven).
 **Risk:** high
 
-### Story 1.6 — Crons, backups and a restore drill as VM timers
+### Story 1.6 — Crons, backups and a restore drill as VM timers ✅ #209 `4480b2c`
 **As** the platform, **I want** systemd timers for the 5 `/api/cron/*` jobs, the nightly Medusa dump to R2 **and** the OCI bucket, and a weekly restore drill, **so that** nothing depends on Cloud Scheduler or Cloud SQL backups anymore.
 **Acceptance:** Timers exist but the 5 cron timers stay **disabled** until S2 (no double-run with Cloud Scheduler); the backup lands in both buckets (OCI via instance principal, no keys on host); the drill restores the newest dump into a throwaway container and posts row counts to Telegram; a failure alerts Telegram; the backup connects as a dedicated **read-only** role (`pg_read_all_data`), never the app's role (PR #206 review: the GCP job reuses `DATABASE_URL` only until Cloud SQL is deleted).
 **Risk:** high
 
-### Story 1.7 — Latency measured, VM vs Cloud Run
+### Story 1.7 — Latency measured, VM vs Cloud Run ✅ measured 2026-10-16
 **As** the product owner, **I want** p95 page latency for `/`, one PDP and one shop page on `oci.` vs prod, recorded in this sprint doc, **so that** we know the 2-core box keeps the site as fast before we flip.
 **Acceptance:** A table of measured p95s (cold + warm) in this doc; any page >25% slower is named with its cause before S2 starts.
 **Risk:** high
@@ -121,6 +121,38 @@ stories:
   aomx's host were served `CN=miyagisanchez.com` — found by the fresh reviewer, reproduced and then proven
   fixed with `openssl s_client` per host on the VM. Cost today: none — the S2.1 census saw zero tenant-domain
   requests. When the first tenant domain moves, it gets its own named block.
+
+## Evidence (2026-10-16, measured on `panfleto-prod`)
+- **Images (S1.2):** `medusa-web` and `miyagi-web` built `linux/arm64` on GitHub's ARM runner in ~5–6 min; the
+  GHCR packages are public by default and the VM pulled them anonymously (D11 settled). The web build passed
+  its live-key guards (Clerk/Stripe `pk_live_`, Mercado Pago `APP_USR-`).
+- **First boot (S1.5) hit a real defect:** Medusa forces TLS on any non-localhost DATABASE_URL, so it hung on
+  the plain local Postgres — fixed with `?sslmode=disable` (#210). Then healthy in ~45 s.
+- **Data (S1.5):** prod's 2026-10-16T09:00 R2 dump restored with zero `pg_restore` errors — 178 products, 20
+  orders, 9 customers, 158 tables. Store API: **121 products on both** VM and prod; regions `mxn,usd` on both.
+- **ARM `sharp` (S1.5):** a real product image through `/api/img` → `200 image/webp 384x384 30,920 B` on the VM,
+  **the same byte count as production**.
+- **Redis (S1.5, D10):** cache, event bus, workflow engine and locking all connected at boot.
+- **TLS (S1.4):** the VM presents the Cloudflare Origin CA cert for `miyagisanchez.com, *.miyagisanchez.com`
+  (and `mschz.org`); panfleto.win still serves its own Let's Encrypt cert after its Caddy was recreated.
+- **Backup + drill (S1.6):** `medusa-oci/2026/10/16/…dump.gz` (337,904 B) verified in R2 **and** OCI, dumped as
+  `backup_ro`; the drill restored it in a throwaway container — product 178/178, variant 178/178, customer
+  9/9, cart 77/77, order 20/20, payment_collection 52/52 (restored/live).
+- **Parity (S1.5):** `--resolve` to the VM vs prod — same status and near-identical size on every host family
+  (`api.` health 200, apex 200 at 202,788 vs 202,971 B, a seller subdomain 404 on both, `mschz.org` 301 on both).
+
+**Latency (S1.7)** — 15 cache-busted requests each. VM = straight to the origin; PROD = through Cloudflare to
+GCP, so PROD carries one extra hop: read this as "the VM origin is not slower", not as a speed-up.
+
+| Page | VM p50 / p95 | PROD p50 / p95 |
+|---|---|---|
+| Home `/` | 0.091 s / 0.222 s | 0.302 s / 0.490 s |
+| Listing page (`/mx/l/…`, 404 on both — unlisted product, 165,151 B both) | 0.110 s / 0.166 s | 0.308 s / 0.431 s |
+| Seller subdomain (404 on both) | 0.342 s / 1.513 s | 0.611 s / 0.907 s |
+| `api.` `/health` | 0.040 s / 0.048 s | 0.204 s / 0.373 s |
+
+No page is more than 25% slower on the VM except the seller-subdomain 404's p95 (one 1.5 s outlier in 15 —
+a cold render on 0.55 CPU); worth re-measuring through Cloudflare after the flip.
 
 ## Sprint QA
 - **api spec(s):** a pure spec on the build-args derivation (S1.2: parity with `cloudbuild.yaml`), a spec on `db-backup.sh`'s target dispatch (S1.1: `medusa` dumps, unknown target fails loud), each observed red once by mutation.

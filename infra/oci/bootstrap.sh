@@ -4,7 +4,9 @@
 #   bash infra/oci/bootstrap.sh            # everything below, idempotent
 #   bash infra/oci/bootstrap.sh --only env # just rewrite medusa.env / web.env / backup.env
 #
-# It reads every value AS THE OPERATOR and streams it over ssh into root-only files on the VM. Nothing
+# It reads every value AS THE OPERATOR and streams it over ssh into 0600 files on the VM owned by the deploy
+# user `ubuntu` — the account docker compose reads env_file as, and already root-equivalent through its
+# `docker` group membership, so no other account on the box can read them. Nothing
 # is printed, nothing is written to this machine's disk, and .env.local is never a source (it caused the
 # 2026-07-13 outage — LEARNINGS). What it does:
 #   1. clones/updates /opt/miyagi (this public repo) on the VM and runs install-host.sh;
@@ -31,7 +33,7 @@ ssh_vm() { ssh -i "$SSH_KEY" -o ConnectTimeout=15 "$VM" "$@"; }
 step() { printf '\n\033[1;36m▶ %s\033[0m\n' "$*"; }
 want() { [ -z "$ONLY" ] || [ "$ONLY" = "$1" ]; }
 
-# write_vm PATH — stdin → a root-only file on the VM (0600), atomically.
+# write_vm PATH — stdin → a 0600 file on the VM, atomically (re-owned to `ubuntu` below; see the header).
 write_vm() { ssh_vm "sudo install -m 0600 -o root -g root /dev/stdin '$1.tmp' && sudo mv '$1.tmp' '$1'"; }
 
 # service_env SERVICE SKIP_REGEX — the service's env as KEY='value' lines: plain values as Cloud Run holds

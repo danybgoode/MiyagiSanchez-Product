@@ -7,7 +7,7 @@
 # `db-backup` job writes (infra/gcp/backups/BACKUPS.md), under the same `medusa/YYYY/MM/DD/` keys.
 #
 # The dump connects as `backup_ro` (pg_read_all_data), never as the app's role — the answered review
-# finding on PR #206. Credentials: infra/oci/backup.env (root-only, written by bootstrap.sh); OCI uses the
+# finding on PR #206. Credentials: infra/oci/backup.env (0600, deploy user, written by bootstrap.sh); OCI uses the
 # instance principal, so no OCI key is on this host.
 #
 # Any failure exits non-zero (→ the unit fails) and pings Telegram; each upload is read back and its size

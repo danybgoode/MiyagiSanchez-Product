@@ -104,3 +104,13 @@ test('the backup dumps as the read-only role and writes to both vendors', () => 
   assert.match(backup, /oci os object put --auth instance_principal/)
   assert.match(read('update.sh'), /GRANT pg_read_all_data TO backup_ro/)
 })
+
+test('the restore drill fails when EITHER side cannot be counted (PR #209 review)', () => {
+  const drill = read('restore-drill.sh')
+  assert.match(drill, /\[ "\$r" = "\?" \] \|\| \[ "\$l" = "\?" \]/)
+  assert.match(drill, /\[ -n "\$LIVE" \] \|\| fail/)
+})
+
+test('install-host fails loud without the OCI CLI the backup needs (PR #209 review)', () => {
+  assert.match(read('install-host.sh'), /command -v oci >\/dev\/null \|\| \{/)
+})

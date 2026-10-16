@@ -20,6 +20,13 @@ install -d -m 0750 /opt/edge/certs
 docker network inspect edge >/dev/null 2>&1 || docker network create edge >/dev/null
 echo "✓ dirs + edge network"
 
+# backup.sh uploads with the OCI CLI via the instance principal. panfleto's install put it at
+# /usr/local/bin/oci; if it is missing, stop HERE — not at the first 04:45 backup.
+command -v oci >/dev/null || { echo "✗ OCI CLI not found — install it (https://docs.oracle.com/iaas/Content/API/SDKDocs/cliinstall.htm) and re-run" >&2; exit 1; }
+oci os ns get --auth instance_principal --query data --raw-output >/dev/null \
+  || { echo "✗ the instance principal cannot reach Object Storage — check the panfleto dynamic group / policy" >&2; exit 1; }
+echo "✓ OCI CLI + instance principal"
+
 command -v rclone >/dev/null || { apt-get update -qq && apt-get install -y -qq rclone >/dev/null; }
 echo "✓ rclone $(rclone version | head -1 | awk '{print $2}')"
 

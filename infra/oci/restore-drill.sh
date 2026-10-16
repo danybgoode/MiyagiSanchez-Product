@@ -37,13 +37,15 @@ count() { # container db role table
 }
 cd "$DEPLOY"
 LIVE="$(docker compose ps -q postgres)"
+[ -n "$LIVE" ] || fail "the live postgres container is not running — nothing to compare against"
 REPORT=""; BAD=0
 for t in $TABLES; do
   r="$(count "$NAME" drill postgres "$t")"; l="$(count "$LIVE" medusa medusa "$t")"
   REPORT="${REPORT}${t//\"/}: ${r} (live ${l})
 "
+  # Either side unreadable is a FAILED drill — a stopped production container must not read as a pass.
   # The dump is up to a day old, so the restored count may trail live — but never be empty when live isn't.
-  { [ "$r" = "?" ] || { [ "$r" = 0 ] && [ "$l" != 0 ]; }; } && BAD=1
+  { [ "$r" = "?" ] || [ "$l" = "?" ] || { [ "$r" = 0 ] && [ "$l" != 0 ]; }; } && BAD=1
 done
 [ "$BAD" -eq 0 ] || fail "restored counts look wrong:
 ${REPORT}"

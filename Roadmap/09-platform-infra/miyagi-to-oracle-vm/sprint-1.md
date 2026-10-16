@@ -111,7 +111,7 @@ stories:
   (danybgoode/justread#30), never by editing its Caddyfile, which panfleto's `update.sh` resets to
   `origin/main` on every deploy — the way aomx's hand-added route was lost.
 - **D13 · Credentials move in ONE operator-run step, `infra/oci/bootstrap.sh`.** It reads Secret Manager as
-  Daniel and streams each value into a root-only file on the VM; Origin CA keys are generated on the VM.
+  Daniel and streams each value into a 0600 file on the VM (owned by the deploy user, which the `docker` group already makes root-equivalent); Origin CA keys are generated on the VM.
   The agent never handles a secret (the auto-mode classifier refuses it, correctly).
 
 ## Sprint QA

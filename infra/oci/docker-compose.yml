@@ -1,0 +1,109 @@
+# Miyagi Sánchez on the Oracle A1 VM `panfleto-prod` (mx-queretaro-1, aarch64, 2 OCPU / 12 GB).
+# Epic: Roadmap/09-platform-infra/miyagi-to-oracle-vm.
+#
+# The box is SHARED: panfleto (caddy, miniflux, landing, postgres) and aomx run here too. So:
+#   - nothing here publishes a port. The ONE Caddy (owned by panfleto's compose) reaches `miyagi-web` and
+#     `miyagi-medusa` over the external `edge` network; Postgres and Redis sit on `miyagi` only.
+#   - every container has a memory and CPU cap. Measured on Cloud Run (2026-10-15, 30d p99): medusa-web
+#     ≤62% of 1 GiB and ≤0.6 vCPU, miyagi-web hits 93–100% of 1 GiB (hence 1.5G here), Postgres ~0.8 GB
+#     on a 1.7 GB db-g1-small, Redis ~9 MB. The MEMORY caps (4.4 GB of 12) are what protect panfleto. The
+#     CPU caps sum to 1.75 of the box's 2 OCPUs, so Miyagi alone can never take every core; within that,
+#     each container can burst past its measured p95.
+#   - state lives on the /data block volume, so the instance itself stays disposable.
+#
+# Images are built for linux/arm64 in each app repo's `image-arm64.yml` and pulled by commit sha;
+# `update.sh` writes MEDUSA_IMAGE / WEB_IMAGE into .env. A rollback is a restart, never a rebuild.
+
+name: miyagi
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: medusa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in infra/oci/.env}
+      POSTGRES_DB: medusa
+    volumes:
+      - /data/miyagi/postgres:/var/lib/postgresql/data
+    command: >
+      postgres
+      -c shared_buffers=384MB
+      -c effective_cache_size=1GB
+      -c max_connections=60
+    mem_limit: 1536m
+    cpus: 0.5
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medusa"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [miyagi]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Medusa's event bus, workflow engine and locking live here (cache too). noeviction: an evicted
+    # workflow or lock key is a silent correctness bug; an OOM error is a loud one. ~9 MB used today.
+    command: redis-server --appendonly yes --maxmemory 96mb --maxmemory-policy noeviction
+    volumes:
+      - /data/miyagi/redis:/data
+    mem_limit: 128m
+    cpus: 0.1
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [miyagi]
+
+  medusa:
+    image: ${MEDUSA_IMAGE:-ghcr.io/danybgoode/medusa-web:main}
+    restart: unless-stopped
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    # medusa.env is written by infra/oci/bootstrap.sh from Cloud Run's own config + Secret Manager.
+    env_file: [./medusa.env]
+    environment:
+      DATABASE_URL: postgres://medusa:${POSTGRES_PASSWORD}@postgres:5432/medusa
+      REDIS_URL: redis://redis:6379
+      PORT: "8080"
+      # `server` until the cutover (S2): HTTP only — scheduled jobs do not run and NO event is PROCESSED. The
+      # dark copy runs on a restored copy of prod with production credentials, and its jobs and subscribers
+      # reach the real world (Mercado Libre reconciliation, the sweepstakes draw, emails).
+      # ⚠️ Server mode still ENQUEUES events into Redis (Medusa 2.21: the redis event bus adds to its queue in
+      # every mode; only worker/shared mode starts the Worker that drains it — PR #209 review). So the
+      # cutover FLUSHES Redis before it sets MEDUSA_WORKER_MODE=shared (sprint-2 S2.3); otherwise the first
+      # shared-mode boot would fire every dark-period event at real people.
+      MEDUSA_WORKER_MODE: ${MEDUSA_WORKER_MODE:-server}
+    mem_limit: 1280m
+    cpus: 0.6
+    networks:
+      miyagi: {}
+      edge:
+        aliases: [miyagi-medusa]
+
+  web:
+    image: ${WEB_IMAGE:-ghcr.io/danybgoode/miyagi-web:main}
+    restart: unless-stopped
+    depends_on: [medusa]
+    env_file: [./web.env]
+    environment:
+      # Server-side Store API calls go straight to the local Medusa over the compose network, never back
+      # out through Cloudflare. The browser still uses NEXT_PUBLIC_MEDUSA_STORE_URL (baked at build time).
+      MEDUSA_STORE_URL: http://medusa:8080
+      PORT: "8080"
+      HOSTNAME: 0.0.0.0
+    mem_limit: 1536m
+    cpus: 0.55
+    networks:
+      miyagi: {}
+      edge:
+        aliases: [miyagi-web]
+
+networks:
+  miyagi: {}
+  # Created by install-host.sh and joined by panfleto's Caddy (danybgoode/justread deploy/docker-compose.yml).
+  edge:
+    external: true

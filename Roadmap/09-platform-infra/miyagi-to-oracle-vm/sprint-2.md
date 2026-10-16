@@ -67,7 +67,7 @@ stories:
 
 ### Story 2.3 — Freeze, final dump, restore
 **As** the product owner, **I want** Medusa's kill switch off, a final dump, restore on the VM, and a per-table row-count diff against the rehearsal, **so that** no order or seller write is lost in the move.
-**Acceptance:** The diff is empty on frozen tables (or every difference is explained); the GCP cron schedulers are paused at the freeze and the VM's cron timers enabled at the flip.
+**Acceptance:** The diff is empty on frozen tables (or every difference is explained); the GCP cron schedulers are paused at the freeze and the VM's cron timers enabled at the flip; **Redis is flushed (`redis-cli FLUSHALL`) BEFORE `MEDUSA_WORKER_MODE=shared` is set** — the dark copy's server mode queued events that would otherwise fire at real people on the first shared boot (D10); `BACKUP_PREFIX=medusa` is set in `backup.env` and the GCP `db-backup` job is stopped.
 **Risk:** high
 
 ### Story 2.4 — Certs proven before DNS moves

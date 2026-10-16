@@ -154,7 +154,7 @@ jobs:
 
       - name: infra/ — deploy-invariants node:test
         if: steps.areas.outputs.infra == 'true'
-        run: node --test infra/gcp/test/*.test.js infra/gcp/test/*.test.mjs
+        run: node --test infra/gcp/test/*.test.js infra/gcp/test/*.test.mjs infra/oci/test/*.test.mjs
 
       - name: yaml — actionlint on workflow files
         if: steps.areas.outputs.workflows == 'true'

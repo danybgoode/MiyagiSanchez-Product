@@ -1,0 +1,11 @@
+[Unit]
+Description=Miyagi: storefront cron /api/cron/%i (replaces Cloud Scheduler frontend-%i)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/miyagi/infra/oci
+# Same call Cloud Scheduler makes: GET + the x-cron-secret header. Made from INSIDE the web container,
+# where CRON_SECRET already is, so the secret never appears on a command line or in the journal.
+ExecStart=/usr/bin/docker compose exec -T web node -e "fetch('http://127.0.0.1:8080/api/cron/%i',{headers:{'x-cron-secret':process.env.CRON_SECRET,'user-agent':'miyagi-vm-cron'}}).then(async r=>{console.log(r.status,(await r.text()).slice(0,300));process.exit(r.ok?0:1)}).catch(e=>{console.error(e);process.exit(1)})"

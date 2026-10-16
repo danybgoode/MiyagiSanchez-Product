@@ -1,0 +1,10 @@
+[Unit]
+Description=Miyagi: nightly Medusa backup (04:45 UTC, after panfleto's 04:30)
+
+[Timer]
+OnCalendar=*-*-* 04:45:00 UTC
+RandomizedDelaySec=300
+Persistent=true
+
+[Install]
+WantedBy=timers.target

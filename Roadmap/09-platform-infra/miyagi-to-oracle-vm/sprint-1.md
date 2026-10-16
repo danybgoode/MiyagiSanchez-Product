@@ -23,7 +23,7 @@ stories:
   - id: S1.3
     title: "The compose stack on the VM"
     as_a: "the platform"
-    i_want: "`deploy/oci/` (compose + `update.sh`) running medusa, web, postgres 17 and redis on `/data/miyagi` with mem/cpu limits, joined to panfleto's Caddy through an external `edge` network"
+    i_want: "`infra/oci/` (compose + `update.sh`) running medusa, web, postgres 17 and redis on `/data/miyagi` with mem/cpu limits, joined to panfleto's Caddy through an external `edge` network"
     so_that: "Miyagi runs on the free box without touching panfleto"
     risk: high
     status: planned
@@ -73,7 +73,7 @@ stories:
 **Risk:** high
 
 ### Story 1.3 — The compose stack on the VM
-**As** the platform, **I want** `deploy/oci/` (compose + `update.sh`) running medusa, web, postgres 17 and redis on `/data/miyagi` with mem/cpu limits, joined to panfleto's Caddy through an external `edge` network, **so that** Miyagi runs on the free box without touching panfleto.
+**As** the platform, **I want** `infra/oci/` (compose + `update.sh`) running medusa, web, postgres 17 and redis on `/data/miyagi` with mem/cpu limits, joined to panfleto's Caddy through an external `edge` network, **so that** Miyagi runs on the free box without touching panfleto.
 **Acceptance:** Limits: web 1.5G, medusa 1.25G, postgres 1.5G, redis 128M, plus `cpus:` caps; `docker ps` before/after shows panfleto + aomx never restarted; panfleto's `Caddyfile` changes by exactly one `import` line; secrets live in a root-only `deploy/oci/.env` written by a script that reads Secret Manager as the operator (never `.env.local`).
 **Risk:** high
 
@@ -96,6 +96,31 @@ stories:
 **As** the product owner, **I want** p95 page latency for `/`, one PDP and one shop page on `oci.` vs prod, recorded in this sprint doc, **so that** we know the 2-core box keeps the site as fast before we flip.
 **Acceptance:** A table of measured p95s (cold + warm) in this doc; any page >25% slower is named with its cause before S2 starts.
 **Risk:** high
+
+## Decisions made while building (2026-10-15)
+- **D9 · `infra/oci/`, not `deploy/oci/`.** The root repo's CI only watches `infra/**`; the stack's
+  invariants (`infra/oci/test/oci-stack.test.mjs`) run in the same `guards` step as `infra/gcp/test`.
+- **D10 · The dark copy runs Medusa in `server` mode** (HTTP only — jobs do not run and no event is
+  processed). ⚠️ Corrected by the PR #209 review: server mode still ENQUEUES events into Redis, so the cutover
+  must flush Redis before switching to `shared` (sprint-2 S2.3).
+  It runs on a restored copy of prod with production credentials, and its jobs reach the real world
+  (Mercado Libre reconciliation, the sweepstakes draw). So S1.5 proves Redis by Medusa booting on its
+  Redis event bus, workflow engine and locking; **"an order reaches a subscriber" moves to S2.6**, after
+  the cutover sets `MEDUSA_WORKER_MODE=shared`.
+- **D11 · Images are public on GHCR** — both app repos are public, so the VM pulls anonymously (no
+  registry credential on the host, panfleto's pattern) and the arm64 runners are free.
+- **D12 · Tenants plug into panfleto's Caddy through `/opt/edge/sites` + the `edge` network**
+  (danybgoode/justread#30), never by editing its Caddyfile, which panfleto's `update.sh` resets to
+  `origin/main` on every deploy — the way aomx's hand-added route was lost.
+- **D13 · Credentials move in ONE operator-run step, `infra/oci/bootstrap.sh`.** It reads Secret Manager as
+  Daniel and streams each value into a 0600 file on the VM (owned by the deploy user, which the `docker` group already makes root-equivalent); Origin CA keys are generated on the VM.
+  The agent never handles a secret (the auto-mode classifier refuses it, correctly).
+
+- **D14 · Miyagi's Caddy file names every host; no catch-all.** The first draft's `https://` catch-all (for
+  Cloudflare-for-SaaS tenant domains) took over the SHARED Caddy's TLS: panfleto.win, app.panfleto.win and
+  aomx's host were served `CN=miyagisanchez.com` — found by the fresh reviewer, reproduced and then proven
+  fixed with `openssl s_client` per host on the VM. Cost today: none — the S2.1 census saw zero tenant-domain
+  requests. When the first tenant domain moves, it gets its own named block.
 
 ## Sprint QA
 - **api spec(s):** a pure spec on the build-args derivation (S1.2: parity with `cloudbuild.yaml`), a spec on `db-backup.sh`'s target dispatch (S1.1: `medusa` dumps, unknown target fails loud), each observed red once by mutation.

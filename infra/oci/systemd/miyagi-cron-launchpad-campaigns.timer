@@ -1,0 +1,9 @@
+[Unit]
+Description=Miyagi: /api/cron/launchpad-campaigns daily at 06:00 UTC (was Cloud Scheduler frontend-launchpad-campaigns)
+
+[Timer]
+OnCalendar=*-*-* 06:00:00 UTC
+Unit=miyagi-cron@launchpad-campaigns.service
+
+[Install]
+WantedBy=timers.target

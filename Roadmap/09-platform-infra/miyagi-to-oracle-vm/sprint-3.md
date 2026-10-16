@@ -180,5 +180,5 @@ Nothing on this list was deleted by an agent.
 
 ## Changes
 - danybgoode/miyagi-product-management#212 (`6d47a23`), danybgoode/miyagi-product-management#213 (`d8fedd4`)
-- danybgoode/miyagisanchezcommerce#433 (`ed9e3fb`), danybgoode/medusa-bonsai-backend#206 (`6d0a883`)
-- danybgoode/justread#31 (`e086f3e`)
+- danybgoode/miyagisanchezcommerce#433 ([merge commit](https://github.com/danybgoode/miyagisanchezcommerce/commit/ed9e3fb)), danybgoode/medusa-bonsai-backend#206 ([merge commit](https://github.com/danybgoode/medusa-bonsai-backend/commit/6d0a883))
+- danybgoode/justread#31 ([merge commit](https://github.com/danybgoode/justread/commit/e086f3e))

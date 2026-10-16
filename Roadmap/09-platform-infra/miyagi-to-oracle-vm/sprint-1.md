@@ -67,12 +67,12 @@ stories:
 **Acceptance:** `db-backup.sh` gains a `medusa` target (same `pg_dump -Fc | gzip → rclone → verify` path); the GCP job reaches the private IP (`medusa-conn` connector) with a DSN from Secret Manager; one run lands a verified `medusa/YYYY/MM/DD/…dump.gz` in `miyagi-db-escrow`; `BACKUPS.md` says so. **Ships first, on its own, ahead of the rest of the epic.**
 **Risk:** high
 
-### Story 1.2 — arm64 images built in CI, pulled by sha ✅ web #432 `ca61345` · api #204 `1502ad4`
+### Story 1.2 — arm64 images built in CI, pulled by sha ✅ web #432 [merge commit](https://github.com/danybgoode/miyagisanchezcommerce/commit/ca61345) · api #204 [merge commit](https://github.com/danybgoode/medusa-bonsai-backend/commit/1502ad4)
 **As** the platform, **I want** GitHub Actions to build `linux/arm64` images of both apps into private GHCR, tagged by sha, with the exact build args `cloudbuild.yaml` passes, **so that** the 2 shared cores never compile Next.js and a rollback is a restart.
 **Acceptance:** Both app repos push `ghcr.io/danybgoode/<app>:<sha>` on merge to `main`; the build args are **derived** from each `cloudbuild.yaml` and a spec asserts parity; Cloud Build keeps deploying GCP untouched until S2.
 **Risk:** high
 
-### Story 1.3 — The compose stack on the VM ✅ #209 `4480b2c` · justread#30 `ffcb9f1` · #210 `0dcf941`
+### Story 1.3 — The compose stack on the VM ✅ #209 `4480b2c` · justread#30 [merge commit](https://github.com/danybgoode/justread/commit/ffcb9f1) · #210 `0dcf941`
 **As** the platform, **I want** `infra/oci/` (compose + `update.sh`) running medusa, web, postgres 17 and redis on `/data/miyagi` with mem/cpu limits, joined to panfleto's Caddy through an external `edge` network, **so that** Miyagi runs on the free box without touching panfleto.
 **Acceptance:** Limits: web 1.5G, medusa 1.25G, postgres 1.5G, redis 128M, plus `cpus:` caps; `docker ps` before/after shows panfleto + aomx never restarted; panfleto's `Caddyfile` changes by exactly one `import` line; secrets live in a root-only `deploy/oci/.env` written by a script that reads Secret Manager as the operator (never `.env.local`).
 **Risk:** high
@@ -179,5 +179,5 @@ If any step fails, note the step number + what you saw — that's the bug report
 - danybgoode/miyagi-product-management#206 (S1.1, `6759011`), danybgoode/miyagi-product-management#208,
   danybgoode/miyagi-product-management#209 (`4480b2c`), danybgoode/miyagi-product-management#210 (`0dcf941`),
   danybgoode/miyagi-product-management#211 (`7aa4724`)
-- danybgoode/miyagisanchezcommerce#432 (`ca61345`), danybgoode/medusa-bonsai-backend#204 (`1502ad4`)
-- danybgoode/justread#30 (`ffcb9f1`)
+- danybgoode/miyagisanchezcommerce#432 ([merge commit](https://github.com/danybgoode/miyagisanchezcommerce/commit/ca61345)), danybgoode/medusa-bonsai-backend#204 ([merge commit](https://github.com/danybgoode/medusa-bonsai-backend/commit/1502ad4))
+- danybgoode/justread#30 ([merge commit](https://github.com/danybgoode/justread/commit/ffcb9f1))

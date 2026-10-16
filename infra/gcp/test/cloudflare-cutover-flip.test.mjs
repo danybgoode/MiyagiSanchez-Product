@@ -100,3 +100,21 @@ test('cloudflare-cutover-flip.mjs: resolves the ALB static IP live via gcloud, n
 test('cloudflare-cutover-flip.mjs: flips the record TYPE to A (matches the ALB IP target), not left as the original CNAME', () => {
   assert.match(src, /content: albIp, proxied: true, type: 'A'/)
 })
+
+test('--target-ip overrides the source ALB, and is validated (miyagi-to-oracle-vm S2.5)', () => {
+  const src = readFileSync(join(__dirname, '..', 'cloudflare-cutover-flip.mjs'), 'utf8')
+  assert.match(src, /const TARGET_IP = arg\('target-ip', undefined\)/)
+  assert.match(src, /const albIp = TARGET_IP \? String\(TARGET_IP\) : resolveAlbStaticIp\(\)/)
+  assert.match(src, /--target-ip must be an IPv4 address/)
+})
+
+test('--audit-ip is read-only: it lists records by CONTENT and returns before any rollback or write path (S2.5)', () => {
+  const src = readFileSync(join(__dirname, '..', 'cloudflare-cutover-flip.mjs'), 'utf8')
+  const audit = src.indexOf("const AUDIT_IP = arg('audit-ip', undefined)")
+  assert.ok(audit > 0, 'the --audit-ip flag exists')
+  assert.ok(audit < src.indexOf('if (ROLLBACK_FILE)'), 'audit runs before the rollback branch')
+  const block = src.slice(audit, src.indexOf('if (ROLLBACK_FILE)'))
+  assert.match(block, /\.filter\(\(r\) => r\.content === String\(AUDIT_IP\)\)/)
+  assert.match(block, /\n\s+return\n/)
+  assert.doesNotMatch(block, /patchRecord|createRecord|deleteRecord|writeFileSync/)
+})

@@ -6,7 +6,9 @@
 #     `miyagi-medusa` over the external `edge` network; Postgres and Redis sit on `miyagi` only.
 #   - every container has a memory and CPU cap. Measured on Cloud Run (2026-10-15, 30d p99): medusa-web
 #     ≤62% of 1 GiB and ≤0.6 vCPU, miyagi-web hits 93–100% of 1 GiB (hence 1.5G here), Postgres ~0.8 GB
-#     on a 1.7 GB db-g1-small, Redis ~9 MB. The caps keep a spike from taking panfleto down with it.
+#     on a 1.7 GB db-g1-small, Redis ~9 MB. The MEMORY caps (4.4 GB of 12) are what protect panfleto. The
+#     CPU caps sum to 1.75 of the box's 2 OCPUs, so Miyagi alone can never take every core; within that,
+#     each container can burst past its measured p95.
 #   - state lives on the /data block volume, so the instance itself stays disposable.
 #
 # Images are built for linux/arm64 in each app repo's `image-arm64.yml` and pulled by commit sha;
@@ -30,7 +32,7 @@ services:
       -c effective_cache_size=1GB
       -c max_connections=60
     mem_limit: 1536m
-    cpus: 1.0
+    cpus: 0.5
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U medusa"]
       interval: 10s
@@ -47,7 +49,7 @@ services:
     volumes:
       - /data/miyagi/redis:/data
     mem_limit: 128m
-    cpus: 0.25
+    cpus: 0.1
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -67,13 +69,16 @@ services:
       DATABASE_URL: postgres://medusa:${POSTGRES_PASSWORD}@postgres:5432/medusa
       REDIS_URL: redis://redis:6379
       PORT: "8080"
-      # `server` until the cutover (S2): HTTP only, NO scheduled jobs and NO subscribers. The dark copy
-      # runs against a restored copy of prod with production credentials, and its jobs talk to the real
-      # world (Mercado Libre reconciliation, the sweepstakes draw, checkout reconciliation). The cutover
-      # sets MEDUSA_WORKER_MODE=shared in .env, which is what Cloud Run runs.
+      # `server` until the cutover (S2): HTTP only — scheduled jobs do not run and NO event is PROCESSED. The
+      # dark copy runs on a restored copy of prod with production credentials, and its jobs and subscribers
+      # reach the real world (Mercado Libre reconciliation, the sweepstakes draw, emails).
+      # ⚠️ Server mode still ENQUEUES events into Redis (Medusa 2.21: the redis event bus adds to its queue in
+      # every mode; only worker/shared mode starts the Worker that drains it — PR #209 review). So the
+      # cutover FLUSHES Redis before it sets MEDUSA_WORKER_MODE=shared (sprint-2 S2.3); otherwise the first
+      # shared-mode boot would fire every dark-period event at real people.
       MEDUSA_WORKER_MODE: ${MEDUSA_WORKER_MODE:-server}
     mem_limit: 1280m
-    cpus: 1.0
+    cpus: 0.6
     networks:
       miyagi: {}
       edge:
@@ -91,7 +96,7 @@ services:
       PORT: "8080"
       HOSTNAME: 0.0.0.0
     mem_limit: 1536m
-    cpus: 1.0
+    cpus: 0.55
     networks:
       miyagi: {}
       edge:

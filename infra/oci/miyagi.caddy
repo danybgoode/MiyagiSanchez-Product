@@ -20,11 +20,22 @@
 	}
 }
 
+# Every request reaches this box through Cloudflare, so the TCP peer is a Cloudflare edge. Without this,
+# Caddy forwards THAT address as X-Forwarded-For and every visitor behind one Cloudflare location shares a
+# single rate-limit bucket (storefront lib/ratelimit.ts keys on x-real-ip / XFF[0]; Medusa's request-ip
+# reads XFF first) — on Cloud Run the first XFF entry was the real client. CF-Connecting-IP is the client.
+(miyagi_upstream) {
+	header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+	header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+}
+
 # The commerce API (Medusa): the storefront, agents/UCP clients, Stripe and Clerk webhooks.
 api.miyagisanchez.com {
 	tls /etc/caddy/certs/miyagisanchez.pem /etc/caddy/certs/miyagisanchez.key
 	import miyagi_headers
-	reverse_proxy miyagi-medusa:8080
+	reverse_proxy miyagi-medusa:8080 {
+		import miyagi_upstream
+	}
 }
 
 # The storefront (Next.js): apex, www, every seller subdomain, and the shadow host `oci.` used before
@@ -32,7 +43,9 @@ api.miyagisanchez.com {
 miyagisanchez.com, *.miyagisanchez.com {
 	tls /etc/caddy/certs/miyagisanchez.pem /etc/caddy/certs/miyagisanchez.key
 	import miyagi_headers
-	reverse_proxy miyagi-web:8080
+	reverse_proxy miyagi-web:8080 {
+		import miyagi_upstream
+	}
 }
 
 # mschz.org — the printed-QR short-link redirector, served by the storefront app (its own zone, so its
@@ -40,17 +53,14 @@ miyagisanchez.com, *.miyagisanchez.com {
 mschz.org, www.mschz.org {
 	tls /etc/caddy/certs/mschz.pem /etc/caddy/certs/mschz.key
 	import miyagi_headers
-	reverse_proxy miyagi-web:8080
+	reverse_proxy miyagi-web:8080 {
+		import miyagi_upstream
+	}
 }
 
-# Tenant custom domains arrive through Cloudflare for SaaS with the TENANT's hostname as SNI and Host.
-# Any HTTPS host no other block on this Caddy claims lands here and is rewritten by the storefront's own
-# middleware (custom-domain lookup). Cloudflare validates this origin against the fallback origin
-# `cname.miyagisanchez.com`, which the wildcard cert covers; panfleto's Caddyfile sets
-# `fallback_sni cname.miyagisanchez.com` so an unknown SNI is answered with that cert instead of failing
-# the handshake. Verified per host family with openssl before DNS moves (S2.4).
-https:// {
-	tls /etc/caddy/certs/miyagisanchez.pem /etc/caddy/certs/miyagisanchez.key
-	import miyagi_headers
-	reverse_proxy miyagi-web:8080
-}
+# Tenant custom domains (Cloudflare for SaaS) are NOT served by a catch-all. An `https://` block here took
+# over the whole Caddy: Caddy turned it into a matcher-less TLS connection policy pinned to Miyagi's cert,
+# and panfleto.win, app.panfleto.win and aomx's host were served `CN=miyagisanchez.com` (PR #209 review,
+# reproduced with openssl). On a shared edge, Miyagi claims only hostnames it NAMES. None are live today
+# (7-day census, S2.1: zero tenant-domain requests reached Cloud Run); when one moves, it gets its own block
+# with the wildcard cert, and the S2.4 handshake check covers it.

@@ -123,3 +123,49 @@ test('no secret reaches argv: PGPASSWORD by name only, the Telegram token via cu
   }
   assert.doesNotMatch(read('backup.sh'), /-e PGPASSWORD="/)
 })
+
+// ── PR #209 fresh-review fixes ────────────────────────────────────────────────────────────────────────────
+test('miyagi.caddy names every host it serves — no catch-all that hijacks the shared Caddy\'s TLS', () => {
+  // An `https://` (or `:443`, `*`, `https://*`) site block became a matcher-less TLS policy pinned to Miyagi's
+  // cert, and panfleto.win / aomx's host were served CN=miyagisanchez.com — reproduced with openssl.
+  const addresses = [...caddy.matchAll(/^([^\s#(][^{\n]*)\{\s*$/gm)].map((m) => m[1].trim())
+  assert.ok(addresses.length >= 3, 'site blocks were parsed')
+  for (const a of addresses) {
+    for (const host of a.split(',').map((h) => h.trim())) {
+      assert.match(host, /^(\*\.)?[a-z0-9-]+(\.[a-z0-9-]+)+$/, `"${host}" is not a named host`)
+    }
+  }
+  assert.doesNotMatch(read('miyagi.caddy'), /fallback_sni/)
+})
+
+test('the upstreams receive the real client IP, not the Cloudflare edge', () => {
+  assert.match(caddy, /header_up X-Real-IP \{http\.request\.header\.CF-Connecting-IP\}/)
+  assert.match(caddy, /header_up X-Forwarded-For \{http\.request\.header\.CF-Connecting-IP\}/)
+  const proxies = [...caddy.matchAll(/reverse_proxy \S+ \{\n\s+import miyagi_upstream/g)].length
+  assert.equal(proxies, [...caddy.matchAll(/reverse_proxy /g)].length, 'a reverse_proxy without miyagi_upstream')
+})
+
+test('CPU caps leave the 2-OCPU box at least a quarter core for panfleto', () => {
+  const cpus = [...compose.matchAll(/\n    cpus: ([\d.]+)/g)].reduce((s, m) => s + Number(m[1]), 0)
+  assert.ok(cpus <= 1.75 + 1e-9, `${cpus} CPUs of caps`)
+})
+
+test('update.sh validates the site file inside Caddy and restores the previous one on failure', () => {
+  const u = read('update.sh')
+  assert.match(u, /caddy validate --config \/etc\/caddy\/Caddyfile/)
+  assert.match(u, /mv "\$SITE\.prev" "\$SITE"; else rm -f "\$SITE"/)
+  assert.ok(u.indexOf('caddy validate') < u.indexOf('caddy reload'), 'validate runs before reload')
+})
+
+test('dark-period backups never share the prod prefix; every failure path alerts', () => {
+  const b = read('backup.sh')
+  assert.match(b, /KEY="\$\{BACKUP_PREFIX:-medusa-oci\}\//)
+  assert.match(b, /trap 'alert "unexpected failure at line \$LINENO"' ERR/)
+  assert.match(read('bootstrap.sh'), /BACKUP_PREFIX='medusa-oci'/)
+})
+
+test('no secret reaches argv in update.sh or bootstrap.sh', () => {
+  assert.doesNotMatch(read('update.sh'), /-v pw="/)
+  assert.match(read('update.sh'), /\\getenv pw BACKUP_RO_PASSWORD/)
+  assert.doesNotMatch(read('bootstrap.sh'), /-H "Authorization: Bearer \$CF_TOKEN"/)
+})

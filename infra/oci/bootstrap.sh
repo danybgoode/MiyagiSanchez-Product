@@ -84,17 +84,24 @@ if want env; then
     sudo test -s "$F" || { printf "POSTGRES_PASSWORD=%s\nBACKUP_RO_PASSWORD=%s\n" "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" | sudo install -m 0600 /dev/stdin "$F"; }
     sudo grep -q "^BACKUP_RO_PASSWORD=" "$F" || printf "BACKUP_RO_PASSWORD=%s\n" "$(openssl rand -hex 24)" | sudo tee -a "$F" >/dev/null
     sudo chown ubuntu "$F"'
+  # Each file is BUFFERED and checked before it is written: piping straight into write_vm would replace a good
+  # file with an empty or partial one when gcloud / a secret read failed mid-stream (pipefail only reports
+  # afterwards), and a failed $(secret …) inside a printf argument does not trip `set -e` at all.
   step "medusa.env ← Cloud Run medusa-web"
-  service_env medusa-web 'DATABASE_URL|REDIS_URL|PORT|MEDUSA_WORKER_MODE' | write_vm /opt/miyagi/infra/oci/medusa.env
+  BUF="$(service_env medusa-web 'DATABASE_URL|REDIS_URL|PORT|MEDUSA_WORKER_MODE')"
+  printf '%s\n' "$BUF" | grep -q "^STRIPE_SECRET_KEY='sk_" || { echo "✗ medusa.env looks incomplete — not written" >&2; exit 1; }
+  printf '%s\n' "$BUF" | write_vm /opt/miyagi/infra/oci/medusa.env
   step "web.env ← Cloud Run miyagi-web"
-  service_env miyagi-web 'PORT|MEDUSA_STORE_URL' | write_vm /opt/miyagi/infra/oci/web.env
+  BUF="$(service_env miyagi-web 'PORT|MEDUSA_STORE_URL')"
+  printf '%s\n' "$BUF" | grep -q "^CRON_SECRET='." || { echo "✗ web.env looks incomplete — not written" >&2; exit 1; }
+  printf '%s\n' "$BUF" | write_vm /opt/miyagi/infra/oci/web.env
   step "backup.env ← R2 escrow token + Telegram"
-  {
-    printf "R2_BACKUP_BUCKET='miyagi-db-escrow'\nOCI_BUCKET='miyagi-backups'\n"
-    for s in R2_BACKUP_ACCESS_KEY_ID R2_BACKUP_SECRET_ACCESS_KEY R2_BACKUP_ENDPOINT TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID; do
-      printf "%s='%s'\n" "$s" "$(secret "$s")"
-    done
-  } | write_vm /opt/miyagi/infra/oci/backup.env
+  BUF="$(printf "R2_BACKUP_BUCKET='miyagi-db-escrow'\nOCI_BUCKET='miyagi-backups'\nBACKUP_PREFIX='medusa-oci'")"
+  for s in R2_BACKUP_ACCESS_KEY_ID R2_BACKUP_SECRET_ACCESS_KEY R2_BACKUP_ENDPOINT TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID; do
+    v="$(secret "$s")"; [ -n "$v" ] || { echo "✗ secret $s is empty — backup.env not written" >&2; exit 1; }
+    BUF="$BUF"$'\n'"$s='$v'"
+  done
+  printf '%s\n' "$BUF" | write_vm /opt/miyagi/infra/oci/backup.env
   # backup.sh reads BACKUP_RO_PASSWORD from backup.env; keep it in step with .env without it passing here.
   ssh_vm 'P=$(sudo grep "^BACKUP_RO_PASSWORD=" /opt/miyagi/infra/oci/.env | cut -d= -f2); printf "BACKUP_RO_PASSWORD=%s\n" "$P" | sudo tee -a /opt/miyagi/infra/oci/backup.env >/dev/null'
   ssh_vm 'sudo chown ubuntu /opt/miyagi/infra/oci/{medusa,web,backup}.env'
@@ -109,7 +116,9 @@ if want certs; then
     san="$(echo "$2" | tr ',' '\n' | sed 's/^/DNS:/' | paste -sd, -)"
     csr="$(ssh_vm "sudo openssl req -new -newkey rsa:2048 -nodes -keyout /opt/edge/certs/$1.key -subj '/CN=${2%%,*}' -addext 'subjectAltName=$san' 2>/dev/null")"   # key stays 0600 root: Caddy runs as root
     body="$(python3 -c 'import json,sys; print(json.dumps({"hostnames": sys.argv[1].split(","), "requested_validity": 5475, "request_type": "origin-rsa", "csr": sys.stdin.read()}))' "$2" <<<"$csr")"
-    curl -fsS https://api.cloudflare.com/client/v4/certificates -H "Authorization: Bearer $CF_TOKEN" \
+    # The token goes to curl as a config on stdin, never in argv.
+    printf 'header = "Authorization: Bearer %s"\n' "$CF_TOKEN" \
+      | curl -fsS -K - https://api.cloudflare.com/client/v4/certificates \
       -H 'Content-Type: application/json' --data "$body" \
       | python3 -c 'import json,sys; j=json.load(sys.stdin); assert j["success"], j["errors"]; print(j["result"]["certificate"])' \
       | ssh_vm "sudo install -m 0644 /dev/stdin /opt/edge/certs/$1.pem"

@@ -21,9 +21,13 @@ STAMP="$(date -u +%Y-%m-%dT%H%M%SZ)"
 DAY="$(date -u +%Y/%m/%d)"
 FILE="medusa-${STAMP}.dump.gz"
 LOCAL="/data/miyagi/backups/${FILE}"
-KEY="medusa/${DAY}/${FILE}"
+# `medusa-oci/` until the cutover: the dark copy's dumps must never sit, indistinguishable, beside the real
+# prod dumps the GCP job writes to `medusa/` in the same write-once bucket (PR #209 review). The cutover sets
+# BACKUP_PREFIX=medusa in backup.env, when this VM becomes prod and the GCP job is deleted.
+KEY="${BACKUP_PREFIX:-medusa-oci}/${DAY}/${FILE}"
 
 alert() {
+  trap - ERR
   echo "ALERT: $*" >&2
   if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_CICD_CHAT_ID:-}" ]; then
     printf 'url = "https://api.telegram.org/bot%s/sendMessage"\n' "$TELEGRAM_BOT_TOKEN" \
@@ -32,6 +36,10 @@ alert() {
   fi
   exit 1
 }
+
+# Any command that dies under `set -e` without calling alert() — a failed substitution, stat — still pages:
+# the header's "any failure pings Telegram" has to be true of every path (PR #209 review).
+trap 'alert "unexpected failure at line $LINENO"' ERR
 
 cd "$DEPLOY"
 # `-e PGPASSWORD` with NO value: docker copies it from this process's environment, so the password never

@@ -28,7 +28,9 @@ trap 'docker rm -f "$NAME" >/dev/null 2>&1 || true' EXIT
 [ -n "$DUMP" ] || fail "no local dump in /data/miyagi/backups"
 docker run -d --name "$NAME" --network none -e POSTGRES_PASSWORD=drill -e POSTGRES_DB=drill \
   --memory 768m --cpus 0.5 postgres:17-alpine >/dev/null
-for _ in $(seq 1 30); do docker exec "$NAME" pg_isready -U postgres >/dev/null 2>&1 && break; sleep 2; done
+# Over TCP, not the unix socket: during init the entrypoint runs a temporary socket-only server that answers
+# pg_isready before the real server (and database `drill`) is up (PR #209 review).
+for _ in $(seq 1 60); do docker exec "$NAME" pg_isready -h 127.0.0.1 -U postgres -d drill >/dev/null 2>&1 && break; sleep 2; done
 gunzip -c "$DUMP" | docker exec -i "$NAME" pg_restore --no-owner --no-privileges -U postgres -d drill \
   || fail "pg_restore of $(basename "$DUMP") failed"
 

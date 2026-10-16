@@ -100,7 +100,9 @@ stories:
 ## Decisions made while building (2026-10-15)
 - **D9 · `infra/oci/`, not `deploy/oci/`.** The root repo's CI only watches `infra/**`; the stack's
   invariants (`infra/oci/test/oci-stack.test.mjs`) run in the same `guards` step as `infra/gcp/test`.
-- **D10 · The dark copy runs Medusa in `server` mode** (HTTP only — no scheduled jobs, no subscribers).
+- **D10 · The dark copy runs Medusa in `server` mode** (HTTP only — jobs do not run and no event is
+  processed). ⚠️ Corrected by the PR #209 review: server mode still ENQUEUES events into Redis, so the cutover
+  must flush Redis before switching to `shared` (sprint-2 S2.3).
   It runs on a restored copy of prod with production credentials, and its jobs reach the real world
   (Mercado Libre reconciliation, the sweepstakes draw). So S1.5 proves Redis by Medusa booting on its
   Redis event bus, workflow engine and locking; **"an order reaches a subscriber" moves to S2.6**, after
@@ -113,6 +115,12 @@ stories:
 - **D13 · Credentials move in ONE operator-run step, `infra/oci/bootstrap.sh`.** It reads Secret Manager as
   Daniel and streams each value into a 0600 file on the VM (owned by the deploy user, which the `docker` group already makes root-equivalent); Origin CA keys are generated on the VM.
   The agent never handles a secret (the auto-mode classifier refuses it, correctly).
+
+- **D14 · Miyagi's Caddy file names every host; no catch-all.** The first draft's `https://` catch-all (for
+  Cloudflare-for-SaaS tenant domains) took over the SHARED Caddy's TLS: panfleto.win, app.panfleto.win and
+  aomx's host were served `CN=miyagisanchez.com` — found by the fresh reviewer, reproduced and then proven
+  fixed with `openssl s_client` per host on the VM. Cost today: none — the S2.1 census saw zero tenant-domain
+  requests. When the first tenant domain moves, it gets its own named block.
 
 ## Sprint QA
 - **api spec(s):** a pure spec on the build-args derivation (S1.2: parity with `cloudbuild.yaml`), a spec on `db-backup.sh`'s target dispatch (S1.1: `medusa` dumps, unknown target fails loud), each observed red once by mutation.

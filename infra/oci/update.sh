@@ -49,18 +49,31 @@ done
 docker compose up -d --remove-orphans
 
 # The backup's own read-only role (pg_read_all_data) — backup.sh never dumps as the app's role. Idempotent;
-# the password comes from .env as a psql variable (briefly in this single-admin host's process list, never in a log).
-BACKUP_RO_PASSWORD="$(grep '^BACKUP_RO_PASSWORD=' "$ENV_FILE" | cut -d= -f2-)"
-docker compose exec -T postgres psql -q -v ON_ERROR_STOP=1 -U medusa -d medusa -v pw="$BACKUP_RO_PASSWORD" <<'SQL'
+# the password reaches psql by environment NAME (`-e` with no value, then \getenv), never on a command line.
+BACKUP_RO_PASSWORD="$(grep '^BACKUP_RO_PASSWORD=' "$ENV_FILE" | cut -d= -f2-)" \
+docker compose exec -T -e BACKUP_RO_PASSWORD postgres psql -q -v ON_ERROR_STOP=1 -U medusa -d medusa <<'SQL'
+\getenv pw BACKUP_RO_PASSWORD
 SELECT format('CREATE ROLE backup_ro LOGIN PASSWORD %L', :'pw')
   WHERE NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'backup_ro') \gexec
 SELECT format('ALTER ROLE backup_ro PASSWORD %L', :'pw') \gexec
 GRANT pg_read_all_data TO backup_ro;
 SQL
 echo "✓ backup_ro role"
-install -m 0644 "$DEPLOY/miyagi.caddy" /opt/edge/sites/miyagi.caddy
-docker exec deploy-caddy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null
-echo "✓ caddy reloaded"
+# The site file goes into a directory the SHARED Caddy imports, so a bad one must never stay there: a
+# failed reload keeps the old config live, but the next restart of panfleto's Caddy (its own deploy, a
+# reboot) would not start, taking panfleto and aomx down with Miyagi (PR #209 review). Install, VALIDATE
+# inside the running container, and put the previous file back on any failure.
+SITE=/opt/edge/sites/miyagi.caddy
+[ -f "$SITE" ] && cp "$SITE" "$SITE.prev"
+install -m 0644 "$DEPLOY/miyagi.caddy" "$SITE"
+if ! docker exec deploy-caddy-1 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1 \
+   || ! docker exec deploy-caddy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null; then
+  if [ -f "$SITE.prev" ]; then mv "$SITE.prev" "$SITE"; else rm -f "$SITE"; fi
+  echo "✗ Caddy rejected miyagi.caddy — previous site file restored; Caddy is unchanged" >&2
+  exit 1
+fi
+rm -f "$SITE.prev"
+echo "✓ caddy validated + reloaded"
 
 # Wait for both apps from INSIDE their containers — a 200 here is the app, not Caddy or Cloudflare.
 wait_for() { # service url

@@ -14,7 +14,9 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 install -d -m 0700 -o 70 -g 70 /data/miyagi/postgres     # 70 = postgres uid in postgres:17-alpine
 install -d -m 0750 /data/miyagi/redis /data/miyagi/backups
-install -d -m 0755 /opt/edge/sites
+# Owned by the deploy user: update.sh (run as ubuntu, not sudo) installs Miyagi's site file here. ubuntu is
+# already root-equivalent through the docker group, so this widens nothing.
+install -d -m 0755 -o ubuntu -g ubuntu /opt/edge/sites
 install -d -m 0750 /opt/edge/certs
 
 docker network inspect edge >/dev/null 2>&1 || docker network create edge >/dev/null

@@ -157,11 +157,39 @@ test('update.sh validates the site file inside Caddy and restores the previous o
   assert.ok(u.indexOf('caddy validate') < u.indexOf('caddy reload'), 'validate runs before reload')
 })
 
-test('dark-period backups never share the prod prefix; every failure path alerts', () => {
+test('since the cutover the backup writes the PROD prefix, by default and from bootstrap; every failure alerts', () => {
+  // The dark period wrote `medusa-oci/`; on 2026-10-16 this VM became prod. A provisioner default IS the live
+  // config, so neither the script's fallback nor bootstrap may name the dark-period prefix any more.
   const b = read('backup.sh')
-  assert.match(b, /KEY="\$\{BACKUP_PREFIX:-medusa-oci\}\//)
+  assert.match(b, /ship medusa "\$\{BACKUP_PREFIX:-medusa\}"/)
+  assert.doesNotMatch(b + read('bootstrap.sh'), /BACKUP_PREFIX='medusa-oci'|:-medusa-oci\}/)
+  assert.match(read('bootstrap.sh'), /BACKUP_PREFIX='medusa'/)
   assert.match(b, /trap 'alert "unexpected failure at line \$LINENO"' ERR/)
-  assert.match(read('bootstrap.sh'), /BACKUP_PREFIX='medusa-oci'/)
+  assert.match(b, /^set -Eeuo pipefail$/m, 'errtrace: the ERR trap must reach inside ship()')
+})
+
+test('the VM also backs up Supabase, under the GCP job\'s own `supabase/` prefix (one continuous series)', () => {
+  const b = read('backup.sh')
+  assert.match(b, /ship supabase supabase\n/)
+  assert.match(b, /\[ -n "\$\{SUPABASE_BACKUP_DSN:-\}" \] \|\| alert/)
+  assert.match(read('bootstrap.sh'), /TELEGRAM_CICD_CHAT_ID \\\n\s+SUPABASE_BACKUP_DSN; do/)
+})
+
+test('the Supabase DSN never reaches argv: split into PG* vars, passed to the container by NAME', () => {
+  const b = read('backup.sh')
+  assert.match(b, /docker compose exec -T -e PGHOST -e PGPORT -e PGUSER -e PGPASSWORD -e PGDATABASE -e PGSSLMODE \\/)
+  assert.doesNotMatch(b, /pg_dump[^\n]*(--dbname|-d )/)
+  assert.doesNotMatch(b, /-e PG[A-Z]+=/)
+  // `eval "$(cmd)"` evaluates "" when cmd fails and exits 0 — the parse must be captured, checked, then eval'd.
+  assert.match(b, /SB_ENV="\$\(SUPABASE_BACKUP_DSN=/)
+  assert.match(b, /\|\| alert "SUPABASE_BACKUP_DSN does not parse"\neval "\$SB_ENV"/)
+})
+
+test('bootstrap never rebuilds medusa.env / web.env on a full run — their Cloud Run sources are deleted', () => {
+  const b = read('bootstrap.sh')
+  assert.match(b, /\nif \[ "\$ONLY" = env \]; then\n/)
+  assert.doesNotMatch(b, /\nif want env; then/)
+  assert.match(b, /\nif want backup-env; then\n/)
 })
 
 test('no secret reaches argv in update.sh or bootstrap.sh', () => {

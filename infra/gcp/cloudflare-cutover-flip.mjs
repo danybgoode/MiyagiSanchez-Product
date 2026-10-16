@@ -17,6 +17,7 @@
 //   node infra/gcp/cloudflare-cutover-flip.mjs --apply                      # actually flip
 //   node infra/gcp/cloudflare-cutover-flip.mjs --domain mschz.org --apply   # the redirector domain
 //   node infra/gcp/cloudflare-cutover-flip.mjs --rollback <snapshot-file>   # revert from a snapshot
+//   node infra/gcp/cloudflare-cutover-flip.mjs --target-ip <vm-reserved-ip> --apply  # point at the Oracle VM (S2.5)
 //
 // Credentials — env var first, else `gcloud secrets versions access latest` against project
 // miyagisanchez-prod: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID (same as
@@ -157,6 +158,18 @@ function groupByName(records) {
 }
 
 ;(async () => {
+  // --audit-ip <ip> (read-only, miyagi-to-oracle-vm S2.1): every record in the zone whose content IS that IP,
+  // whatever its name. The flip selects records BY NAME, so an explicit record outside the selected names
+  // keeps pointing at the old origin — the dry-run with guessed names found cname. and gcp. that way; this
+  // lists the population instead of the names we remembered (LEARNINGS, gcp-account-migration (9)).
+  const AUDIT_IP = arg('audit-ip', undefined)
+  if (AUDIT_IP) {
+    const zone = await resolveZone(DOMAIN)
+    const hits = (await fetchAllRecords(zone.id)).filter((r) => r.content === String(AUDIT_IP))
+    console.log(`▶ ${DOMAIN}: ${hits.length} record(s) pointing at ${AUDIT_IP}`)
+    for (const r of hits) console.log(`  ${r.type} ${r.name} (proxied: ${r.proxied})`)
+    return
+  }
   if (ROLLBACK_FILE) {
     console.log(`▶ Rolling back from snapshot ${ROLLBACK_FILE}`)
     const snapshot = JSON.parse(readFileSync(ROLLBACK_FILE, 'utf8'))
@@ -177,8 +190,16 @@ function groupByName(records) {
   }
 
   console.log(`▶ Cutover flip for ${DOMAIN} (apex + wildcard${EXTRA_HOSTS.length ? ' + ' + EXTRA_HOSTS.join('/') : ''})`)
-  const albIp = resolveAlbStaticIp()
-  console.log(`  ALB static IP: ${albIp}`)
+  // --target-ip (miyagi-to-oracle-vm S2.5): the origin moves OFF the GCP ALB to the Oracle VM. Without an
+  // explicit target this tool resolves the SOURCE environment's ALB IP and "flips" DNS to where it already
+  // points — indistinguishable from success (LEARNINGS, gcp-account-migration (3)). The rollback path is
+  // the snapshot file, or a re-run with no --target-ip (which resolves the ALB again).
+  const TARGET_IP = arg('target-ip', undefined)
+  if (TARGET_IP !== undefined && !/^\d{1,3}(\.\d{1,3}){3}$/.test(String(TARGET_IP))) {
+    console.error(`✗ --target-ip must be an IPv4 address, got ${TARGET_IP}`); process.exit(1)
+  }
+  const albIp = TARGET_IP ? String(TARGET_IP) : resolveAlbStaticIp()
+  console.log(TARGET_IP ? `  target IP (--target-ip): ${albIp}` : `  ALB static IP: ${albIp}`)
 
   const zone = await resolveZone(DOMAIN)
   console.log(`  zone: ${zone.id} (status: ${zone.status})`)

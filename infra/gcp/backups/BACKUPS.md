@@ -1,6 +1,9 @@
 # DB backups — runbook
 
 ## Backup-of-record (since the Oracle VM cutover, 2026-10-16)
+> GCP project `miyagisanchez-prod` was **deleted** on 2026-10-16. Every Cloud Run job, scheduler and secret
+> described below is gone. The only live backup is the VM's `infra/oci/backup.sh`.
+
 Medusa left Cloud SQL for the Oracle VM `panfleto-prod`
 ([`miyagi-to-oracle-vm`](../../../Roadmap/09-platform-infra/miyagi-to-oracle-vm/README.md)). Cloud SQL
 `medusa-pg` was **deleted** on 2026-10-16, and its native backups and PITR went with it.

@@ -1,6 +1,6 @@
 ---
-status: in-progress  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Building      # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: miyagi-to-oracle-vm
 title: "Miyagi on the Oracle VM — move the always-on stack off GCP"
@@ -34,6 +34,10 @@ satisfied_event: null
 build_order: 4       # integer position in the ONE global build sequence — the SSOT once the epic
                      # exists (the seed's value is only a fallback). Fill it in at the betting
                      # table; plain integers, no "#2a" suffixes. See 00-ideas/README.md → Ordering.
+actual_usd: 25.19
+actual_mtok: 72.1
+actual_models: "claude-opus-5-5 ≈$25.19"
+actual_basis: "this machine · 2026-10-16 · 1 session · prices 2026-10-02"
 ---
 
 # Epic: Miyagi on the Oracle VM — move the always-on stack off GCP

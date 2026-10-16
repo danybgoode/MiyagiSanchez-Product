@@ -174,3 +174,10 @@ Env: the Oracle VM, dark · https://oci.miyagisanchez.com
    → panfleto still works (the VM's other tenant was not disturbed).
 
 If any step fails, note the step number + what you saw — that's the bug report.
+
+## Changes
+- danybgoode/miyagi-product-management#206 (S1.1, `6759011`), danybgoode/miyagi-product-management#208,
+  danybgoode/miyagi-product-management#209 (`4480b2c`), danybgoode/miyagi-product-management#210 (`0dcf941`),
+  danybgoode/miyagi-product-management#211 (`7aa4724`)
+- danybgoode/miyagisanchezcommerce#432 (`ca61345`), danybgoode/medusa-bonsai-backend#204 (`1502ad4`)
+- danybgoode/justread#30 (`ffcb9f1`)

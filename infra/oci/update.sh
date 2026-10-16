@@ -17,7 +17,7 @@ ENV_FILE="$DEPLOY/.env"
 cd "$DEPLOY"
 
 for f in .env medusa.env web.env; do
-  [ -s "$f" ] || { echo "✗ infra/oci/$f is missing — run bootstrap.sh from the workstation first" >&2; exit 1; }
+  [ -s "$f" ] || { echo "✗ infra/oci/$f is missing — restore it from Daniel's password manager (0600, owner ubuntu); bootstrap.sh's source is deleted" >&2; exit 1; }
 done
 
 git -C "$ROOT" fetch -q origin main

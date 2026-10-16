@@ -763,6 +763,10 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   resolved the OLD ALB IP and "flipped" DNS to where it already pointed, indistinguishable from
   success until you look at traffic. Before any cutover window: make ids env-overridable, re-derive
   every input against the TARGET, and dry-run against the live system reading the resolved values.
+  *Same family AFTER a teardown (2026-10-16): a provisioner's default IS the live config.* Three scripts
+  still recreated what had just been deleted: the backup provisioner defaulted to the deleted VPC
+  connector, bootstrap wrote the dark-period backup prefix, and bootstrap rebuilt env from deleted
+  Cloud Run services. After deleting infrastructure, re-read every script that could re-provision it.
   (4) **Global-name resources are account-scoped CLAIMS** — GCS bucket names, project ids, and
   Cloud Run domain mappings cannot coexist in two projects; enumerate them at inventory time
   (the fix for `api.`'s domain mapping was moving it onto the ALB as a host rule — architecture
@@ -798,7 +802,11 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   requests by `Host` header and ask who is still knocking."* Run that query before declaring any
   origin retired. This is the third repeat of the same family (see the exact-name selector lesson
   below), and the tooling was never the gap: the flip script already supported `--domain mschz.org`
-  and `--extra-hosts`.
+  and `--extra-hosts`. *Sharpened 2026-10-16 (miyagi-to-oracle-vm):* the ALB's request logging turned
+  out to be OFF, so the census returned **zero**, which is a fact to explain, not "no traffic". It was rebuilt
+  from the backends' own (Cloud Run) request logs. Then audit the DNS zone **by content**
+  (`cloudflare-cutover-flip.mjs --audit-ip <old-ip>`), not by name: that is the query that cannot forget
+  `cname.`/`gcp.`. It reported 0 left after the flip.
   (10) **Order a TLS-fronted cutover cert-first: verify SNI selection at the NEW origin BEFORE
   touching DNS.** `openssl s_client -connect <new-ip>:443 -servername <host>` must already return
   the right SAN set while DNS still points at the old origin — otherwise the first person to prove
@@ -823,6 +831,18 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   did, so nothing was lost) and NOT enough to assert a quiet window. The 2026-07-19 cutover's own
   row-count proof has the same shape and the same limit — it was accepted because the write path was
   independently stopped, not because the diff alone showed it.
+- **Oracle-VM move cluster (2026-10-16, miyagi-to-oracle-vm; full story in that epic's RETROSPECTIVE):**
+  (1) **On a SHARED reverse proxy, one tenant's catch-all site hijacks every tenant's TLS.** A Caddy
+  `https://` / `:443` block becomes a TLS policy with no host matcher; panfleto.win was served
+  `CN=miyagisanchez.com` (reproduced with openssl). Every tenant site file names its hosts, pinned by a spec.
+  (2) **Medusa forces TLS on any non-localhost `DATABASE_URL`,** and a compose service name counts as
+  non-localhost. Medusa crash-looped on "connection timed out" until `?sslmode=disable`.
+  (3) **Medusa `server` mode still ENQUEUES events into Redis.** A dark copy's queue fires at real people on the
+  first `shared` boot, so `FLUSHALL` before switching modes.
+  (4) **One account's `projects list` is not the inventory.** Two projects read as "deleted" because they were
+  absent under lolis8755; they were alive and billing under other accounts. Check each under its OWN credentials.
+  (5) **Before deleting a "Medusa-only" job, read its LIVE targets.** `db-backup` was the only Supabase backup,
+  and the plan had listed it for deletion.
 - **Claude Code's auto-mode permission classifier can flag a `git push origin main` as unauthorized
   AFTER it already landed** — the push itself succeeds (visible on `origin/main`), but a denial message
   attaches to a *later* tool call, reads like it's blocking that unrelated call, and doesn't roll anything

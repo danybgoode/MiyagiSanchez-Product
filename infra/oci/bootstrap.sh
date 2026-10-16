@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-# Workstation-side bootstrap for Miyagi on the Oracle VM — the ONE step that moves credentials.
+# Workstation-side bootstrap for Miyagi on the Oracle VM — the ONE step that moved credentials.
+#
+# ⚠️ HISTORICAL since 2026-10-16: its source, GCP project `miyagisanchez-prod` (Secret Manager + Cloud Run),
+# was DELETED. Every step that reads `secret`/`service_env` now fails. The VM's env files
+# (/opt/miyagi/infra/oci/{.env,medusa.env,web.env,backup.env}) are production's secrets, backed up only in
+# Daniel's password manager. Change a value by editing the VM file (0600, owner ubuntu), then run update.sh.
+# Only the `repo` step still works. `certs` reads CLOUDFLARE_API_TOKEN from Secret Manager too; the Origin CA
+# certs it issued are valid for 15 years, and re-issuing needs that token from the password manager.
 # Run by Daniel from the medusa-bonsai checkout (gcloud on lolis-profile, gh authed, OCI CLI configured):
 #   bash infra/oci/bootstrap.sh            # everything below, idempotent
 #   bash infra/oci/bootstrap.sh --only backup-env # just rewrite backup.env (R2, Telegram, Supabase DSN)

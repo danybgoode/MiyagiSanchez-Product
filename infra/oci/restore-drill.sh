@@ -11,7 +11,8 @@ set -euo pipefail
 DEPLOY=/opt/miyagi/infra/oci
 # shellcheck disable=SC1091
 set -a; . "$DEPLOY/backup.env"; set +a
-DUMP="$(ls -1t /data/miyagi/backups/medusa-*.dump.gz 2>/dev/null | head -1)"
+# `|| true`: with no dump, `ls` fails and pipefail would exit HERE, before the alert below (PR #209 review).
+DUMP="$(ls -1t /data/miyagi/backups/medusa-*.dump.gz 2>/dev/null | head -1 || true)"
 NAME="miyagi-restore-drill-$$"
 TABLES="product product_variant customer cart \"order\" payment_collection"
 

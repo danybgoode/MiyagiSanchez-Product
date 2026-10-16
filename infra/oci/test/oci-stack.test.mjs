@@ -176,3 +176,7 @@ test('bootstrap writes the PROD_-prefixed names image-arm64.yml reads (PR #432 r
   assert.match(b, /gh variable set PROD_NEXT_PUBLIC_SUPABASE_URL --env production/)
   assert.doesNotMatch(b, /gh variable set "\$s"/)
 })
+
+test('a missing dump reaches the drill\'s alert instead of dying in pipefail (PR #209 review)', () => {
+  assert.match(read('restore-drill.sh'), /DUMP="\$\(ls -1t [^\n]*\| head -1 \|\| true\)"/)
+})

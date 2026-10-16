@@ -66,7 +66,12 @@ services:
     # medusa.env is written by infra/oci/bootstrap.sh from Cloud Run's own config + Secret Manager.
     env_file: [./medusa.env]
     environment:
-      DATABASE_URL: postgres://medusa:${POSTGRES_PASSWORD}@postgres:5432/medusa
+      # `sslmode=disable` is load-bearing: Medusa turns on TLS for ANY database URL that does not contain
+      # localhost / 127.0.0.1 / sslmode=disable (@medusajs/utils modules-sdk/load-module-database-config.js).
+      # Cloud SQL accepted that; this Postgres has no TLS, so every boot hung on "Could not connect to the
+      # database … timed out after 10 seconds" (first VM boot, 2026-10-16). The traffic never leaves the
+      # private compose network.
+      DATABASE_URL: postgres://medusa:${POSTGRES_PASSWORD}@postgres:5432/medusa?sslmode=disable
       REDIS_URL: redis://redis:6379
       PORT: "8080"
       # `server` until the cutover (S2): HTTP only — scheduled jobs do not run and NO event is PROCESSED. The

@@ -586,6 +586,14 @@ The ad-funded local print magazine (México-86 retro aesthetic) — Miyagi's fir
   Cloud Run, exact-preview Chromium, and production Chromium are green; physical PWA/theme and
   authenticated money/ticket smokes remain explicitly owed. See the three epics'
   `RETROSPECTIVE.md` files and the AI-adoption trial note.
+- ✅ **2026-10-16 — Miyagi runs on the Oracle Always Free VM; GCP is deleted.** The whole always-on stack
+  (Medusa, the storefront, Postgres, Redis) moved from GCP `miyagisanchez-prod` to `panfleto-prod`, an A1 VM in
+  mx-queretaro-1 shared with panfleto and aomx behind one Caddy. The cutover took **about 10 minutes with checkout
+  off**, with zero data loss (rehearsal and final row counts identical). Medusa **and** Supabase now back up
+  nightly to R2 and the OCI bucket, with a weekly restore drill. The GCP project and three spare projects were
+  deleted the same day, so fixed infrastructure cost is ~0. Merges build arm64 images; the deploy is
+  `/opt/miyagi/infra/oci/update.sh` on the VM. **Owed to Daniel: the live money-path smoke.**
+  See [09 › miyagi-to-oracle-vm](09-platform-infra/miyagi-to-oracle-vm/).
 - **2026-07-19 — GCP account migration CUT OVER (S0–S3 in ONE session): miyagisanchez.com now
   serves from `miyagisanchez-prod` under the new `lolis8755` account — zero code changes, zero
   data loss, zero webhook repoints.** The reuse-heaviest epic on the board ran on the existing

@@ -44,7 +44,7 @@ stories:
 ---
 # Miyagi on the Oracle VM — Sprint 3: The GCP teardown
 
-**Status:** ✅ GCP torn down 2026-10-16 ~19:10Z; docs updated
+**Status:** ✅ done 2026-10-16. `miyagisanchez-prod` and the 3 spare projects are DELETE_REQUESTED; nothing of Miyagi runs on GCP
 
 ## Stories
 
@@ -134,10 +134,10 @@ and `print-pdf`. None of them uses the deleted connector or services.
 
 | Project | Account (gcloud config) | State |
 |---|---|---|
-| `miyagisanchez-prod` | lolis8755 (`lolis-profile`) | ACTIVE, billing on. Holds only the services above plus `db-backup` (Supabase) |
-| `project-32471a48-ac44-413f-b51` | lolis8755 (`lolis-profile`) | **ACTIVE, billing on: owed to Daniel to delete** |
-| `gen-lang-client-0305197114` | leroytramafat (`bonsai-profile`) | **ACTIVE, billing on: owed to Daniel to delete** |
-| `loyal-coyote-484117-k9` | danielvp1987 (`n8ngcp`) | **ACTIVE, billing on: owed to Daniel to delete** |
+| `miyagisanchez-prod` | lolis8755 (`lolis-profile`) | ACTIVE at teardown; **DELETE_REQUESTED later the same day** (see below) |
+| `project-32471a48-ac44-413f-b51` | lolis8755 (`lolis-profile`) | ACTIVE at teardown; **DELETE_REQUESTED later the same day** |
+| `gen-lang-client-0305197114` | leroytramafat (`bonsai-profile`) | ACTIVE at teardown; **DELETE_REQUESTED later the same day** |
+| `loyal-coyote-484117-k9` | danielvp1987 (`n8ngcp`) | ACTIVE at teardown; **DELETE_REQUESTED later the same day** |
 
 A project's absence from one account's `projects list` says nothing about a project that belongs to another
 account. A first draft of this table read that absence as "deleted".
@@ -158,3 +158,27 @@ Nothing on this list was deleted by an agent.
   `ssh ubuntu@159.54.158.4 /opt/miyagi/infra/oci/update.sh` deploys it. Making this automatic needs a VM deploy key
   stored as a GitHub secret, which is a credential decision for Daniel.
 
+### After the teardown (same day): GCP emptied, then deleted
+- **Supabase backup moved to the VM** (danybgoode/miyagi-product-management#213, `d8fedd4`). `infra/oci/backup.sh`
+  now dumps Medusa and Supabase. The first run verified `medusa/…T195944Z` at 337,953 B and `supabase/…T195944Z`
+  at 355,041 B in both R2 and OCI; the GCP job's dump an hour earlier was 355,040 B. Then Daniel deleted
+  `db-backup`, `db-backup-daily` and `medusa-ops`.
+- **Deleted as unused:**
+  - `print-pdf` (its only request in 30 days was our probe) and its `print` repo;
+  - both Telegram notifiers (no Cloud Build trigger is left to fire them) and `gcf-artifacts`;
+  - `pmo-smalldocs` (its only request in 30 days was our probe, and its bucket was last written 2026-07-28),
+    its bucket `miyagi-pmo-reports` and `cloud-run-source-deploy`. The `reporthub-as-notion` epic loses its
+    planned host and needs a new one if it resumes.
+- **Secrets.** Daniel copied the VM's 4 env files and the 5 values that existed only in GCP
+  (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `SERPAPI_KEY`, `GOLDEN_BEANS_FLAG_SYNC_KEY_{BACKEND,FRONTEND}`)
+  into his password manager. Those two places are now the **only** sources: `bootstrap.sh` can no longer read Secret
+  Manager.
+- **`miyagisanchez-prod` deleted** (DELETE_REQUESTED 2026-10-16, undeletable for 30 days). So were
+  `project-32471a48-ac44-413f-b51`, `gen-lang-client-0305197114` and `loyal-coyote-484117-k9`, all DELETE_REQUESTED
+  on the same day. What remains on GCP: `n8n-free-server-484118` (the n8n e2-micro; its stopped `n8n-server`
+  was deleted), and `bonsai-analytics-494321` and `miyagisanchezback` with billing off.
+
+## Changes
+- danybgoode/miyagi-product-management#212 (`6d47a23`), danybgoode/miyagi-product-management#213 (`d8fedd4`)
+- danybgoode/miyagisanchezcommerce#433 (`ed9e3fb`), danybgoode/medusa-bonsai-backend#206 (`6d0a883`)
+- danybgoode/justread#31 (`e086f3e`)

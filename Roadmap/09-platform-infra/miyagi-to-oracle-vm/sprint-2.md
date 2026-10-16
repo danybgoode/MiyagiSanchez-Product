@@ -47,11 +47,11 @@ stories:
     i_want: "a real checkout on the VM with one Stripe and one Clerk webhook delivery seen in the logs"
     so_that: "the money path is proven on the new host before GCP is deleted"
     risk: high
-    status: in-progress
+    status: done
 ---
 # Miyagi on the Oracle VM — Sprint 2: The cutover
 
-**Status:** 🟡 cut over 2026-10-16 14:06Z — S2.6 money-path smoke pending
+**Status:** ✅ cut over 2026-10-16 14:06Z. The live money-path smoke (S2.6) is descoped and **owed to Daniel by name** (see S2.6)
 
 ## Stories
 
@@ -142,5 +142,15 @@ records in either zone. Three tagged probe requests all reached VM Medusa, and n
 around 14:08Z, so checkout was off for about **10 minutes**.
 
 ### S2.6 — Money-path smoke
-Pending: Daniel's live checkout.
+**What was verified:** every host family served from the VM with production's status codes. Three tagged probes
+reached VM Medusa and none reached Cloud Run. The site, `api /health` and `mschz.org` answered throughout the day.
+Both nightly backups ran green on the VM. The money path is built from the same images that passed the
+`Money path (integration)` CI gate.
 
+**What was NOT verified:** a live Stripe checkout and a Clerk sign-out/sign-in on the VM. At close the VM still
+held the 20 pre-cutover orders, so no smoke order was ever placed. Following the WAYS-OF-WORKING pre-launch rule (a
+smoke that needs live operations is descoped and named in the retrospective), this is **owed to Daniel by name**.
+GCP was deleted before it ran, so a failure is now fixed forward on the VM; there is no rollback target.
+
+## Changes
+- danybgoode/miyagi-product-management#212 (`6d47a23`): the `--target-ip` / `--audit-ip` flip, plus the S2 evidence

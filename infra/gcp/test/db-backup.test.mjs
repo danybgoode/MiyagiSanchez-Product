@@ -89,10 +89,12 @@ test('a stale `neon` target now fails loud instead of dumping the abandoned copy
   assert.deepEqual(r.dsns, [])
 })
 
-test('the provisioner backs up medusa by default, binds the app DSN, and reaches the private IP', () => {
+test('the provisioner is Supabase-only: Medusa, its DSN and the deleted VPC connector are gone (miyagi-to-oracle-vm S3)', () => {
+  // The provisioner default IS the live config. On 2026-10-16 Cloud SQL + `medusa-conn` were deleted and the VM
+  // took over the Medusa dump; a re-run with the old default would fail on the connector or bind a dead DSN.
   const src = fs.readFileSync(PROVISION, 'utf8')
-  assert.match(src, /BACKUP_TARGETS="\$\{BACKUP_TARGETS:-supabase,medusa\}"/)
-  assert.match(src, /MEDUSA_BACKUP_DSN=DATABASE_URL:latest/)
-  assert.match(src, /--vpc-connector="\$VPC_CONNECTOR" --vpc-egress=private-ranges-only/)
+  assert.match(src, /BACKUP_TARGETS="\$\{BACKUP_TARGETS:-supabase\}"/)
+  assert.doesNotMatch(src, /MEDUSA_BACKUP_DSN=|--vpc-connector|medusa-conn"/)
+  assert.doesNotMatch(src, /REUSED=\([^)]*DATABASE_URL/)
   assert.doesNotMatch(src, /NEON_BACKUP_DSN/)
 })

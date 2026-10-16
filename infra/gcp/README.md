@@ -1,5 +1,16 @@
 # GCP provisioning — Medusa backend
 
+> **RETIRED 2026-10-16. Miyagi's production now runs on the Oracle VM: see [`infra/oci/`](../oci/)**
+> (epic [`miyagi-to-oracle-vm`](../../Roadmap/09-platform-infra/miyagi-to-oracle-vm/README.md)). These
+> resources were deleted: Cloud Run `medusa-web`, `miyagi-web`, `medusa-web-staging`; Cloud SQL `medusa-pg`;
+> Memorystore; `medusa-conn`; the ALB; the Cloud Build triggers; and the `frontend-*` schedulers. **Do not
+> run** `deploy*.sh`, `provision.sh`, `provision-cloudsql.sh`, `provision-frontend.sh`, `provision-alb-frontend.sh`,
+> `provision-scheduler-frontend.sh`, `provision-staging.sh` or `cicd-setup*.sh`: they recreate billing
+> infrastructure for a rail that no longer exists. Their static guards (`test/deploy-invariants*.test.js`,
+> `alb-invariants`, `scheduler-invariants`) still pass because they only read these files. Delete the guards
+> together with the scripts if the scripts are ever removed. What remains live in `miyagisanchez-prod`:
+> `db-backup` (Supabase only, `backups/`), `print-pdf`, `pmo-smalldocs` and the two Telegram notifiers.
+
 Reviewable scripts to stand up the Medusa backend on **Cloud Run (us-east4)**, co-located
 with Neon (AWS us-east-1). Nothing here runs automatically — read, set the variables, then run.
 

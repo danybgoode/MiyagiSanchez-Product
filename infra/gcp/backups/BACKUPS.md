@@ -1,20 +1,19 @@
 # DB backups — runbook
 
-## Backup-of-record (post Cloud SQL cutover, 2026-06-22)
-The commerce DB moved from **Neon (AWS)** to **Cloud SQL (`medusa-pg`, GCP us-east4, private IP)** —
-see [`postgres-neon-to-cloudsql`](../../../Roadmap/09-platform-infra/postgres-neon-to-cloudsql/README.md).
-The backup story split accordingly:
+## Backup-of-record (since the Oracle VM cutover, 2026-10-16)
+Medusa left Cloud SQL for the Oracle VM `panfleto-prod`
+([`miyagi-to-oracle-vm`](../../../Roadmap/09-platform-infra/miyagi-to-oracle-vm/README.md)). Cloud SQL
+`medusa-pg` was **deleted** on 2026-10-16, and its native backups and PITR went with it.
 
 | Database | Backup-of-record | Mechanism |
 |---|---|---|
-| **Commerce** (Cloud SQL `medusa-pg`) | **Cloud SQL native** + **R2 escrow dump** (since 2026-10-15) | **Automated daily backups + 7-day PITR** (`PITR 7/7`, set at provisioning) + on-demand backup + **instance clone**; **plus** the `db-backup` job's `medusa` target — the only copy outside GCP |
-| **Supabase** (non-commerce: conversations, offers, supply) | **R2 escrow dump** (below) | the `db-backup` Cloud Run Job, `supabase` target — **unchanged** |
+| **Commerce** (Medusa, Postgres on the VM) | **R2 escrow dump + OCI bucket** | `infra/oci/backup.sh` (systemd `miyagi-backup.timer`, 04:45 UTC) dumps as `backup_ro` to `r2:miyagi-db-escrow/medusa/YYYY/MM/DD/` **and** OCI bucket `miyagi-backups`, reading each upload back. `miyagi-restore-drill.timer` (Sun 05:30 UTC) restores the newest dump and compares counts. See [`infra/oci/`](../../oci/) |
+| **Supabase** (non-commerce: conversations, offers, supply) | **R2 escrow dump** (below) | the `db-backup` Cloud Run Job, now `BACKUP_TARGETS=supabase` only, with no VPC connector |
 
-Cloud SQL keeps its own backups inside GCP (intra-project, no cross-cloud egress); they're managed +
-verifiable from the console / `gcloud sql backups list --instance=medusa-pg`. A confirmed automated backup
-(`gcloud sql backups list`) is the gate for retiring any Neon-side coverage (Story 3.2). The custom R2
-escrow pipeline below dumps **Supabase and Medusa**; its old `neon` target was retired 2026-10-15 (see
-*Neon target retirement* at the bottom).
+The last Cloud SQL state is `r2:miyagi-db-escrow/medusa/2026/10/16/medusa-2026-10-16T135957Z.dump.gz`,
+the post-freeze final dump. GCP Medusa took no buyer write after it. The *Restore the commerce DB (Cloud SQL
+native)* and *Cloud SQL backup-failure check* sections below are **retired** and kept as history; their
+instance, job and scheduler no longer exist.
 
 ## R2 escrow dump pipeline (Supabase)
 Daily `pg_dump` to a **Cloudflare R2** bucket, as off-platform, vendor-neutral, immutable escrow. Built in
@@ -96,7 +95,7 @@ pg_restore --no-owner --data-only --table=marketplace_offers --dbname="$TARGET_D
 ```
 Use a **PG17** `pg_restore` (matches the dump). RTO is a few minutes for the non-commerce volume.
 
-## Restore the commerce DB (Cloud SQL native)
+## Restore the commerce DB (Cloud SQL native) — RETIRED 2026-10-16, `medusa-pg` deleted
 Cloud SQL restore/PITR is console- or `gcloud`-driven — no R2 dump involved for commerce:
 ```bash
 # List automated backups:
@@ -110,7 +109,7 @@ gcloud sql instances clone medusa-pg medusa-pg-pitr \
 The in-VPC dump/restore mechanics (connector-attached `postgres:17-alpine` Cloud Run Job — a laptop can't
 reach the private IP) are recorded in `postgres-neon-to-cloudsql/sprint-2.md`.
 
-## Cloud SQL backup-failure check (Telegram alert)
+## Cloud SQL backup-failure check (Telegram alert) — RETIRED 2026-10-16, job + scheduler deleted
 Cloud SQL's native automated backups are the commerce backup-of-record, but they have **no alert of their
 own** — a silently-failing nightly backup would be an invisible blind spot. This job closes it (DevOps
 reliability cleanup, Sprint 2): once a day it lists `medusa-pg`'s backups and pings the ops Telegram chat

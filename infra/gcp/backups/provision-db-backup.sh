@@ -10,7 +10,7 @@
 # Prereqs you (Daniel) own first — see infra/gcp/backups/BACKUPS.md:
 #   • An R2 bucket (lock+lifecycle) + a bucket-scoped Object R&W API token → R2_* values below
 #   • A read-only Postgres role on Supabase                 → SUPABASE_DSN below
-#   • Medusa needs no new credential: the job binds the app's own DATABASE_URL secret (see SECRET_FLAGS)
+#   • Medusa is NOT backed up here any more — the Oracle VM's infra/oci/backup.sh dumps it
 #
 # Run:
 #   gcloud config configurations activate lolis-profile     # lolis8755@gmail.com
@@ -32,20 +32,18 @@ BACKUP_SA="${BACKUP_SA:-medusa-backup}"
 BACKUP_SA_EMAIL="${BACKUP_SA}@${PROJECT_ID}.iam.gserviceaccount.com"
 TAG="${TAG:-$(date +%Y%m%d-%H%M%S)}"
 IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${AR_REPO}/db-backup:${TAG}"
-BACKUP_TARGETS="${BACKUP_TARGETS:-supabase,medusa}"
-# Cloud SQL `medusa-pg` has a PRIVATE IP only, so the job egresses through the backend's VPC connector
-# for private ranges and straight out for Supabase/R2 (public).
-VPC_CONNECTOR="${VPC_CONNECTOR:-medusa-conn}"
+# Supabase only since 2026-10-16: Cloud SQL `medusa-pg` and its `medusa-conn` VPC connector were deleted when
+# Medusa moved to the Oracle VM (miyagi-to-oracle-vm S3), and the VM's own infra/oci/backup.sh now dumps Medusa
+# to the same bucket. This provisioner's default IS the live config: a re-run with the old `supabase,medusa`
+# + connector default would fail on the missing connector, or dump a DSN that no longer exists.
+BACKUP_TARGETS="${BACKUP_TARGETS:-supabase}"
 R2_BUCKET="${R2_BACKUP_BUCKET:-miyagi-db-escrow}"
 RETENTION_DAYS="${RETENTION_DAYS:-30}"
 
 # Secret shells (values populated from env below, or left empty for later).
 SECRETS=(SUPABASE_BACKUP_DSN R2_BACKUP_ACCESS_KEY_ID R2_BACKUP_SECRET_ACCESS_KEY R2_BACKUP_ENDPOINT)
-# Reused (already exist): TELEGRAM_BOT_TOKEN, TELEGRAM_CICD_CHAT_ID, and DATABASE_URL — the Medusa
-# app's own DSN. Binding it rather than copying it into a MEDUSA_BACKUP_DSN secret means a rotation can
-# never leave the backup on a stale password; the trade-off is a read-write role, accepted because the
-# Cloud SQL instance is retired by miyagi-to-oracle-vm S3 (the VM then dumps its own local Postgres).
-REUSED=(TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID DATABASE_URL)
+# Reused (already exist): TELEGRAM_BOT_TOKEN, TELEGRAM_CICD_CHAT_ID.
+REUSED=(TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID)
 
 say() { printf '\n\033[1;36m▶ %s\033[0m\n' "$*"; }
 add_version() { printf '%s' "$2" | gcloud secrets versions add "$1" --data-file=- >/dev/null; }
@@ -74,7 +72,7 @@ say "Secret shells + accessor for $BACKUP_SA"
 for s in "${SECRETS[@]}"; do
   gcloud secrets describe "$s" >/dev/null 2>&1 || gcloud secrets create "$s" --replication-policy=automatic
 done
-# Reused secrets are never created here: an empty DATABASE_URL shell on a fresh or wrong project would
+# Reused secrets are never created here: an empty TELEGRAM_* shell on a fresh or wrong project would
 # provision "fine" and fail only at the first nightly run. Absent ⇒ stop now, naming it.
 for s in "${REUSED[@]}"; do
   gcloud secrets describe "$s" >/dev/null 2>&1 || { echo "✗ reused secret $s does not exist in $PROJECT_ID — provision the app first" >&2; exit 1; }
@@ -98,8 +96,8 @@ say "Building $IMAGE (context infra/gcp/backups)"
 gcloud builds submit infra/gcp/backups --tag "$IMAGE"
 
 say "Creating/updating Cloud Run Job $JOB"
-SECRET_FLAGS="SUPABASE_BACKUP_DSN=SUPABASE_BACKUP_DSN:latest,MEDUSA_BACKUP_DSN=DATABASE_URL:latest,R2_BACKUP_ACCESS_KEY_ID=R2_BACKUP_ACCESS_KEY_ID:latest,R2_BACKUP_SECRET_ACCESS_KEY=R2_BACKUP_SECRET_ACCESS_KEY:latest,R2_BACKUP_ENDPOINT=R2_BACKUP_ENDPOINT:latest,TELEGRAM_BOT_TOKEN=TELEGRAM_BOT_TOKEN:latest,TELEGRAM_CICD_CHAT_ID=TELEGRAM_CICD_CHAT_ID:latest"
-# BACKUP_TARGETS itself contains a comma ("supabase,medusa"), so use gcloud's
+SECRET_FLAGS="SUPABASE_BACKUP_DSN=SUPABASE_BACKUP_DSN:latest,R2_BACKUP_ACCESS_KEY_ID=R2_BACKUP_ACCESS_KEY_ID:latest,R2_BACKUP_SECRET_ACCESS_KEY=R2_BACKUP_SECRET_ACCESS_KEY:latest,R2_BACKUP_ENDPOINT=R2_BACKUP_ENDPOINT:latest,TELEGRAM_BOT_TOKEN=TELEGRAM_BOT_TOKEN:latest,TELEGRAM_CICD_CHAT_ID=TELEGRAM_CICD_CHAT_ID:latest"
+# BACKUP_TARGETS can contain a comma (e.g. "supabase,medusa"), so use gcloud's
 # custom-delimiter syntax (^|^ -> "|" separates the k=v pairs) or the comma is
 # parsed as a dict separator and job create fails with "Bad syntax for dict arg".
 ENV_FLAGS="^|^BACKUP_TARGETS=${BACKUP_TARGETS}|R2_BACKUP_BUCKET=${R2_BUCKET}|RETENTION_DAYS=${RETENTION_DAYS}"
@@ -109,7 +107,6 @@ gcloud run jobs "$JOB_ACTION" "$JOB" \
   --service-account="$BACKUP_SA_EMAIL" \
   --set-env-vars="$ENV_FLAGS" \
   --set-secrets="$SECRET_FLAGS" \
-  --vpc-connector="$VPC_CONNECTOR" --vpc-egress=private-ranges-only \
   --max-retries=1 --task-timeout=900s --memory=512Mi
 
 say "Daily Cloud Scheduler $SCHED_JOB ($CRON UTC) → runs the job"

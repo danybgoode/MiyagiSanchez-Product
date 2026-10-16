@@ -12,46 +12,46 @@ stories:
     i_want: "7 days of ALB request logs grouped by `Host` header, committed here as the cutover list"
     so_that: "no host is missed the way `mschz.org`, `cname.` and `gcp.` were last time"
     risk: high
-    status: planned
+    status: done
   - id: S2.2
     title: "A timed rehearsal"
     as_a: "the platform"
     i_want: "a full rehearsal dump (`sql export --offload`) and restore on the VM, timed"
     so_that: "the maintenance window is a measured number"
     risk: high
-    status: planned
+    status: done
   - id: S2.3
     title: "Freeze, final dump, restore"
     as_a: "the product owner"
     i_want: "Medusa's kill switch off, a final dump, restore on the VM, and a per-table row-count diff against the rehearsal"
     so_that: "no order or seller write is lost in the move"
     risk: high
-    status: planned
+    status: done
   - id: S2.4
     title: "Certs proven before DNS moves"
     as_a: "the platform"
     i_want: "`openssl s_client` against the VM to return the right cert for every host family in 2.1, re-run until green"
     so_that: "no one meets a 525"
     risk: high
-    status: planned
+    status: done
   - id: S2.5
     title: "The origin flip"
     as_a: "the product owner"
     i_want: "every host in 2.1 pointed at the VM"
     so_that: "GCP serves none of Miyagi's traffic"
     risk: high
-    status: planned
+    status: done
   - id: S2.6
     title: "Money-path smoke on the VM"
     as_a: "the product owner"
     i_want: "a real checkout on the VM with one Stripe and one Clerk webhook delivery seen in the logs"
     so_that: "the money path is proven on the new host before GCP is deleted"
     risk: high
-    status: planned
+    status: in-progress
 ---
 # Miyagi on the Oracle VM — Sprint 2: The cutover
 
-**Status:** ⬜ not started
+**Status:** 🟡 cut over 2026-10-16 14:06Z — S2.6 money-path smoke pending
 
 ## Stories
 
@@ -105,3 +105,42 @@ Env: production · https://miyagisanchez.com
    → you land back where you were (Clerk works through the new origin).
 
 If any step fails, note the step number + what you saw — that's the bug report.
+
+## Evidence (2026-10-16)
+
+### S2.1 — Host census
+The ALB's request logging was **off**, so its logs held zero requests — an absence, not "no traffic". The census was
+rebuilt from 7 days of Cloud Run request logs grouped by `Host`: `api.`, the apex, `www.`, `mschz.org`, 76 seller
+subdomains (covered by the `*` record), and the direct `run.app` URL the Cloud Schedulers call (moved to VM
+systemd timers instead). No tenant custom domain appeared. The flip's dry run, run with the new `--target-ip`, proposed
+exactly these records; `--audit-ip 136.69.97.223` then listed records **by content**, which added the explicit
+`cname.` and `gcp.` records that sit beside the wildcard.
+
+### S2.2 — Rehearsal
+The 09:00Z R2 dump was restored onto the VM (pg_restore exit 0). Its counts are the baseline: product 178, variant 178,
+customer 9, cart 77, order 20, payment_collection 52.
+
+### S2.3 — Freeze, final dump, restore
+| Time (UTC) | Step |
+|---|---|
+| 13:58 | `checkout.stripe_enabled` killed (Golden); GCP `medusa-web` → `MEDUSA_WORKER_MODE=server` (rev 00094); the 6 schedulers paused |
+| 13:59 | final dump `medusa/2026/10/16/medusa-2026-10-16T135957Z.dump.gz` (338,342 B) in R2 |
+| ~14:02 | restored onto an empty VM DB (exit 0); Redis `FLUSHALL` **before** `MEDUSA_WORKER_MODE=shared` (D10); `BACKUP_PREFIX='medusa'`; `update.sh` healthy (medusa-web `1502ad4`, miyagi-web `ca61345`); 5 `miyagi-cron-*` timers enabled |
+
+Row-count diff against the rehearsal: **empty** on every counted table (identical numbers), so no write happened between
+the two dumps.
+
+### S2.4 — Certs at the VM before DNS moved
+`openssl s_client -servername <host> -connect 159.54.158.4:443` returned the Cloudflare Origin cert for the apex, `www`,
+`api`, a seller subdomain, `mschz.org`, `cname.` and `gcp.`. HTTP status matched production on each. panfleto's and
+aomx's hosts still got their own certs (D14).
+
+### S2.5 — The flip
+At 14:06Z: miyagisanchez.com `@`, `*`, `www`, `api`, `cname`, `gcp` and the mschz.org apex moved to `159.54.158.4`, all still
+proxied. Rollback snapshots are in `.cf-cutover-snapshots/` (gitignored). `--audit-ip 136.69.97.223` afterwards: **0**
+records in either zone. Three tagged probe requests all reached VM Medusa, and none reached Cloud Run. Checkout reopened
+around 14:08Z, so checkout was off for about **10 minutes**.
+
+### S2.6 — Money-path smoke
+Pending: Daniel's live checkout.
+

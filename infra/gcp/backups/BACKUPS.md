@@ -8,14 +8,14 @@ Medusa left Cloud SQL for the Oracle VM `panfleto-prod`
 | Database | Backup-of-record | Mechanism |
 |---|---|---|
 | **Commerce** (Medusa, Postgres on the VM) | **R2 escrow dump + OCI bucket** | `infra/oci/backup.sh` (systemd `miyagi-backup.timer`, 04:45 UTC) dumps as `backup_ro` to `r2:miyagi-db-escrow/medusa/YYYY/MM/DD/` **and** OCI bucket `miyagi-backups`, reading each upload back. `miyagi-restore-drill.timer` (Sun 05:30 UTC) restores the newest dump and compares counts. See [`infra/oci/`](../../oci/) |
-| **Supabase** (non-commerce: conversations, offers, supply) | **R2 escrow dump** (below) | the `db-backup` Cloud Run Job, now `BACKUP_TARGETS=supabase` only, with no VPC connector |
+| **Supabase** (non-commerce: conversations, offers, supply) | **R2 escrow dump + OCI bucket** | the same `infra/oci/backup.sh` run on the VM, which dumps with `SUPABASE_BACKUP_DSN` (from `backup.env`) to `supabase/YYYY/MM/DD/`, the prefix the GCP job used, so the series is continuous. The GCP `db-backup` Cloud Run Job below did this until the VM's first verified Supabase dump (2026-10-16), then was **deleted**; the pipeline sections below are history |
 
 The last Cloud SQL state is `r2:miyagi-db-escrow/medusa/2026/10/16/medusa-2026-10-16T135957Z.dump.gz`,
 the post-freeze final dump. GCP Medusa took no buyer write after it. The *Restore the commerce DB (Cloud SQL
 native)* and *Cloud SQL backup-failure check* sections below are **retired** and kept as history; their
 instance, job and scheduler no longer exist.
 
-## R2 escrow dump pipeline (Supabase)
+## R2 escrow dump pipeline (Supabase) — RETIRED: moved to the VM (`infra/oci/backup.sh`)
 Daily `pg_dump` to a **Cloudflare R2** bucket, as off-platform, vendor-neutral, immutable escrow. Built in
 [Backend Production Readiness, Sprint 2](../../../Roadmap/09-platform-infra/backend-production-readiness/sprint-2.md).
 The cross-store RPO/RTO + restore procedures live in the central

@@ -2,7 +2,9 @@
 # Workstation-side bootstrap for Miyagi on the Oracle VM — the ONE step that moves credentials.
 # Run by Daniel from the medusa-bonsai checkout (gcloud on lolis-profile, gh authed, OCI CLI configured):
 #   bash infra/oci/bootstrap.sh            # everything below, idempotent
-#   bash infra/oci/bootstrap.sh --only env # just rewrite medusa.env / web.env / backup.env
+#   bash infra/oci/bootstrap.sh --only backup-env # just rewrite backup.env (R2, Telegram, Supabase DSN)
+#   bash infra/oci/bootstrap.sh --only env # medusa.env / web.env — HISTORICAL: it reads the Cloud Run services,
+#                                          # deleted 2026-10-16; the VM's files are now the source of truth
 #
 # It reads every value AS THE OPERATOR and streams it over ssh into 0600 files on the VM owned by the deploy
 # user `ubuntu` — the account docker compose reads env_file as, and already root-equivalent through its
@@ -15,7 +17,8 @@
 #      Secret Manager by the exact mapping the service uses (minus DATABASE_URL/REDIS_URL/PORT/
 #      MEDUSA_WORKER_MODE, which the compose file owns);
 #   4. infra/oci/web.env     — the same for miyagi-web (MEDUSA_STORE_URL is overridden by compose);
-#   5. infra/oci/backup.env  — the R2 escrow token + Telegram, for backup.sh / restore-drill.sh;
+#   5. infra/oci/backup.env  — the R2 escrow token, Telegram and SUPABASE_BACKUP_DSN, for backup.sh /
+#      restore-drill.sh;
 #   6. Cloudflare Origin CA certs for miyagisanchez.com (+ wildcard) and mschz.org (+ www) — the key and
 #      CSR are generated ON the VM, only the CSR travels, so the private keys never leave it;
 #   7. the 8 browser-public NEXT_PUBLIC_* keys into the frontend repo's `production` GitHub Environment as
@@ -79,7 +82,9 @@ if want repo; then
     sudo /opt/miyagi/infra/oci/install-host.sh'
 fi
 
-if want env; then
+# `env` only on request: it reads medusa-web / miyagi-web from Cloud Run, which were deleted 2026-10-16, so a
+# full run must not attempt it (and must never overwrite the VM's live files with nothing).
+if [ "$ONLY" = env ]; then
   step "infra/oci/.env (DB passwords generated on the VM, once)"
   ssh_vm 'set -e; F=/opt/miyagi/infra/oci/.env
     sudo test -s "$F" || { printf "POSTGRES_PASSWORD=%s\nBACKUP_RO_PASSWORD=%s\n" "$(openssl rand -hex 24)" "$(openssl rand -hex 24)" | sudo install -m 0600 /dev/stdin "$F"; }
@@ -96,16 +101,24 @@ if want env; then
   BUF="$(service_env miyagi-web 'PORT|MEDUSA_STORE_URL')"
   printf '%s\n' "$BUF" | grep -q "^CRON_SECRET='." || { echo "✗ web.env looks incomplete — not written" >&2; exit 1; }
   printf '%s\n' "$BUF" | write_vm /opt/miyagi/infra/oci/web.env
-  step "backup.env ← R2 escrow token + Telegram"
-  BUF="$(printf "R2_BACKUP_BUCKET='miyagi-db-escrow'\nOCI_BUCKET='miyagi-backups'\nBACKUP_PREFIX='medusa-oci'")"
-  for s in R2_BACKUP_ACCESS_KEY_ID R2_BACKUP_SECRET_ACCESS_KEY R2_BACKUP_ENDPOINT TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID; do
+  ssh_vm 'sudo chown ubuntu /opt/miyagi/infra/oci/{medusa,web}.env'
+fi
+
+if want backup-env; then
+  step "backup.env ← R2 escrow token + Telegram + Supabase DSN"
+  # BACKUP_PREFIX='medusa': this VM is production since 2026-10-16. The default IS the live config — writing
+  # the dark-period 'medusa-oci' here would silently move prod's dumps to the wrong prefix on any re-run.
+  BUF="$(printf "R2_BACKUP_BUCKET='miyagi-db-escrow'\nOCI_BUCKET='miyagi-backups'\nBACKUP_PREFIX='medusa'")"
+  for s in R2_BACKUP_ACCESS_KEY_ID R2_BACKUP_SECRET_ACCESS_KEY R2_BACKUP_ENDPOINT TELEGRAM_BOT_TOKEN TELEGRAM_CICD_CHAT_ID \
+           SUPABASE_BACKUP_DSN; do
     v="$(secret "$s")"; [ -n "$v" ] || { echo "✗ secret $s is empty — backup.env not written" >&2; exit 1; }
+    case "$v" in *"'"*|*$'\n'*) echo "✗ secret $s has a quote or newline — backup.env not written" >&2; exit 1 ;; esac
     BUF="$BUF"$'\n'"$s='$v'"
   done
   printf '%s\n' "$BUF" | write_vm /opt/miyagi/infra/oci/backup.env
   # backup.sh reads BACKUP_RO_PASSWORD from backup.env; keep it in step with .env without it passing here.
   ssh_vm 'P=$(sudo grep "^BACKUP_RO_PASSWORD=" /opt/miyagi/infra/oci/.env | cut -d= -f2); printf "BACKUP_RO_PASSWORD=%s\n" "$P" | sudo tee -a /opt/miyagi/infra/oci/backup.env >/dev/null'
-  ssh_vm 'sudo chown ubuntu /opt/miyagi/infra/oci/{medusa,web,backup}.env'
+  ssh_vm 'sudo chown ubuntu /opt/miyagi/infra/oci/backup.env'
 fi
 
 if want certs; then

@@ -155,7 +155,7 @@ Nothing on this list was deleted by an agent.
 - Both apps' `AGENTS.md` describe the VM rail: web #433, api #206. panfleto's `deploy/README.md` names the three
   tenants and the no-catch-all rule (justread #31).
 - **The deploy rail is now manual.** A merge builds `:main` on the arm64 runner, then
-  `ssh ubuntu@159.54.158.4 /opt/miyagi/infra/oci/update.sh` deploys it. Making this automatic needs a VM deploy key
+  `ssh -i ~/.ssh/panfleto_oci ubuntu@159.54.158.4 /opt/miyagi/infra/oci/update.sh` deploys it. Making this automatic needs a VM deploy key
   stored as a GitHub secret, which is a credential decision for Daniel.
 
 ### After the teardown (same day): GCP emptied, then deleted

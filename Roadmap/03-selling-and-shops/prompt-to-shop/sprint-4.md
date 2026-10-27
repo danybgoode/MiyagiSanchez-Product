@@ -41,7 +41,7 @@ stories:
 
 ### Story 4.2 — Photo → product (Gemini vision, 20 a month)
 **As** a merchant with photos on my phone, **I want** to take or pick a photo and get a product card filled with a title, description, category and suggested price, **so that** I add products the way I already think: in photos.
-**Acceptance:** Upload via `/api/sell/upload` → R2; Gemini vision fills a `CatalogImportRow` validated by `validateRows`; the card fills visibly; confirming creates **one Medusa draft product** owned by the shop; the allowance spends one `photo` per confirmed suggestion through the S1.1 RPC; the 21st in a calendar month is refused with «Te quedan 0 fotos este mes; vuelven el 1». Rate-limited by `LimitKey`. No AI-generated images.
+**Acceptance:** Upload via `/api/sell/upload` → R2; Gemini vision fills a `CatalogImportRow` validated by `validateRows`; the card fills visibly; confirming creates **one Medusa draft product** owned by the shop; the allowance spends one `photo` per confirmed suggestion through the S1.1 RPC; the 21st in a calendar month is refused with «Te quedan 0 fotos este mes; vuelven el 1». Rate-limited by `LimitKey`. No AI-generated images. **Adds the «Con IA» row to `/mx/precios`** (moved from E2 `pricing-page` by Daniel, 2026-10-27, so the page never promises what isn't live): it reads the allowance numbers from the one module S1.1/S1.4 define (3 versions before signup; 10 versions + 20 photo → product a month), through E2's pricing catalog, never retyped.
 **Risk:** high
 
 ### Story 4.3 — Example → real replacement + «Publicar» disabled reason

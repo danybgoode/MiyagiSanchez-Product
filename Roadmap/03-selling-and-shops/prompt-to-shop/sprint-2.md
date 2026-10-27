@@ -55,7 +55,7 @@ stories:
 
 ### Story 2.2 — Describe box on /mx/vende and the /sell first run
 **As** a merchant who just heard of Miyagi, **I want** one box that says «Cuéntanos qué vendes» with three tappable examples, right where I land, **so that** I start by describing, not by filling forms.
-**Acceptance:** On a 375 px phone the box is above the fold on `/mx/vende`; `/sell` with no shop shows the same box. The no-JS marketing-surface spec still passes (substantive content + OG). Secondary links: «¿Ya tienes tu catálogo en un archivo?» and «Armar a mano».
+**Acceptance:** On a 375 px phone the box is above the fold on `/mx/vende`; `/sell` with no shop shows the same box. The no-JS marketing-surface spec still passes (substantive content + OG). Secondary links: «¿Ya tienes tu catálogo en un archivo?» and «Armar a mano». **The new hero line ships here, with the box** (moved from E2 `pricing-page` by Daniel, 2026-10-27, so the claim goes live with the feature): «Describe tu negocio. En segundos tienes tienda, compradores en el marketplace y una IA que la atiende — sin comisión.», replacing the anchor hero title and the `/mx/vende` metadata title/description in `locales/es.json` → `sellerAcquisition.anchor`.
 **Risk:** low
 
 ### Story 2.3 — Taking-shape screen

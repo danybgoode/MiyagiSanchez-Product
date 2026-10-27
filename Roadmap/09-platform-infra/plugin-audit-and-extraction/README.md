@@ -2,7 +2,7 @@
 status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
 slug: plugin-audit-and-extraction
 sprints_in: https://github.com/danybgoode/dobby-foundation/tree/main/Roadmap/09-platform-infra/plugin-audit-and-extraction  # sprint docs + retro live in the foundation repo
-build_order: 6
+build_order: 9
 title: "Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded"
 area: 09-platform-infra
 risk: low

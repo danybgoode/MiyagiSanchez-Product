@@ -16,9 +16,10 @@
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
-## 📋 Ready to build (scaffolded, not started) (4)
+## 📋 Ready to build (scaffolded, not started) (5)
 
 - [Prompt-to-shop](../../03-selling-and-shops/prompt-to-shop/README.md) — 03 Selling & Shops · 0/19 stories · risk: High
+- [BYO Envía connect](../../04-shipping-and-delivery/envia-byo-connect/README.md) — 04 Shipping · 0/11 stories · risk: High
 - [Pricing page](../../08-growth-and-promotions/pricing-page/README.md) — 08 Growth · 0/6 stories · risk: Low
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
@@ -203,4 +204,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 164 · seeds in funnel: 8 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 165 · seeds in funnel: 8 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

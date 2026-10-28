@@ -195,7 +195,11 @@ is a security path, so the deterministic gate is the gate unless the router says
 - **A2 — supersedes D12/D13 lines.** `computeT1Cost(inputs, tier, useT1Pagos, rates, apps)` mirrors Tiendanube:
   `plan`, `payment` (T1pagos % + fixed, or the external cut), `apps`. `COMPARADOR_T1_TIERS = ['basico','avanzado']`;
   the shared `gateway=external` param is reused, platform-gated. Gratis is a note in the T1 picker, not a chip —
-  a $0 "plan" that cannot sell would flatter T1. SPEI is not on T1's pricing page, so it is not modelled.
+  a $0 "plan" that cannot sell would flatter T1. SPEI ($3 per transfer via T1pagos, in the page's payments FAQ) is
+  not modelled: every platform line prices each order at its card rate, and a SPEI share would need a new input.
+- **A3 — S2 review.** On an external gateway T1 charges its cut **on top of** the provider's own fee, so
+  `computeT1Cost` adds a `processor` line at the same public card rate Miyagi's column charges. Without it T1
+  looked ~$700/mo cheaper than Miyagi at 100 × $500 on an unlike-for-like basis. `DetectedPlatform` excludes `'t1'`.
 - Deviation from sprint-2.md's smoke steps 3 (Gratis chip) — rewritten to the external-gateway toggle.
 - **D14 outcome — analyzer detection descoped.** No real T1 storefront URL or HTML marker could be verified on
   build day; guessing a host pattern would misdetect. The manual T1 picker is the path; `DetectedPlatform` is unchanged.
@@ -208,6 +212,10 @@ is a security path, so the deterministic gate is the gate unless the router says
 - **Follow-up (out of D8's enforced paths, pre-existing):** hand-typed SKU prices remain in
   `app/api/ucp/manifest/route.ts`, `app/api/ucp/mcp/route.ts` (tool descriptions/labels) and `lib/{subdomain,ml-sync}-billing.ts`.
   Move them to the catalog and add those paths to the sweep's enforced list.
+- **Follow-up — Tiendanube has the same external-gateway gap A3 fixed for T1** (`computeTiendanubeCost`: the
+  external path adds TN's cut but not the provider's fee). A behaviour change to a shipped comparison; its own story.
+- **Follow-up — agent surfaces don't know T1:** MCP `compare_costs` (`app/api/ucp/mcp/route.ts`), the manifest
+  description (`app/api/ucp/manifest/route.ts`) and `/agent` copy list four platforms. `app/api/**` is a security path.
 - **S1 build found two more hand-typed prices** than P7 named — the promotor sales `scripts` (es + en, one also
   saying «pago único» for a yearly renewal). Tokenized; the source sweep is what found them.
 

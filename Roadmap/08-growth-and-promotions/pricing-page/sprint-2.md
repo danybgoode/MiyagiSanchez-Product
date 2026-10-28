@@ -29,7 +29,8 @@ stories:
 
 ### Story 2.1 — T1 figures in the dataset + computeT1Cost + URL codec + analyze route
 **As** the builder, **I want** T1's public rates in the comparador dataset and a pure cost function for them, **so that** the comparison is computed and cited like the other four platforms.
-**Acceptance:** Re-verify on build day against T1's pricing page and record each figure with source URL and `verifiedAt`: tiers Gratis / Básico $399 / Avanzado $1,499 a month, cards 3.5% + $1, SPEI $3, +2% on external methods for paid tiers, the Gratis tier's monthly online-order cap (30 as of 2026-10-27). `computeT1Cost` is pure and spec-covered (observed red once); `'t1'` joins `ComparatorPlatform`, the URL codec and `app/api/comparador/analyze`. Only public rates — never T1's negotiated freight or fleet.
+**Amended at build (README A1–A3):** Gratis is a note, not a tier; the external charge is an alternative with the provider's fee added; SPEI not modelled; select, not chips; analyzer detection descoped.
+**Acceptance (as planned):** Re-verify on build day against T1's pricing page and record each figure with source URL and `verifiedAt`: tiers Gratis / Básico $399 / Avanzado $1,499 a month, cards 3.5% + $1, SPEI $3, +2% on external methods for paid tiers, the Gratis tier's monthly online-order cap (30 as of 2026-10-27). `computeT1Cost` is pure and spec-covered (observed red once); `'t1'` joins `ComparatorPlatform`, the URL codec and `app/api/comparador/analyze`. Only public rates — never T1's negotiated freight or fleet.
 **Risk:** low
 
 ### Story 2.2 — T1 picker in the comparador + the prefilled link from /mx/precios

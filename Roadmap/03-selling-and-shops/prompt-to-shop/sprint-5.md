@@ -37,7 +37,7 @@ stories:
 ---
 # Prompt-to-shop — Sprint 5: Pay, deliver, publish, return
 
-**Status:** ✅ merged + deployed (storefront #442 → `1b2123c`, live 2026-10-28). The money steps and the timer enable are owed to Daniel.
+**Status:** ✅ merged + deployed (storefront #442 → `1b2123c`, live 2026-10-28). The money steps are owed to Daniel; the nudge timer is enabled.
 
 ## Stories
 
@@ -92,9 +92,7 @@ If any step fails, note the step number + what you saw — that's the bug report
 
 ### Results — 2026-10-28, production (`miyagi-web` at `1b2123c`)
 - **Routes ✅** — `/api/p2s/publish` and `/api/sell/shop/qr` refuse an anonymous caller (401). `/api/cron/p2s-nudges` refuses both a missing secret and a `?secret=` query (401; header only). `/sell/armar/cobros` serves.
-- **Timer — OWED to Daniel.** The `miyagi-cron-p2s-nudges.timer` unit is merged (root #227) and pulled onto the VM. Enabling it was refused to the agent by the permission classifier (persistence on the VM). Run on the VM:
-  `sudo install -m 0644 /opt/miyagi/infra/oci/systemd/miyagi-cron-p2s-nudges.timer /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now miyagi-cron-p2s-nudges.timer && sudo systemctl start miyagi-cron@p2s-nudges.service && journalctl -u miyagi-cron@p2s-nudges.service -n 5`
-  → expect `200 {"ok":true,"candidates":0,…}` (zero drafts exist on 2026-10-28, so the run sends nothing).
+- **Timer ✅** — enabled on the VM by Daniel on 2026-10-28 (`miyagi-cron-p2s-nudges.timer`, daily at 15:00 UTC). The first manual run returned 200 with zero candidates, as expected.
 - **Steps 1–8 — OWED to Daniel.** These include Mercado Pago OAuth from the chooser and a real test order (money).
 - **Decisions made while building** (see #442):
   - The checkout preview asks checkout's own endpoint (`/api/checkout/options`) instead of re-deriving the rule, because checkout's decision lives in the backend.

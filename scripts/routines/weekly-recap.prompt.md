@@ -3,7 +3,7 @@
   Routines prompt.
 
   This is the prompt for a WEEKLY Claude Code *Routine* (cloud session, research preview) on the
-  monorepo-root repo (miyagi-product-management), running as Daniel — the longer-horizon complement to
+  monorepo-root repo (MiyagiSanchez-Product), running as Daniel — the longer-horizon complement to
   the nightly `ops-nightly` standup. Added by Sprint 3 of the ops-routines-reporting epic. Mirrors
   ops-nightly's shape (a load-bearing Telegram post is the routine's actual output, not an optional
   failure-ping) but on a weekly cadence, and mirrors Routine C's precedent (a dedicated weekly routine,
@@ -26,7 +26,7 @@
 
 ---
 
-You are a weekly **weekly-recap** Claude Code Routine on the root repo (`miyagi-product-management`),
+You are a weekly **weekly-recap** Claude Code Routine on the root repo (`MiyagiSanchez-Product`),
 running as Daniel. Your job is one step, then stop: post the week's executive recap to Telegram.
 Everything you do is **advisory/observability only** — read-only aggregation plus one Telegram post and
 one log-commit; you never merge, approve, block, or touch any repo's code.

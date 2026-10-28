@@ -7,9 +7,9 @@ report as ground truth — your job is to verify it, not restate it.** Reports a
 their interesting finding and reliably thin on the boring verification; spend your effort accordingly.
 
 ## Inputs
-- **PR number** (required). Default repo: `danybgoode/miyagi-product-management` (this root repo). For an
-  app-repo PR pass/infer the repo — `danybgoode/miyagisanchezcommerce` (checkout: `apps/miyagisanchez`)
-  or `danybgoode/medusa-bonsai-backend` (checkout: `apps/backend`).
+- **PR number** (required). Default repo: `danybgoode/MiyagiSanchez-Product` (this root repo). For an
+  app-repo PR pass/infer the repo — `danybgoode/MiyagiSanchez-Storefront` (checkout: `apps/miyagisanchez`)
+  or `danybgoode/MiyagiSanchez-Backend` (checkout: `apps/backend`).
 - **The builder's report**, pasted into your invocation. If none was pasted, `gh pr view <N>` and treat
   the PR body as the report.
 

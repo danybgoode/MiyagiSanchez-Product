@@ -1,4 +1,4 @@
-# Agent index — miyagi-product-management (the orchestration repo)
+# Agent index — MiyagiSanchez-Product (the orchestration repo)
 
 > **Read this before touching anything here.** It is auto-loaded by Codex and (via `CLAUDE.md`) by
 > Claude. Keep it SHORT — a file long enough to skim is a file nobody reads twice.
@@ -9,7 +9,7 @@ The **root repo**: product docs, process, and the delivery toolchain. It ships n
 no deploy rail — merging here deploys nothing.
 
 ```
-medusa-bonsai/                 ← THIS repo (danybgoode/miyagi-product-management)
+medusa-bonsai/                 ← THIS repo (danybgoode/MiyagiSanchez-Product)
 ├── Roadmap/                   ← product source of truth: poster, epics, sprints, retros, LEARNINGS
 ├── scripts/                   ← the delivery toolchain (~30 node scripts + their tests)
 ├── tasks/                     ← engineering delivery log

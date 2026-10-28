@@ -217,8 +217,8 @@ risk tier** once CI is green and findings are resolved — the tier selects the 
 scope, not the merge authority. Roll back with `git revert` on `main`.
 
 **A deterministic security floor runs underneath, free and without an LLM** (2026-09-16): GitHub secret
-scanning with push protection on all five repos, and CodeQL default setup on `miyagisanchezcommerce` and
-`medusa-bonsai-backend`. The security lens finds logic flaws — cross-tenant reads, money-path mistakes,
+scanning with push protection on all five repos, and CodeQL default setup on `MiyagiSanchez-Storefront` and
+`MiyagiSanchez-Backend`. The security lens finds logic flaws — cross-tenant reads, money-path mistakes,
 authorization gated on the wrong thing; the scanners find known patterns and leaked credentials. Neither
 replaces the other. `/security-review` is available locally as a pre-push self-check, never a gate.
 

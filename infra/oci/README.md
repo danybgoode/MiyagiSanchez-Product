@@ -12,14 +12,14 @@ GCP is deleted; nothing of Miyagi runs anywhere else.
 | Edge | Cloudflare (proxied, Full Strict) → Caddy → `/opt/edge/sites/miyagi.caddy` → the `edge` network. Origin CA certs in `/opt/edge/certs`, valid until 2041 |
 
 ## Deploy and roll back
-A merge to `main` in either app repo only **builds** `ghcr.io/danybgoode/{miyagi-web,medusa-web}:main` (arm64,
+A merge to `main` in either app repo only **builds** `ghcr.io/danybgoode/{miyagisanchez-storefront,miyagisanchez-backend}:main` (arm64,
 public). Nothing deploys by itself. Once the image build is green:
 
 ```bash
 /opt/miyagi/infra/oci/update.sh   # pulls this repo + both :main images by digest, migrates, health-checks, validates Caddy
 ```
 
-To roll back, add `MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/medusa-web:<sha>` (or `WEB_IMAGE_PIN=…`) to
+To roll back, add `MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>` (or `WEB_IMAGE_PIN=…`) to
 `/opt/miyagi/infra/oci/.env` and re-run `update.sh`. A pin always wins over `:main`; delete the line to roll forward.
 
 ## Secrets: two copies, and only two

@@ -1,22 +1,22 @@
 {
   "$comment": "Read by scripts/{standup,weekly-recap,pmo-report}.mjs via scripts/lib/reporting-config.mjs (the dobby-foundation template's reporting seam). The chat id is NOT here \u2014 this repo is public: routines use TELEGRAM_CHAT_ID, local runs use the gitignored reporting.config.local.json.",
   "repos": [
-    "danybgoode/miyagi-product-management",
-    "danybgoode/miyagisanchezcommerce",
-    "danybgoode/medusa-bonsai-backend"
+    "danybgoode/MiyagiSanchez-Product",
+    "danybgoode/MiyagiSanchez-Storefront",
+    "danybgoode/MiyagiSanchez-Backend"
   ],
   "deployRepos": [
     {
-      "label": "Frontend",
-      "repo": "danybgoode/miyagisanchezcommerce"
+      "label": "MiyagiSanchez-Storefront",
+      "repo": "danybgoode/MiyagiSanchez-Storefront"
     },
     {
-      "label": "Backend",
-      "repo": "danybgoode/medusa-bonsai-backend"
+      "label": "MiyagiSanchez-Backend",
+      "repo": "danybgoode/MiyagiSanchez-Backend"
     }
   ],
   "smoke": {
-    "repo": "danybgoode/miyagisanchezcommerce",
+    "repo": "danybgoode/MiyagiSanchez-Storefront",
     "workflow": "browser-smoke.yml"
   },
   "stalePreviewAgeDays": 7,
@@ -44,9 +44,9 @@
     ]
   },
   "checkouts": {
-    "danybgoode/miyagi-product-management": ".",
-    "danybgoode/miyagisanchezcommerce": "apps/miyagisanchez",
-    "danybgoode/medusa-bonsai-backend": "apps/backend"
+    "danybgoode/MiyagiSanchez-Product": ".",
+    "danybgoode/MiyagiSanchez-Storefront": "apps/miyagisanchez",
+    "danybgoode/MiyagiSanchez-Backend": "apps/backend"
   },
   "owed": {
     "owners": [

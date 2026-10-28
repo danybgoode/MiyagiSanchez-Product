@@ -37,7 +37,7 @@ PROJECT="${PROJECT:-miyagisanchez-prod}"
 REGION="${REGION:-us-east4}"
 VM="${VM:-ubuntu@159.54.158.4}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/panfleto_oci}"
-WEB_REPO="${WEB_REPO:-danybgoode/miyagisanchezcommerce}"
+WEB_REPO="${WEB_REPO:-danybgoode/MiyagiSanchez-Storefront}"
 ONLY="${2:-}"; [ "${1:-}" = "--only" ] || ONLY=""
 
 ssh_vm() { ssh -i "$SSH_KEY" -o ConnectTimeout=15 "$VM" "$@"; }
@@ -83,7 +83,7 @@ if want repo; then
   ssh_vm 'set -e
     if [ ! -d /opt/miyagi/.git ]; then
       sudo install -d -o ubuntu -g ubuntu /opt/miyagi
-      git clone -q https://github.com/danybgoode/miyagi-product-management.git /opt/miyagi
+      git clone -q https://github.com/danybgoode/MiyagiSanchez-Product.git /opt/miyagi
     fi
     git -C /opt/miyagi fetch -q origin main && git -C /opt/miyagi reset -q --hard origin/main
     sudo /opt/miyagi/infra/oci/install-host.sh'

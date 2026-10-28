@@ -3,7 +3,7 @@ epic: prompt-to-shop
 sprint: 3
 title: "Keep it"
 risk: high
-phase: Shaping
+phase: Shipped
 stories_total: 3
 stories:
   - id: S3.1
@@ -12,25 +12,25 @@ stories:
     i_want: "to tap «Quedármela» and sign up in a sheet over my shop"
     so_that: "signup feels like the reward and I land back on my shop"
     risk: high
-    status: planned
+    status: in-progress
   - id: S3.2
     title: "Conditional draft claim + idempotent draft → shop apply"
     as_a: "the platform"
     i_want: "the draft claimed by exactly one signed-in owner, on the device that made it, and turned into one shop"
     so_that: "no second seller, no stolen draft, and no example in Medusa"
     risk: high
-    status: planned
+    status: in-progress
   - id: S3.3
     title: "Bienvenida and Puertas leave the main path"
     as_a: "a new merchant"
     i_want: "no intake questions and no choice of doors before I see my shop"
     so_that: "the first thing I see is my shop"
     risk: low
-    status: planned
+    status: done
 ---
 # Prompt-to-shop — Sprint 3: Keep it
 
-**Status:** ⬜ not started
+**Status:** ✅ merged + deployed (storefront #440 → `871e7ee`, live 2026-10-28). The sign-up walkthrough below is owed to Daniel.
 
 ## Stories
 
@@ -74,3 +74,15 @@ Env: production · https://miyagisanchez.com   (or the preview URL while testing
    → exactly one welcome email
 
 If any step fails, note the step number + what you saw — that's the bug report.
+
+### Results — 2026-10-28, production (`miyagi-web` at `871e7ee`)
+- **Step 6 ✅** — `/sell/bienvenida` and `/sell/puertas` redirect to `/sell` (a streamed `NEXT_REDIRECT`, since `/sell` has a loading boundary). `/mx/vende`'s title prints the brand once.
+- **Signed out ✅** — `/sell/armar` sends the visitor to `/mx/vende`, and `/sell/armar?draft=<id>` back to `/p2s/<id>`.
+- **Steps 1–5 and 7 — OWED to Daniel.** They need a real sign-up (Google, then the email code), a second phone, and Medusa admin.
+- **Decisions made while building** (see #440):
+  - The backend picks a free slug itself (`name-1`, `name-2`…), so there is no slug conflict to show.
+  - A user who already has a shop is never claimed onto it.
+  - The draft is applied only to a seller created by that call (`ensureShop` 201), and `claimed_seller_id` is written right after it.
+  - Claim routes live at `/api/p2s/claim/[id]` and `/api/p2s/link/[id]`, because `portfolio-no-auto-send` reserves `…/draft*` routes.
+- **Review:** codex general (1 Blocking, then 1 Should-fix), the fresh verifier (lint plus 4 findings) and the codex security lens (clean) — all fixed with specs. agy's security reply was rejected by the output guard for its format; its findings are answered on #440.
+- **Found:** a dependabot merge to backend `main` (`6cf1431`) never built its arm64 image, because a bot-token push starts no workflow. It was dispatched by hand and deployed 2026-10-28. The deploy Telegram ping (✅/❌) was missing since the VM move; restored by root #226.

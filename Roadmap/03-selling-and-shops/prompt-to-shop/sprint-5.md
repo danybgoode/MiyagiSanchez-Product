@@ -3,7 +3,7 @@ epic: prompt-to-shop
 sprint: 5
 title: "Pay, deliver, publish, return"
 risk: high
-phase: Shaping
+phase: Shipped
 stories_total: 4
 stories:
   - id: S5.1
@@ -12,32 +12,32 @@ stories:
     i_want: "logos and plain choices for how I get paid and how I deliver, with a preview of what my buyer will see"
     so_that: "I set it up in minutes without settings jargon"
     risk: high
-    status: planned
+    status: in-progress
   - id: S5.2
     title: "Publish + marketplace-card moment + shares"
     as_a: "a merchant ready to sell"
     i_want: "to tap «Publicar» and see my shop inside the marketplace, then share it in one tap"
     so_that: "I see that buyers can find me, and I tell my customers"
     risk: low
-    status: planned
+    status: in-progress
   - id: S5.3
     title: "Funnel events"
     as_a: "Daniel"
     i_want: "each step of the journey counted once"
     so_that: "I can see where merchants stop"
     risk: low
-    status: planned
+    status: in-progress
   - id: S5.4
     title: "Day 1/3/7 nudges + scheduler check"
     as_a: "a merchant who stopped halfway"
     i_want: "a reminder on the channel I chose, telling me the one step left"
     so_that: "I come back and finish"
     risk: high
-    status: planned
+    status: in-progress
 ---
 # Prompt-to-shop — Sprint 5: Pay, deliver, publish, return
 
-**Status:** ⬜ not started
+**Status:** ✅ merged + deployed (storefront #442 → `1b2123c`, live 2026-10-28). The money steps and the timer enable are owed to Daniel.
 
 ## Stories
 
@@ -89,3 +89,21 @@ Env: production · https://miyagisanchez.com   (or the preview URL while testing
    → the day-1 nudge arrives on its chosen channel; the published shop gets none
 
 If any step fails, note the step number + what you saw — that's the bug report.
+
+### Results — 2026-10-28, production (`miyagi-web` at `1b2123c`)
+- **Routes ✅** — `/api/p2s/publish` and `/api/sell/shop/qr` refuse an anonymous caller (401). `/api/cron/p2s-nudges` refuses both a missing secret and a `?secret=` query (401; header only). `/sell/armar/cobros` serves.
+- **Timer — OWED to Daniel.** The `miyagi-cron-p2s-nudges.timer` unit is merged (root #227) and pulled onto the VM. Enabling it was refused to the agent by the permission classifier (persistence on the VM). Run on the VM:
+  `sudo install -m 0644 /opt/miyagi/infra/oci/systemd/miyagi-cron-p2s-nudges.timer /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now miyagi-cron-p2s-nudges.timer && sudo systemctl start miyagi-cron@p2s-nudges.service && journalctl -u miyagi-cron@p2s-nudges.service -n 5`
+  → expect `200 {"ok":true,"candidates":0,…}` (zero drafts exist on 2026-10-28, so the run sends nothing).
+- **Steps 1–8 — OWED to Daniel.** These include Mercado Pago OAuth from the chooser and a real test order (money).
+- **Decisions made while building** (see #442):
+  - The checkout preview asks checkout's own endpoint (`/api/checkout/options`) instead of re-deriving the rule, because checkout's decision lives in the backend.
+  - «Entrega acordada» maps to `shipping.local_pickup`. Manual carrier is backend-decided and US-only, so it gets no switch.
+  - Publish activates only the merchant's own draft products, through the catalog's own activate (viability gate included).
+  - Funnel events fire on the transition (keep, publish) or once per draft through localStorage.
+  - Nudge milestones are recorded in `block_status.nudges` before the send. Unclaimed drafts get none, because no email is stored.
+- **Review:**
+  - fresh verifier: lint red, plus a funnel that re-fired across sessions.
+  - codex general: 3 Should-fix (a send throw ending the batch, bank «Otro», unbounded concurrency), then clean.
+  - codex security: the cron secret was also accepted in the query string, and the QR slug was unvalidated; then clean.
+  - All fixed with specs.

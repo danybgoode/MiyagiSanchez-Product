@@ -64,9 +64,52 @@ test('a failure before the swap is one Miyagi Sánchez line — the brand, never
   assert.match(run('dn_fail_text', 'while pulling the images (exit 1)'), /^<b>Miyagi Sánchez<\/b> · 🚀 deploy FAILED — while pulling the images \(exit 1\)/)
 })
 
-test('a failure AFTER the swap says the new containers are running — never "nothing new is running"', () => {
+test('a failure AFTER the swap names what runs — never "nothing new is running"', () => {
   const t = run('dn_fail_text', 'while installing the Caddy site file (exit 1)', 'Storefront 16bcd1f, Backend 6cf1431')
-  assert.match(t, /The new containers ARE running \(Storefront 16bcd1f, Backend 6cf1431\)/)
+  assert.match(t, /Running now: Storefront 16bcd1f, Backend 6cf1431\. The deploy did not finish\./)
   assert.doesNotMatch(t, /Nothing new is running/)
   assert.match(run('dn_fail_text', 'while pulling the images (exit 1)'), /Nothing new is running/)
+})
+
+// update.sh's exit handler, extracted and driven with stubs: what it posts is what the containers RUN.
+import { readFileSync } from 'node:fs'
+const UPDATE = readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'update.sh'), 'utf8')
+const ON_EXIT = UPDATE.slice(UPDATE.indexOf('on_exit() {'), UPDATE.indexOf('\n}\n', UPDATE.indexOf('on_exit() {')) + 3)
+const exitPosts = (state) => {
+  const script = `
+    . "${LIB}"
+    POSTS=""
+    notify() { POSTS="\${POSTS}<<\$1>>"; }
+    notice() { notify "notice $1 $2 $3 $4"; }
+    running_rev() { case "$1" in web) printf '%s' "$RUN_WEB";; medusa) printf '%s' "$RUN_MEDUSA";; esac; }
+    ${ON_EXIT}
+    ${state}
+    (exit 1); on_exit; printf '%s' "$POSTS"`
+  const r = spawnSync('bash', ['-c', script], { encoding: 'utf8' })
+  assert.equal(r.status, 0, r.stderr)
+  return r.stdout
+}
+
+test('exit before the swap: one Miyagi Sánchez line, nothing new running', () => {
+  const p = exitPosts('DEPLOYED=0 SWAPPED=0 STEP="pulling the images" FAILED_APP="" PREV_WEB=a PREV_MEDUSA=b RUN_WEB=a RUN_MEDUSA=b')
+  assert.match(p, /^<<<b>Miyagi Sánchez<\/b> · 🚀 deploy FAILED — while pulling the images \(exit 1\)\nNothing new is running/)
+})
+
+test('Caddy fails after the swap: each CHANGED app gets its own 🚀 FAILED, naming what it runs', () => {
+  const p = exitPosts('DEPLOYED=0 SWAPPED=1 STEP="installing the Caddy site file" FAILED_APP="" PREV_WEB=old PREV_MEDUSA=same RUN_WEB=new RUN_MEDUSA=same')
+  assert.equal(p, '<<notice MiyagiSanchez-Storefront new old fail:the deploy did not finish while installing the Caddy site file (exit 1); MiyagiSanchez-Storefront is running this commit>>')
+})
+
+test('the health check fails: that app says so under its own name', () => {
+  const p = exitPosts('DEPLOYED=0 SWAPPED=1 STEP="installing the Caddy site file" FAILED_APP=medusa PREV_WEB=w PREV_MEDUSA=m0 RUN_WEB=w RUN_MEDUSA=m1')
+  assert.equal(p, '<<notice MiyagiSanchez-Backend m1 m0 fail:MiyagiSanchez-Backend did not pass its health check (exit 1)>>')
+})
+
+test('a half-failed Compose that changed nothing still says what runs, never "nothing new"', () => {
+  const p = exitPosts('DEPLOYED=0 SWAPPED=1 STEP="starting the containers" FAILED_APP="" PREV_WEB=w0000000 PREV_MEDUSA=m0000000 RUN_WEB=w0000000 RUN_MEDUSA=m0000000')
+  assert.match(p, /Running now: Storefront w000000, Backend m000000\./)
+})
+
+test('a finished deploy posts nothing from the exit handler', () => {
+  assert.equal(exitPosts('DEPLOYED=1 SWAPPED=1 STEP=x FAILED_APP="" PREV_WEB=a PREV_MEDUSA=b RUN_WEB=c RUN_MEDUSA=d'), '')
 })

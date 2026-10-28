@@ -227,9 +227,11 @@ test('update.sh pings Telegram on every deploy: 🚀 per changed app on success,
   assert.ok(u.indexOf('PREV_WEB="$(running_rev web)"') < u.indexOf('docker compose up -d'), 'previous revisions are read before the swap')
   // An EXIT trap, not ERR: the Caddy rollback path leaves with an explicit `exit 1`, which ERR never sees.
   assert.match(u, /trap on_exit EXIT/)
-  // After the swap, a failure no app owns still names what is running (codex, PR #230).
-  assert.match(u, /elif \[ "\$SWAPPED" = 1 \]; then\n\s*notify "\$\(dn_fail_text "while \$\{STEP\} \(exit \$rc\)" "Storefront/)
-  assert.ok(u.indexOf('trap on_exit EXIT') < u.indexOf('git -C "$ROOT" fetch'), 'the trap is armed before the first step that can fail')
+  // Swap state is set BEFORE `up` (a half-failed Compose may have started one), and a post-swap failure reads what
+  // actually runs, with a per-app 🚀 FAILED for every app that changed (codex, PR #230).
+  assert.ok(u.indexOf('SWAPPED=1') < u.indexOf('docker compose up -d'), 'SWAPPED=1 is set before compose up')
+  assert.match(u, /cur_web="\$\(running_rev web\)"; cur_medusa="\$\(running_rev medusa\)"/)
+  assert.match(u, /notice "\$repo" "\$cur" "\$prev" "fail:\$\{why\}"/)
   assert.match(u, /curl -s -m 10 -o \/dev\/null -K -/)
   assert.doesNotMatch(u, /bot\$\{?TELEGRAM_BOT_TOKEN\}?\/sendMessage" *\\?\n?\s*--data/)
   assert.match(u, /\) \|\| true\n\}/, 'a Telegram failure never fails the deploy')

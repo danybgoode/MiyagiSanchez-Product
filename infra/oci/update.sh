@@ -47,21 +47,25 @@ running_rev() {
 }
 # notice REPO NEW PREV STATUS — the 🚀 for one app (deploy-notice.sh builds it; GitHub supplies the prose).
 notice() { notify "$(dn_text "$1" "$2" "$3" "$4" "$(dn_commit_message "$1" "$2")" "$(dn_ahead "$1" "$3" "$2")")"; }
-# Every way out that is not the success path below pages. Before the swap it is one Miyagi Sánchez line; after it,
-# the app that failed its health check says so under its own name.
-DEPLOYED=0 SWAPPED=0 STEP="pulling the repo" FAILED_APP=""
+# Every way out that is not the success path below pages. Once the swap was ATTEMPTED, the notice reads what the
+# containers actually run (a Compose that fails halfway can still have started one), and each app whose running
+# commit changed gets its own 🚀 FAILED under its name, with its subject and paragraph; only a failure where nothing
+# changed is one Miyagi Sánchez line (codex, PR #230).
+DEPLOYED=0 SWAPPED=0 STEP="pulling the repo" FAILED_APP="" PREV_WEB="" PREV_MEDUSA=""
 on_exit() {
-  local rc=$?
+  local rc=$? why cur_web cur_medusa changed=0
   [ "$DEPLOYED" = 1 ] && return
-  if [ "$SWAPPED" = 1 ] && [ "$FAILED_APP" = web ]; then
-    notice "$STOREFRONT_REPO" "$(rev "$WEB_IMAGE")" "$PREV_WEB" "fail:MiyagiSanchez-Storefront did not pass its health check (exit $rc)"
-  elif [ "$SWAPPED" = 1 ] && [ "$FAILED_APP" = medusa ]; then
-    notice "$BACKEND_REPO" "$(rev "$MEDUSA_IMAGE")" "$PREV_MEDUSA" "fail:MiyagiSanchez-Backend did not pass its health check (exit $rc)"
-  elif [ "$SWAPPED" = 1 ]; then
-    notify "$(dn_fail_text "while ${STEP} (exit $rc)" "Storefront $(rev "$WEB_IMAGE" | cut -c1-7), Backend $(rev "$MEDUSA_IMAGE" | cut -c1-7)")"
-  else
-    notify "$(dn_fail_text "while ${STEP} (exit $rc)")"
-  fi
+  if [ "$SWAPPED" != 1 ]; then notify "$(dn_fail_text "while ${STEP} (exit $rc)")"; return; fi
+  cur_web="$(running_rev web)"; cur_medusa="$(running_rev medusa)"
+  for app in web medusa; do
+    if [ "$app" = web ]; then cur="$cur_web" prev="$PREV_WEB" repo="$STOREFRONT_REPO"; else cur="$cur_medusa" prev="$PREV_MEDUSA" repo="$BACKEND_REPO"; fi
+    [ -n "$cur" ] && [ "$cur" != "$prev" ] || continue
+    changed=$((changed + 1))
+    if [ "$FAILED_APP" = "$app" ]; then why="${repo} did not pass its health check (exit $rc)"
+    else why="the deploy did not finish while ${STEP} (exit $rc); ${repo} is running this commit"; fi
+    notice "$repo" "$cur" "$prev" "fail:${why}"
+  done
+  [ "$changed" -gt 0 ] || notify "$(dn_fail_text "while ${STEP} (exit $rc)" "Storefront ${cur_web:0:7}, Backend ${cur_medusa:0:7}")"
 }
 trap on_exit EXIT
 
@@ -98,8 +102,8 @@ done
 # What runs NOW, before the swap: the "previous" each 🚀 names, and how a re-run that changes nothing stays quiet.
 PREV_WEB="$(running_rev web)"; PREV_MEDUSA="$(running_rev medusa)"
 STEP="starting the containers"
+SWAPPED=1   # set BEFORE `up`: a Compose that fails halfway may already have started a new container
 docker compose up -d --remove-orphans
-SWAPPED=1
 STEP="creating the backup role"
 
 # The backup's own read-only role (pg_read_all_data) — backup.sh never dumps as the app's role. Idempotent;

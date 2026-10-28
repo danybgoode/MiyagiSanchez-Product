@@ -64,11 +64,11 @@ dn_text() {
 }
 
 # dn_fail_text WHY [RUNNING] — a failure no single app owns. Pure. RUNNING empty: it stopped before the swap, so
-# nothing new runs. RUNNING set (e.g. "Storefront 16bcd1f, Backend 6cf1431"): the new containers already started
-# and a later step (the backup role, Caddy) failed — say so, never "nothing new is running" (codex, PR #230).
+# nothing new runs. RUNNING set (e.g. "Storefront 16bcd1f, Backend 6cf1431"): the swap was attempted, so it names what
+# the containers actually run — never "nothing new is running" (codex, PR #230).
 dn_fail_text() {
   if [ -n "${2:-}" ]; then
-    printf '<b>Miyagi Sánchez</b> · 🚀 deploy FAILED — %s\nThe new containers ARE running (%s), but the deploy did not finish. SSH to the VM and re-run update.sh; logs: docker compose logs' "$(dn_esc "$1")" "$(dn_esc "$2")"
+    printf '<b>Miyagi Sánchez</b> · 🚀 deploy FAILED — %s\nRunning now: %s. The deploy did not finish. SSH to the VM and re-run update.sh; logs: docker compose logs' "$(dn_esc "$1")" "$(dn_esc "$2")"
   else
     printf '<b>Miyagi Sánchez</b> · 🚀 deploy FAILED — %s\nNothing new is running. SSH to the VM and re-run update.sh; logs: docker compose logs' "$(dn_esc "$1")"
   fi

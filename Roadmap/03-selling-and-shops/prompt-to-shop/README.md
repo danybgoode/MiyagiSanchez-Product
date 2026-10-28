@@ -143,8 +143,7 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
 - **D4 — Spend is one conditional write.** `spend_ai_allowance(p_subject, p_kind, p_period, p_cap) returns int` is a
   single `INSERT … ON CONFLICT (subject, kind, period) DO UPDATE SET count = ai_allowance.count + 1 WHERE
   ai_allowance.count < p_cap RETURNING count`: the new count, or `NULL` at the cap. `p_cap >= 1` is checked.
-  Generation uses `spend_p2s_generation(p_device, p_draft_id, p_version_cap, p_budget_period, p_budget_cap) returns
-  jsonb`, which in ONE transaction spends the device version, then the global budget, and gives the device version
+  Generation uses `spend_p2s_generation(p_device, p_version_cap, p_budget_period, p_budget_cap) returns jsonb`, which in ONE transaction spends the device version, then the global budget, and gives the device version
   back if the budget refuses, returning `{ok, reason: 'allowance'|'budget'|null, versions_used}`. A merchant never
   loses a version to a closed budget. Two concurrent calls at 2 of 3 spend at most one: the row lock in `ON CONFLICT
   DO UPDATE` serialises them.
@@ -179,8 +178,8 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
   above does not depend on schema support (a 400 is just a failed block), and the latency against the 20 s
   narration budget is measured in the **S1 live smoke**, with per-block timings logged.
 - **D10 — Block shapes.** `identity` = `profile` fields `name, tagline, description, state, city, accent_color,
-  theme_preset` + `accent_alternates: [hex, hex, hex]`. `words` = `profile.announcement` + `profile.hero` (promo copy
-  only, no image URL) + an `about` paragraph. `catalog` = 4–6 `ExampleRow`s, where `ExampleRow = CatalogImportRow &
+  theme_preset` + `accent_alternates: [hex, hex, hex]`. `words` = `profile.announcement` + a draft-only `headline` + an
+  `about` paragraph. No `hero`: its promo mode requires `promo_image_url` (`validateConfig`), and we never invent one. `catalog` = 4–6 `ExampleRow`s, where `ExampleRow = CatalogImportRow &
   { example: true; illustration: IllustrationKey }` is a **draft-only** type: `CatalogImportRow` has no example field,
   and `MiyagiSetupFile` is not widened. `illustration` is a closed enum keyed to `CATALOG_CATEGORY_KEYS`; `images` is
   always empty. A generated colour must still pass the theme contrast guard; a failing one is replaced, not shipped.

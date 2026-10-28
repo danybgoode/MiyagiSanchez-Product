@@ -1,6 +1,6 @@
 ---
-status: in-progress  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped      # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 locked_at: "2026-10-28T21:45:44Z"
 slug: pricing-page
@@ -36,9 +36,15 @@ satisfied_min_score: null   # the score (1–5) a satisfaction_rated answer need
 build_order: 9       # integer position in the ONE global build sequence — the SSOT once the epic
                      # exists (the seed's value is only a fallback). Fill it in at the betting
                      # table; plain integers, no "#2a" suffixes. See 00-ideas/README.md → Ordering.
+actual_usd: 28.94
+actual_mtok: 77.8
+actual_models: "claude-opus-5-5 ≈$28.94"
+actual_basis: "this machine · 2026-10-28 · 1 session · prices 2026-10-02"
 ---
 
-# Epic: Pricing page
+# Epic: Pricing page ✅
+
+> ✅ **Shipped 2026-10-28** — S1 #445 → `ebef359`, S2 #446 → `78e73d2`, both deployed and verified live. Phone walkthroughs owed to Daniel; follow-ups listed under the lock and in `RETROSPECTIVE.md`.
 
 > **Area:** 08-growth-and-promotions · **Risk:** low · **Class:** Feature · **Scope seed:** [`00-ideas/seeds/pricing-page.md`](../../00-ideas/seeds/pricing-page.md)
 <!-- Class (above) is the Stage-2 classification: Feature, Spike, Bug, or Chore — see SKILL.md's
@@ -244,15 +250,15 @@ Builds in parallel with prompt-to-shop: the only shared surface is `/mx/vende`, 
 epic only adds a pricing link in a different component.
 
 ## Definition of Done (epic)
-- [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
-- [ ] Each `sprint-N.md` has its smoke walkthrough (real URLs)
-- [ ] This README marked ✅; every sprint status ticked with commit refs
-- [ ] `RETROSPECTIVE.md` written
-- [ ] Product poster (`Roadmap/README.md`) updated
-- [ ] Team memory + `MEMORY.md` index updated
-- [ ] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
-- [ ] **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
-      exists **in Golden Frijoles, in every env**, with the stated polarity, **and its switch is set there** —
+- [x] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
+- [x] Each `sprint-N.md` has its smoke walkthrough (real URLs)
+- [x] This README marked ✅; every sprint status ticked with commit refs
+- [x] `RETROSPECTIVE.md` written
+- [x] Product poster (`Roadmap/README.md`) updated
+- [x] Team memory + `MEMORY.md` index updated
+- [x] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
+- [x] ~~**Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
+      exists **in Golden Frijoles, in every env**, with the stated polarity, **and its switch is set there**~~ — n/a, no flag planned (`flag_key: null`) —
       `frijoles flags get <key>` must print `on vN` or `off vN` in its PRODUCTION row (a bare `off` with no version
       means nothing is served there, so the app runs on its own built-in default). A newly synced flag goes live as written in its file; a sync never switches an existing one. *Verify-only — not a new gate; whether a high-risk epic needs one
       is decided at refining, not here.*

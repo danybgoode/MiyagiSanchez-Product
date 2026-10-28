@@ -3,7 +3,7 @@
 > **GENERATED — do not hand-edit.** `node scripts/owed-ledger.mjs`.
 > Re-derived from the spec tree on every run, never from a maintained list.
 
-_Generated: 2026-08-18_
+_Generated: 2026-10-28_
 
 **86 check(s) owed across 79 spec file(s).**
 
@@ -24,7 +24,7 @@ _Generated: 2026-08-18_
 - `apps/miyagisanchez/e2e/mcp-configured-checkout.spec.ts:13` — artwork URL and a real payment, is owed to Daniel per sprint-4.md).
 - `apps/miyagisanchez/e2e/mcp-order-read.spec.ts:11` — — that's owed to Daniel, same fixture gap `agent-connector.spec.ts` notes.
 - `apps/miyagisanchez/e2e/onboarding-cobros-wizard.spec.ts:11` — real MP OAuth round-trip itself is owed to Daniel (money/auth).
-- `apps/miyagisanchez/e2e/orders-bulk-status.spec.ts:7` — that live check is owed to Daniel. This asserts the proxy is Clerk-gated
+- `apps/miyagisanchez/e2e/orders-bulk-status.spec.ts:9` — that live check is owed to Daniel. This asserts the proxy is Clerk-gated
 - `apps/miyagisanchez/e2e/promoter-cadence.spec.ts:36` — NOT covered (owed to Daniel): a real one-time Stripe charge + confirming no
 - `apps/miyagisanchez/e2e/refund-transition-api.spec.ts:7` — owed to Daniel (see sprint-1.md).
 - `apps/miyagisanchez/e2e/rental-checkout.spec.ts:12` — smoke is owed to Daniel (flag is OFF in prod) — see sprint-2.md.
@@ -39,7 +39,6 @@ _Generated: 2026-08-18_
 
 - `apps/miyagisanchez/e2e/admin-audit.spec.ts:13` — inserts a row with my Clerk id/email" check is owed to Daniel (admin session).
 - `apps/miyagisanchez/e2e/admin-featured.spec.ts:9` — session (it mutates Medusa product metadata) and is owed to Daniel.
-- `apps/miyagisanchez/e2e/admin-flags-api.spec.ts:10` — must ALSO 401. The authed 200-upsert + audit render is owed to Daniel (sprint smoke).
 - `apps/miyagisanchez/e2e/admin-tenant-entitlement.spec.ts:20` — admin Clerk session and are owed to Daniel (stated in the PR + sprint smoke).
 - `apps/miyagisanchez/e2e/admin-tenants-api.spec.ts:8` — session and is owed to Daniel (stated in the PR + sprint smoke).
 - `apps/miyagisanchez/e2e/cuenta-search.browser.spec.ts:11` — affordance). The authed Cuenta-menu open stays owed to Daniel.
@@ -52,6 +51,7 @@ _Generated: 2026-08-18_
 - `apps/miyagisanchez/e2e/shop-settings-sections.browser.spec.ts:16` — + dev Clerk keys + MS_TEST_SELLER_EMAIL. The live save round-trips are owed to Daniel.
 - `apps/miyagisanchez/e2e/tenant-intake-api.spec.ts:9` — (a real Clerk session) is owed to Daniel per the Sprint 1 smoke
 - `apps/miyagisanchez/e2e/us-seller-locale.spec.ts:15` — OWED TO DANIEL — an authed `/sell` load. This is the one direct confirmation that
+- `apps/miyagisanchez/e2e/wall-api-auth.spec.ts:15` — owed to Daniel — an automated authed seller session is the known gap
 
 ## admin-only (4)
 
@@ -63,18 +63,18 @@ _Generated: 2026-08-18_
 ## other (49)
 
 - `apps/miyagisanchez/e2e/agent-connector.spec.ts:19` — NOT covered (owed to Daniel — sprint-2.md smoke walkthrough steps 2–4): the live
-- `apps/miyagisanchez/e2e/agent-prompt.browser.spec.ts:14` — owed to Daniel.
+- `apps/miyagisanchez/e2e/agent-prompt.browser.spec.ts:15` — owed to Daniel.
 - `apps/miyagisanchez/e2e/buyer-telegram-api.spec.ts:8` — row-safety, and a delivered Telegram message are owed to Daniel (need a real
 - `apps/miyagisanchez/e2e/catalog-bulk.spec.ts:13` — mid-preview persistence, idempotent re-apply) is owed to Daniel per the
 - `apps/miyagisanchez/e2e/conversation-ledger-api.spec.ts:12` — (owed to Daniel) — stated in the PR.
 - `apps/miyagisanchez/e2e/cross-channel-trust.browser.spec.ts:18` — there. The live custom-domain + subdomain cosmetic look is owed to Daniel.
 - `apps/miyagisanchez/e2e/custom-domain-paywall.spec.ts:31` — NOT covered here (owed to Daniel — sprint-1.md smoke walkthrough): the live
-- `apps/miyagisanchez/e2e/custom-domain-paywall.spec.ts:133` — anonymously). Live card purchase is owed to Daniel (sprint-2.md smoke).
-- `apps/miyagisanchez/e2e/custom-domain-paywall.spec.ts:173` — NOT covered here (owed to Daniel — sprint-3.md smoke): the live coupon
+- `apps/miyagisanchez/e2e/custom-domain-paywall.spec.ts:131` — anonymously). Live card purchase is owed to Daniel (sprint-2.md smoke).
+- `apps/miyagisanchez/e2e/custom-domain-paywall.spec.ts:171` — NOT covered here (owed to Daniel — sprint-3.md smoke): the live coupon
 - `apps/miyagisanchez/e2e/domain-coupon.spec.ts:29` — NOT covered here (owed to Daniel — sprint-1.md smoke walkthrough): the live
 - `apps/miyagisanchez/e2e/growth-track-api.spec.ts:9` — 200-skipped / 202-forwarded paths are owed to Daniel (Sprint 1 smoke —
 - `apps/miyagisanchez/e2e/home-announcement.spec.ts:9` — persists, no layout shift" round-trip is owed to Daniel (sprint smoke walkthrough),
-- `apps/miyagisanchez/e2e/home-personalization.browser.spec.ts:17` — confirm hydration on prod. The real signed-in eyeball is therefore owed to Daniel
+- `apps/miyagisanchez/e2e/home-personalization.browser.spec.ts:18` — confirm hydration on prod. The real signed-in eyeball is therefore owed to Daniel
 - `apps/miyagisanchez/e2e/merchant-commerce-facts.spec.ts:27` — transition" claim needs a real database and is owed to Daniel as a browser/
 - `apps/miyagisanchez/e2e/migrations-estimate.spec.ts:20` — only; the real DB round-trip is owed to Daniel, per convention).
 - `apps/miyagisanchez/e2e/migrations-mapper.spec.ts:23` — live-Shopify-domain pull + parity-report eyeball is owed to Daniel. See
@@ -88,7 +88,7 @@ _Generated: 2026-08-18_
 - `apps/miyagisanchez/e2e/notification-preferences-api.spec.ts:10` — (owed to Daniel) — stated in the PR.
 - `apps/miyagisanchez/e2e/panfleto-rename-alias.spec.ts:13` — `own-shop-seo.spec.ts`'s "positive path owed to Daniel" pattern, except
 - `apps/miyagisanchez/e2e/partner-grants.spec.ts:11` — NOT covered here (owed to Daniel — sprint-2.md smoke walkthrough): the real
-- `apps/miyagisanchez/e2e/pdp-gallery.browser.spec.ts:16` — live custom-domain/subdomain white-label look stays owed to Daniel.
+- `apps/miyagisanchez/e2e/pdp-gallery.browser.spec.ts:20` — live custom-domain/subdomain white-label look stays owed to Daniel.
 - `apps/miyagisanchez/e2e/print-studio-api.spec.ts:21` — are set as env — until then it skips with a clear reason (owed to Daniel,
 - `apps/miyagisanchez/e2e/promoter-cadence.spec.ts:34` — assertion) is owed to Daniel — see sprint-2.md.
 - `apps/miyagisanchez/e2e/promoter-close-migration.spec.ts:12` — (a real quote closed, cash + net-remittance variants) is owed to Daniel —
@@ -103,7 +103,7 @@ _Generated: 2026-08-18_
 - `apps/miyagisanchez/e2e/relationship-stewardship.spec.ts:13` — NOT covered here (owed to Daniel — sprint-2.md's smoke walkthrough): the
 - `apps/miyagisanchez/e2e/scorecard-endpoint-routes.spec.ts:18` — are owed to Daniel as the Sprint 1 smoke walkthrough (step 2).
 - `apps/miyagisanchez/e2e/seller-acquisition-mobile.browser.spec.ts:7` — insets) still evade headless viewport checks and stay owed to Daniel (see sprint-4.md walkthrough).
-- `apps/miyagisanchez/e2e/seller-mode.spec.ts:95` — sprint's stated "owed to Daniel" browser smokes (sprint-6.md);
+- `apps/miyagisanchez/e2e/seller-mode.spec.ts:100` — sprint's stated "owed to Daniel" browser smokes (sprint-6.md);
 - `apps/miyagisanchez/e2e/seller-unclaimed-s3.browser.spec.ts:18` — Until that fixture exists the 375px sub-nav check is owed to Daniel.
 - `apps/miyagisanchez/e2e/shop-ping.spec.ts:7` — The live Telegram send is owed to Daniel; this asserts the deterministic seam
 - `apps/miyagisanchez/e2e/shop-settings-returns.browser.spec.ts:17` — MS_TEST_SELLER_EMAIL. The live save round-trip is owed to Daniel.

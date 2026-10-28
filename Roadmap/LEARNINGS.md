@@ -1544,6 +1544,22 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   ops-routines-reporting S3 close-out.)*
 
 ## Build & QA
+
+- **"Existing specs green" means the WHOLE deterministic project, not the specs you think you touched
+  (2026-10-28, pricing-page).** The S1 builder ran a targeted subset and reported green; the fresh reviewer ran
+  `npm run test:e2e` and found **4 deterministic blockers** in specs nobody would associate with a pricing page —
+  the admin copy-editor route map, `revalidate-truth`, the buyer-locale population, a seller glossary assertion.
+  Each one guards a cross-cutting invariant a new namespace/route/token silently trips. Run the full `api`
+  project before claiming green; it takes ~1 min. (The cross-family pass, a lone gemini read, missed all four.)
+- **Verify a competitor's price by RENDERING the page, not by curl or the press (2026-10-28, pricing-page).**
+  T1's pricing table is client-rendered: the served HTML had the tiers, the press had "Gratis: 30 orders a
+  month" and "+2% on external methods". The rendered table said the free plan **cannot transact at all**, and
+  the 2%/1% is T1's cut **instead of** T1pagos, charged **on top of** the external provider's own fee. A headless
+  Chromium render (`page.evaluate(() => document.body.innerText)`, click the comparison toggle) settled all three.
+- **A comparison's alternative path must carry every party's fee, or it flatters someone (2026-10-28).** T1's
+  external-gateway path showed T1's cut but not the gateway's own processing — while Miyagi's side included
+  processing — so T1 read ~$700/mo cheaper on an unlike-for-like basis. The fresh reviewer caught it by asking
+  "what does the merchant actually pay on this path?". Tiendanube's external path has the same gap (owed).
 - **A `continue-on-error` JOB CANNOT UPLOAD ITS OWN EVIDENCE — `if: failure()` NEVER FIRES THERE.**
   The PR browser layer is non-blocking by design, so the job reports success no matter what
   happens inside it. Its artifact upload was `if: failure()` — copied from the nightly workflow,

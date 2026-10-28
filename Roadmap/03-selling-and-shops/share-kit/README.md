@@ -130,7 +130,9 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
   placements; `resolveShopPresentation` refuses a preview-private shop and a market mismatch. Owned-channel-only
   products are included — it is the merchant's own catalog.
 - **D2 — `getShopListings` pages.** It requests `limit=50` and follows `offset` until `count` is reached (the backend's
-  own `take: 2000` bounds it). Same `unstable_cache` key and tags. A failed page after the first returns what was read
+  own `take: 2000` stops it). Same `unstable_cache` key and tags. ⚠ S1 verifier: that `take: 2000` is platform-wide
+  (filtered to the seller afterwards), not per seller — past 2000 published products a shop can silently lose some with
+  `count` agreeing. A backend follow-up, outside this epic. A failed page after the first returns what was read
   plus a `console.error`, never a silent partial presented as complete — the caller gets the same array type, so the
   log is the signal.
 - **D3 — The merchant's WhatsApp number has one definition.** Pure `shopWhatsAppNumber(metadata)` in
@@ -160,7 +162,10 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
   `app/(shell)/s/[slug]/catalogo/page.tsx` (unprefixed marketplace host), `app/(shell)/catalogo/page.tsx` (owned host,
   `resolveRequestShopPresentation`, shop from the unspoofable `x-miyagi-shop-slug` header). One body:
   `app/(shell)/_shop-sections/CatalogBody.tsx`. It is a share destination, not a nav section: no `navSections` gate.
-  `export const revalidate = 120`. `catalogo` joins `MARKETPLACE_SHOP_TAILS` in `lib/public-read-routing.ts` so the
+  ⚠ S1 verifier: **no `revalidate`** on these pages — the `(shell)` layout reads headers, so it could never apply
+  (`revalidate-truth.spec.ts`); as for `/tienda`, the ISR literal lives on the public-read catch-all, which gains a
+  `catalogo` case. `app/(us-shell)/us/s/[slug]/catalogo` mirrors it (`market-route-population.spec.ts`) and 404s
+  through D5. `catalogo` joins `MARKETPLACE_SHOP_TAILS` in `lib/public-read-routing.ts` so the
   edge caches it like `/tienda`.
 - **D9 — Weight.** Server component, zero client islands in S1 (plain anchors). Photos through
   `lib/image-loader.ts` (`/api/img`, same origin). OG image from `generateMetadata`: the shop logo, else the first
@@ -170,7 +175,7 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
 - **D10 — QR.** `shopQrPlan(slug, target)` gains `target: 'shop' | 'catalogo'`; `/api/sell/shop/qr?target=catalogo`
   encodes `mschz.org/s/<slug>/catalogo`. Anything else for `target` is `shop`. Still seller-session scoped.
 - **D11 — Tiles.** A «Catálogo» `Card` in `ComparteClient` (copy, WhatsApp via `buildWhatsAppShareLink`, QR download)
-  and the same three actions in `PublishedMoment`. Each tap: `pushAnalyticsEvent('share_catalog_link', { channel })`
+  and the same three actions in `PublishedMoment` (gated on `market === 'mx'`, passed from `KeptShop`). Each tap: `pushAnalyticsEvent('share_catalog_link', { channel })`
   (no dedupe key — once per tap) and the existing `guide.share_done` write. Iconoir, no emoji.
 
 **The renderer (S2.1) — shared infra, security lens**

@@ -48,7 +48,7 @@ stories:
 
 ### Story 1.2 — /mx/precios page, OG image, JSON-LD offers, sitemap
 **As** a merchant comparing platforms, **I want** one page that shows what's free, what each extra costs, and what my payment processor charges, **so that** I know what selling here costs before I sign up.
-**Acceptance:** Server-rendered es-MX at `/mx/precios` with the four sections of the seed's surface block (Gratis, siempre · Extras opcionales · Lo que cobra tu pasarela (no nosotros) · ¿Y contra T1 y los demás?), «Empieza gratis» → `/mx/vende`, a short FAQ. Explicit `revalidate` of one hour (a dataless page without it gets pinned for a year at the CDN). Own `opengraph-image.tsx`; JSON-LD `Offer`s only for fixed-price extras; added to `PLATFORM_SITEMAP_ENTRIES`. An `api` spec reads the raw HTML and finds every section and real prices. Shared `Card` / `Button` / `badge`, Iconoir, no emoji. Never implies card fees are free.
+**Acceptance:** Server-rendered es-MX at `/mx/precios` with the four sections of the seed's surface block (Gratis, siempre · Extras opcionales · Lo que cobra tu pasarela (no nosotros) · ¿Y contra T1 y los demás?), «Empieza gratis» → `/mx/vende`, a short FAQ. ~~Explicit `revalidate` of one hour~~ — amended (README D6): the `(shell)` group renders per request, so the page is `no-store` and needs none. Own `opengraph-image.tsx`; JSON-LD `Offer`s only for fixed-price extras; added to `PLATFORM_SITEMAP_ENTRIES`. An `api` spec reads the raw HTML and finds every section and real prices. Shared `Card` / `Button` / `badge`, Iconoir, no emoji. Never implies card fees are free.
 **Risk:** low
 
 ### Story 1.3 — /acerca, about-agent and llms.txt read the catalog

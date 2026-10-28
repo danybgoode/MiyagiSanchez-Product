@@ -187,6 +187,30 @@ is a security path, so the deterministic gate is the gate unless the router says
 - **D17 — Deploy + verify.** Storefront only: merge → image build → `update.sh` on the VM → verify the
   container revision == merge SHA, then the sprint's anonymous render check on `main`.
 
+### Amendment at S2 build day (2026-10-28 — T1's live page, rendered: `https://t1.com/mx/precios`, «Mostrar tabla comparativa»)
+- **A1 — supersedes D11/P5.** Plans: Gratis $0 · Básico $399 · Avanzado $1,499 MXN a month (annual: $332.5 / $1,249.167 a month).
+  **Gratis has no online store and cannot transact** («No se puede transaccionar») — the 30-order cap in the press is
+  stale. Payments: T1pagos 3.5% + $1 per transaction (Básico, Avanzado) **or** an external provider (PayPal, Mercado
+  Pago) with T1's own cut of **2% (Básico) / 1% (Avanzado)** — an alternative, not an add-on.
+- **A2 — supersedes D12/D13 lines.** `computeT1Cost(inputs, tier, useT1Pagos, rates, apps)` mirrors Tiendanube:
+  `plan`, `payment` (T1pagos % + fixed, or the external cut), `apps`. `COMPARADOR_T1_TIERS = ['basico','avanzado']`;
+  the shared `gateway=external` param is reused, platform-gated. Gratis is a note in the T1 picker, not a chip —
+  a $0 "plan" that cannot sell would flatter T1. SPEI is not on T1's pricing page, so it is not modelled.
+- Deviation from sprint-2.md's smoke steps 3 (Gratis chip) — rewritten to the external-gateway toggle.
+- **D14 outcome — analyzer detection descoped.** No real T1 storefront URL or HTML marker could be verified on
+  build day; guessing a host pattern would misdetect. The manual T1 picker is the path; `DetectedPlatform` is unchanged.
+- **D6 amended (S1 review).** No `revalidate`: every `app/(shell)` route renders per request (the shell reads
+  headers and the Clerk session), and `e2e/revalidate-truth.spec.ts` rejects a `revalidate` the route cannot honour.
+  The page is served `no-store`, so the year-long CDN pin D6 guarded against cannot happen. The fresh reviewer caught
+  this; the lock had assumed a static page.
+- **S1 review — `/mx/precios` is a non-buyer subtree.** Like `/mx/vende`, it is named in
+  `scripts/derive-buyer-locale-population.ts` `NON_BUYER_SUBTREES`, with its reason (es-MX seller page, MX prices).
+- **Follow-up (out of D8's enforced paths, pre-existing):** hand-typed SKU prices remain in
+  `app/api/ucp/manifest/route.ts`, `app/api/ucp/mcp/route.ts` (tool descriptions/labels) and `lib/{subdomain,ml-sync}-billing.ts`.
+  Move them to the catalog and add those paths to the sweep's enforced list.
+- **S1 build found two more hand-typed prices** than P7 named — the promotor sales `scripts` (es + en, one also
+  saying «pago único» for a yearly renewal). Tokenized; the source sweep is what found them.
+
 ### Build contract — Sprint 1 (locked by the architect before the builder started)
 Files: `lib/pricing-catalog.ts` (D1, D3, D4, D5, D7 filler) · `lib/pricing-catalog-server.ts` (D2) ·
 `lib/cost-comparator-dataset.json` (+2 MP figures, D5) · `app/(shell)/mx/precios/{page.tsx,opengraph-image.tsx}`

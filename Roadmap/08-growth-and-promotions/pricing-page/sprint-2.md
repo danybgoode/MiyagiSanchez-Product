@@ -48,9 +48,9 @@ Env: production · https://miyagisanchez.com   (or the preview URL while testing
 1. On a phone, open https://miyagisanchez.com/mx/precios and tap «Compara con tus números»
    → the comparador opens with T1 selected
 2. Pick Básico, set 100 sales a month and a $500 ticket
-   → T1's total shows its subscription, card fee and SPEI lines against Miyagi's
-3. Switch T1 to Gratis
-   → the subscription line drops to $0 and a note states the monthly order cap
+   → T1's total shows its plan and T1pagos card-fee lines against Miyagi's
+3. Switch T1's payment to «Pasarela externa»
+   → the payment line becomes T1's 2% cut (1% on Avanzado), and a note says T1's free plan has no online store
 4. Hover or tap any T1 figure
    → its source and verified date show
 5. Tap «Copiar enlace» and open the link in a private window

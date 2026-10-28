@@ -88,7 +88,12 @@ resolve() {
   local pin; pin="$(grep -E "^$1_PIN=" "$ENV_FILE" | tail -1 | cut -d= -f2- || true)"
   if [ -n "$pin" ]; then docker pull -q "$pin" >/dev/null; echo "$pin"; return; fi
   docker pull -q "$2:main" >/dev/null
-  docker image inspect "$2:main" --format '{{index .RepoDigests 0}}'
+  # The digest UNDER THIS NAME. One image can carry several (during the 2026-10-28 rename the same build was pushed
+  # as miyagi-web and miyagisanchez-storefront), and RepoDigests[0] is whichever was pulled first, so the old name won.
+  local digest
+  digest="$(docker image inspect "$2:main" --format '{{range .RepoDigests}}{{println .}}{{end}}' | grep -m1 "^$2@" || true)"
+  [ -n "$digest" ] || { echo "✗ no $2 digest after pulling $2:main" >&2; return 1; }
+  echo "$digest"
 }
 STEP="pulling the images"
 MEDUSA_IMAGE="$(resolve MEDUSA_IMAGE ghcr.io/danybgoode/miyagisanchez-backend)"

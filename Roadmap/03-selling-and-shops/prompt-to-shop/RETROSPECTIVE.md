@@ -29,4 +29,4 @@ _Crew (actual): orchestrator claude-opus-5-5; builders claude-opus-5-5 (S1, S3â€
 - **OWED to Daniel:**
   - **Enable the nudge timer on the VM.** The agent's attempt was refused by the classifier. The command is in `sprint-5.md`.
   - **Phone walkthroughs:** sprint-2 (which also covers S1's generation smoke), 3, 4 and 5. They include Mercado Pago OAuth and a real test order.
-- **Not done this run:** poster line in `Roadmap/README.md`, LEARNINGS promotion of the four items above, branch cleanup.
+- **Done at close:** the poster line and the four learnings promoted to `LEARNINGS.md`.

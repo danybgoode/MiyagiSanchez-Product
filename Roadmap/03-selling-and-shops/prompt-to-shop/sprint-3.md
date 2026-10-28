@@ -3,7 +3,7 @@ epic: prompt-to-shop
 sprint: 3
 title: "Keep it"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 3
 stories:
   - id: S3.1
@@ -30,7 +30,7 @@ stories:
 ---
 # Prompt-to-shop — Sprint 3: Keep it
 
-**Status:** 🟡 merged + deployed (storefront #440 → `871e7ee`, live 2026-10-28). The sign-up walkthrough below is owed to Daniel.
+**Status:** ✅ merged + deployed (storefront #440 → `871e7ee`, live 2026-10-28). The sign-up walkthrough below is owed to Daniel.
 
 ## Stories
 

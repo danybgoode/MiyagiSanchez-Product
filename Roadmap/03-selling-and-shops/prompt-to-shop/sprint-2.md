@@ -44,7 +44,7 @@ stories:
 ---
 # Prompt-to-shop — Sprint 2: Describe, shape, preview
 
-**Status:** 🟡 merged + deployed (storefront #439 → `cd894f0`, live 2026-10-28). The phone walkthrough below is owed to Daniel.
+**Status:** ✅ merged + deployed (storefront #439 → `cd894f0`, live 2026-10-28). The phone walkthrough below is owed to Daniel.
 
 ## Stories
 

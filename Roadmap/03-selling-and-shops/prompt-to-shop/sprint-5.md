@@ -3,7 +3,7 @@ epic: prompt-to-shop
 sprint: 5
 title: "Pay, deliver, publish, return"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 4
 stories:
   - id: S5.1
@@ -37,7 +37,7 @@ stories:
 ---
 # Prompt-to-shop — Sprint 5: Pay, deliver, publish, return
 
-**Status:** 🟡 merged + deployed (storefront #442 → `1b2123c`, live 2026-10-28). The money steps and the timer enable are owed to Daniel.
+**Status:** ✅ merged + deployed (storefront #442 → `1b2123c`, live 2026-10-28). The money steps and the timer enable are owed to Daniel.
 
 ## Stories
 

@@ -3,7 +3,7 @@ epic: prompt-to-shop
 sprint: 4
 title: "Make it yours"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 3
 stories:
   - id: S4.1
@@ -30,7 +30,7 @@ stories:
 ---
 # Prompt-to-shop — Sprint 4: Make it yours
 
-**Status:** 🟡 merged + deployed (storefront #441 → `16bcd1f`, live 2026-10-28). The phone walkthrough below is owed to Daniel.
+**Status:** ✅ merged + deployed (storefront #441 → `16bcd1f`, live 2026-10-28). The phone walkthrough below is owed to Daniel.
 
 ## Stories
 

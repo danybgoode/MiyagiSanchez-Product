@@ -37,7 +37,7 @@ stories:
 ---
 # Prompt-to-shop — Sprint 1: Generation rail
 
-**Status:** 🟡 merged + deployed (storefront #436 → `2ae4b25`, live 2026-10-28); migration `20261027120000` applied + verified live. Generation smoke owed: blocked on `GEMINI_API_KEY` + Turnstile keys, which are not yet on the VM.
+**Status:** ✅ merged + deployed (storefront #436 → `2ae4b25`, live 2026-10-28); migration `20261027120000` applied + verified live. Generation smoke owed: blocked on `GEMINI_API_KEY` + Turnstile keys, which are not yet on the VM.
 
 ## Stories
 

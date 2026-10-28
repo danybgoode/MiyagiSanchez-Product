@@ -1439,7 +1439,14 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   project-local `cloud-builds` topic, Eventarc subscriptions, or Gen2 notifier functions; builds
   succeeded in the new project while terminal alerts stayed attached to the old one. During a
   cutover, enumerate `topic → subscription/trigger → function/service` as one unit and smoke it
-  before calling the soak observable. *(2026-07-19, GCP account-migration post-cutover audit.)*
+  before calling the soak observable. *(2026-07-19, GCP account-migration post-cutover audit.)* It bit again
+  on the Oracle VM move: the "deployed" Telegram ping lived in the old rail and nothing replaced it, so 12 days of
+  deploys said nothing (fixed in `update.sh`, root #226). *(2026-10-28, prompt-to-shop.)*
+- **A bot-token merge builds nothing: prove the running revision equals `main`.** Dependabot's merge to backend
+  `main` (`6cf1431`) pushed with `GITHUB_TOKEN`, which starts no workflow, so its arm64 image never existed and
+  every `update.sh` kept redeploying the previous digest — green, healthy and stale. After each deploy compare the
+  container's `org.opencontainers.image.revision` label with the merge SHA; a lag means dispatch the image build.
+  *(2026-10-28, prompt-to-shop.)*
 - **Treat the production image runtime as one contract across Docker, package engines/types, and
   hosted CI.** A dependency refresh raised Supabase's floor to Node 22, but both app Dockerfiles and
   CI stayed on Node 20; PR checks remained green while Cloud Build emitted `EBADENGINE`. Move all
@@ -2769,6 +2776,14 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   pricing-money-path-remediation S1 — backend PR #89.)*
 
 ## Architecture
+- **An idempotent create-or-get's 200 is not proof THIS call made the record — apply side data only on the 201.**
+  The draft claim called `ensureShop` and poured the generated profile into whatever came back; a 200 (a shop
+  made by another tab, the manual wizard, or after a failed keep) got overwritten. Mark "this flow made it" right
+  after the 201, and treat a 200 as somebody else's. *(2026-10-28, prompt-to-shop S3, codex blocking.)*
+- **In a stale-takeover idempotency ledger, record PAID before the side effect and bound the side effect below the
+  stale window.** A photo confirm spent, then stalled in the Medusa create past 60 s; a retry took the stale
+  `pending` over and spent again. Order is reserve → spend → mark paid → create (20 s timeout) → finish, so a stale
+  entry can only mean the spend never landed. *(2026-10-28, prompt-to-shop S4, codex blocking.)*
 - **A comment asserting a control is not a control — and the control it claims may never have been
   built.** `apps/backend/src/api/store/_utils/clerk-auth.ts` carried, for months, *"we decode the Clerk
   JWT ourselves — which is safe because Clerk's public key validation happens at the edge

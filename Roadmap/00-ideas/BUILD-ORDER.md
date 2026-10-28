@@ -183,7 +183,7 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (8)
+## ⬜ Funnel — seeds not yet scaffolded (9)
 
 - [Affinity marketplace infrastructure — partner-operated markets](seeds/affinity-marketplace-infrastructure.md) — Raw · Epic
 - [AI-adoption guardrails — close the step-1/2 gaps the ladder names (browser smoke · security review · proactive monitor · OTel)](seeds/ai-adoption-maturity-benchmark.md) — Ready · Chore
@@ -191,6 +191,7 @@
 - [Designer collaboration portal (deferred from #4)](seeds/designer-collaboration-portal.md) — Raw · Feature
 - [Flag lane cleanup — drop the parked platform_flags + legacy mirror, retire dead env vars](seeds/flag-lane-cleanup.md) — Raw · Chore
 - [Ink + highlight — a visual language that doesn't read as AI-default, and the copy that goes with it](seeds/ink-highlight-ui-upgrade.md) — Ready · Feature
+- [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
 
@@ -206,4 +207,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 167 · seeds in funnel: 8 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 167 · seeds in funnel: 9 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

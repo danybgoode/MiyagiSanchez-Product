@@ -238,3 +238,9 @@ test('update.sh pings Telegram on every deploy: 🚀 per changed app on success,
   // The brand and the app names, never the old ones (Daniel, 2026-10-28).
   assert.doesNotMatch(u + read('deploy-notice.sh'), /<b>miyagi<\/b>|miyagisanchezcommerce|medusa-bonsai-backend|ghcr\.io\/danybgoode\/(miyagi-web|medusa-web):main/)
 })
+
+test('resolve picks the digest under the REQUESTED name, never RepoDigests[0] (the 2026-10-28 rename kept the old name)', () => {
+  const u = read('update.sh')
+  assert.doesNotMatch(u, /index \.RepoDigests 0/)
+  assert.match(u, /grep -m1 "\^\$2@"/)
+})

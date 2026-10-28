@@ -181,6 +181,13 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
   `GEMINI_API_KEY` in this checkout and the VM env read was refused, so neither could be measured here. The design
   above does not depend on schema support (a 400 is just a failed block), and the latency against the 20 s
   narration budget is measured in the **S1 live smoke**, with per-block timings logged.
+  **Measured 2026-10-28 (storefront #437):** `gemini-3.5-flash` exists (`GET models/…` → 200) and accepts
+  `responseSchema`. Its default thinking spent 980 of identity's 1024 output tokens, stopping at `MAX_TOKENS`
+  mid-JSON, so every identity fell back and a run took 24.6 s. Every block now sends `thinkingConfig: {thinkingLevel:
+  'minimal'}` with ≥ 2048 tokens; all three blocks come back `ok` first time in 6.6–7.4 s. **Two credentials:**
+  `GOOGLE_VERTEX_SA_JSON` (the credited Cloud project, base64 service-account JSON) goes through **Vertex AI** with a
+  minted, cached token. The Gemini API refuses service-account tokens. Otherwise `GEMINI_API_KEY` goes through the
+  Gemini API as above. Vertex wins when both are set.
 - **D10 — Block shapes.** `identity` = `profile` fields `name, tagline, description, state, city, accent_color,
   theme_preset` + `accent_alternates: [hex, hex, hex]`. `words` = `profile.announcement` + a draft-only `headline` + an
   `about` paragraph. No `hero`: its promo mode requires `promo_image_url` (`validateConfig`), and we never invent one. `catalog` = 4–6 `ExampleRow`s, where `ExampleRow = CatalogImportRow &

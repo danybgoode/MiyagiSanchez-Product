@@ -6,9 +6,11 @@
 #     `miyagi-medusa` over the external `edge` network; Postgres and Redis sit on `miyagi` only.
 #   - every container has a memory and CPU cap. Measured on Cloud Run (2026-10-15, 30d p99): medusa-web
 #     ≤62% of 1 GiB and ≤0.6 vCPU, miyagi-web hits 93–100% of 1 GiB (hence 1.5G here), Postgres ~0.8 GB
-#     on a 1.7 GB db-g1-small, Redis ~9 MB. The MEMORY caps (4.4 GB of 12) are what protect panfleto. The
+#     on a 1.7 GB db-g1-small, Redis ~9 MB. The MEMORY caps (5.0 GB of 12) are what protect panfleto. The
 #     CPU caps sum to 1.75 of the box's 2 OCPUs, so Miyagi alone can never take every core; within that,
 #     each container can burst past its measured p95.
+#   - share-kit S2.1 added the PDF renderer (`print-pdf`) INSIDE those two budgets rather than growing them: 512 MB and
+#     0.2 CPU, the CPU taken 0.1 from Postgres and 0.1 from web (both well under their caps at today's traffic).
 #   - state lives on the /data block volume, so the instance itself stays disposable.
 #
 # Images are built for linux/arm64 in each app repo's `image-arm64.yml` and pulled by commit sha;
@@ -32,7 +34,7 @@ services:
       -c effective_cache_size=1GB
       -c max_connections=60
     mem_limit: 1536m
-    cpus: 0.5
+    cpus: 0.4
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U medusa"]
       interval: 10s
@@ -101,11 +103,27 @@ services:
       PORT: "8080"
       HOSTNAME: 0.0.0.0
     mem_limit: 1536m
-    cpus: 0.55
+    cpus: 0.45
     networks:
       miyagi: {}
       edge:
         aliases: [miyagi-web]
+
+  # Headless Chromium that prints our own pages to PDF (share-kit S2.1; MiyagiSanchez-Storefront services/print-pdf).
+  # On `miyagi` ONLY — never `edge`, no `ports:` — so the one thing that can reach it is `web`, at
+  # PRINT_PDF_URL=http://print-pdf:8080. It loads only allow-listed origins and renders one page at a time (its own
+  # guard.js), so 512 MB holds one Chromium; a fifth waiting caller is told `busy` rather than queued into an OOM.
+  print-pdf:
+    image: ${PRINT_PDF_IMAGE:-ghcr.io/danybgoode/miyagisanchez-print-pdf:main}
+    restart: unless-stopped
+    # print.env: PRINT_PDF_SECRET (the same value as web.env's) and PRINT_PDF_ASSET_ORIGINS (the public R2 origin).
+    env_file: [./print.env]
+    environment:
+      PORT: "8080"
+    mem_limit: 512m
+    cpus: 0.2
+    # Chromium's shared memory: the image passes --disable-dev-shm-usage, so the 64 MB default /dev/shm is enough.
+    networks: [miyagi]
 
 networks:
   miyagi: {}

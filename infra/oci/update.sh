@@ -6,7 +6,7 @@
 # Images: `ghcr.io/danybgoode/{miyagisanchez-backend,miyagisanchez-storefront}:main` is resolved to an
 # immutable DIGEST and that digest is what runs — the moving tag never does. To roll back, pin an older sha in
 # infra/oci/.env:
-#   MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>      (or WEB_IMAGE_PIN=…)
+#   MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>      (or WEB_IMAGE_PIN=…, PRINT_PDF_IMAGE_PIN=…)
 # (Until 2026-10-28 the images were `medusa-web` / `miyagi-web`; a pin to an old-name sha still works.)
 # and re-run; delete the line to roll forward. A pin always wins over :main.
 #
@@ -18,7 +18,7 @@ DEPLOY="$ROOT/infra/oci"
 ENV_FILE="$DEPLOY/.env"
 cd "$DEPLOY"
 
-for f in .env medusa.env web.env; do
+for f in .env medusa.env web.env print.env; do
   [ -s "$f" ] || { echo "✗ infra/oci/$f is missing — restore it from Daniel's password manager (0600, owner ubuntu); bootstrap.sh's source is deleted" >&2; exit 1; }
 done
 
@@ -102,9 +102,12 @@ resolve() {
 STEP="pulling the images"
 MEDUSA_IMAGE="$(resolve MEDUSA_IMAGE ghcr.io/danybgoode/miyagisanchez-backend)" || exit 1
 WEB_IMAGE="$(resolve WEB_IMAGE ghcr.io/danybgoode/miyagisanchez-storefront)" || exit 1
+# The PDF renderer (share-kit S2.1), built from the storefront repo's services/print-pdf. Pinned by digest like the others.
+PRINT_PDF_IMAGE="$(resolve PRINT_PDF_IMAGE ghcr.io/danybgoode/miyagisanchez-print-pdf)" || exit 1
 set_env MEDUSA_IMAGE "$MEDUSA_IMAGE"
 set_env WEB_IMAGE "$WEB_IMAGE"
-for img in "$MEDUSA_IMAGE" "$WEB_IMAGE"; do
+set_env PRINT_PDF_IMAGE "$PRINT_PDF_IMAGE"
+for img in "$MEDUSA_IMAGE" "$WEB_IMAGE" "$PRINT_PDF_IMAGE"; do
   echo "  $img → commit $(docker image inspect "$img" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' | cut -c1-7)"
 done
 
@@ -156,6 +159,7 @@ wait_for() { # service url
 }
 wait_for medusa http://127.0.0.1:8080/health
 wait_for web http://127.0.0.1:8080/
+wait_for print-pdf http://127.0.0.1:8080/health
 
 DEPLOYED=1
 WEB_REV="$(rev "$WEB_IMAGE")"; MEDUSA_REV="$(rev "$MEDUSA_IMAGE")"

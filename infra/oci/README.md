@@ -8,7 +8,7 @@ GCP is deleted; nothing of Miyagi runs anywhere else.
 | Host | `panfleto-prod`, OCI A1 Always Free (2 OCPU / 12 GB), mx-queretaro-1, `159.54.158.4` |
 | Access | `ssh -i ~/.ssh/panfleto_oci ubuntu@159.54.158.4`. When it times out, your IP rotated: run `../fluxonline/deploy/allow-my-ip.sh` |
 | Neighbours | panfleto (`/opt/panfleto`, owns Caddy `deploy-caddy-1`) and aomx. Restarting Caddy takes **every** tenant offline |
-| Stack | `/opt/miyagi/infra/oci`: `docker-compose.yml` (postgres, redis, medusa, web), capped ≤ 5 GB / ≤ 1.75 CPU |
+| Stack | `/opt/miyagi/infra/oci`: `docker-compose.yml` (postgres, redis, medusa, web, print-pdf), capped ≤ 5 GB / ≤ 1.75 CPU |
 | Edge | Cloudflare (proxied, Full Strict) → Caddy → `/opt/edge/sites/miyagi.caddy` → the `edge` network. Origin CA certs in `/opt/edge/certs`, valid until 2041 |
 
 ## Deploy and roll back
@@ -23,7 +23,7 @@ To roll back, add `MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sh
 `/opt/miyagi/infra/oci/.env` and re-run `update.sh`. A pin always wins over `:main`; delete the line to roll forward.
 
 ## Secrets: two copies, and only two
-`.env` (DB passwords), `medusa.env`, `web.env` and `backup.env` hold production's secrets: 0600, owner `ubuntu`. The
+`.env` (DB passwords), `medusa.env`, `web.env`, `print.env` (the PDF renderer's secret, share-kit S2.1) and `backup.env` hold production's secrets: 0600, owner `ubuntu`. The
 **only** other copy is Daniel's password manager (one note per file, plus `CLOUDFLARE_API_TOKEN`,
 `CLOUDFLARE_ACCOUNT_ID`, `SERPAPI_KEY`, `GOLDEN_BEANS_FLAG_SYNC_KEY_{BACKEND,FRONTEND}`). The nightly backups do
 **not** include these files. To change a value, edit the VM file, run `update.sh`, **and update the password

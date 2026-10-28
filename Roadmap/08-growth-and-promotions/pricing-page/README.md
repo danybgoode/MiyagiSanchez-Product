@@ -1,7 +1,8 @@
 ---
-status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Shaping       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: in-progress  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
+locked_at: "2026-10-28T21:45:44Z"
 slug: pricing-page
 title: "Pricing page"
 area: 08-growth-and-promotions
@@ -91,6 +92,118 @@ epic adds one pure **pricing catalog** that assembles those sources, and points 
 allowances row on `/mx/precios` → prompt-to-shop S4.2 (it reads this epic's catalog).
 
 **Flag:** none (WAYS-OF-WORKING default); rollback is `git revert`.
+
+## Architecture lock (2026-10-28 — verified against storefront `ec8a2fb` and the live DB)
+
+Builders **cite** these; nothing here is restated elsewhere. Model routing: one orchestrator (Opus 5.5)
+builds both sprints in place in the worktree `~/dobby/.worktrees/pp-web`; S1 defines the catalog contract,
+S2 is mechanical. Review: `review-route.mjs` per PR (`reviewScope: security-paths-only` — none of these paths
+is a security path, so the deterministic gate is the gate unless the router says otherwise).
+
+### Premises the live system corrected (said out loud)
+- **P1 — `getPromoterSkuPrices()` is not a public price list.** It reads `marketplace_promoter_sku_prices`,
+  the *promoter-discounted* override table (`lib/promoter-pricing.ts` clamps it to ≤ list price). Live rows:
+  **one** — `migration = 999`. `print_ad` has none. The print ad's public price lives per tier in
+  `print_editions.tiers[].price_cents`; live: 2 editions, **both `draft`**, none `open`. → D2.
+- **P2 — `/acerca`, `/agent` and `llms.txt` do NOT render `lib/about-content.ts`.** Every live path goes
+  through `getOverriddenAboutSections()` → `locales/{es,en}.json → acerca.sections.pricing` (+ admin
+  `platform_copy_overrides`, **0 pricing rows live**). The two copies have already drifted
+  (`locales` says `miyagisanchez.com/s/tu-tienda`, `about-content.ts` says `/mx/s/tu-tienda`). → D7.
+- **P3 — the type is `CompetitorPlatform`** (`lib/cost-comparator-url.ts`), not `ComparatorPlatform`.
+- **P4 — `app/api/comparador/analyze` is the shop-URL analyzer**, so "T1 joins the analyze route" means T1
+  detection in `lib/shop-url-analyzer.ts#detectPlatformFromSignals`. → D14.
+- **P5 — T1's "+2% on external methods for paid tiers" is not on T1's page** (`https://t1.com/mx/tienda/precios`,
+  served HTML read 2026-10-28) nor in October 2026 press. **Descoped from the model** unless S2 finds it on
+  t1.com on build day (then it is added with its source). The Gratis tier's 30-order cap is also not in T1's
+  served HTML (client-rendered table); it is in press (emprendedor.com, ovaciones.com, Oct 2026). → D11.
+- **P6 — no migration.** No table, no column; the kickoff's migration line does not apply.
+- **P7 — hand-typed prices exist beyond `/acerca`:** `sellerAcquisition.promotor.glossary[0..1].body`
+  (`$499 MXN al año, pago único` — also wrong: it renews yearly — and `$199 MXN al año`) in both locales. → D8.
+
+### Decisions
+- **D1 — One pure catalog.** `lib/pricing-catalog.ts`, next-free and DB-free, exports
+  `buildPricingCatalog(input)` where `input = { migrationPriceMxn: number | null; printAdTiersCents: number[] | null }`
+  and returns `{ free, extras, processors }`. Fixed prices are **imported** from `lib/subdomain-pricing.ts`,
+  `lib/domain-pricing.ts`, `lib/ml-sync-pricing.ts` — never restated. Display strings (es + en) are
+  **formatted by the catalog from those numbers** (yearly-equivalent `~$n/mes` = `Math.round(yearly/12)`:
+  17 · 42 · 25). The existing `*_LABEL` constants stay for their current consumers.
+- **D2 — Admin-set rows.** The I/O shell `lib/pricing-catalog-server.ts` reads (a) `getPromoterSkuPrices().migration`
+  as the migration price — the same value `/mx/vende/migracion` already shows publicly — and (b) the tier
+  prices of every `print_editions` row with `status = 'open'` (same query shape as `app/api/print/editions`).
+  Print ad = «desde $min» across open tiers; no open edition ⇒ `null`. Any `null` renders **«Precio a cotizar»
+  + «Escríbenos»**, never `$0`. Today that is the print ad (P1).
+- **D3 — Completeness.** Every `PROMOTER_SKUS` entry has exactly one `extras` row (`custom_domain`,
+  `print_ad`, `subdomain`, `ml_sync`, `migration`); the spec iterates `PROMOTER_SKUS`, not a hand list.
+- **D4 — Custom domain is yearly-only.** Shown as `$499/año (~$42/mes)`; no monthly purchase is implied.
+- **D5 — Processors from the comparador dataset.** Stripe = existing `miyagi.payment.{pct,fixedMxn}`
+  (3.6% + $3, stripe.com/mx/pricing, 2026-07-17). **New** figures `processor.mercadopago.pct = 3.49`,
+  `processor.mercadopago.fixedMxn = 4` (source `https://www.mercadopago.com.mx/recibe-al-instante`,
+  verifiedAt `2026-10-28`, «+ IVA, dinero al instante»). SPEI is a **direct transfer to the merchant's own
+  CLABE**: the row says Miyagi charges nothing and the merchant's bank may — **no invented rate**. Every
+  processor row says «+ IVA» where the source does, and that the money lands in the merchant's own account.
+- **D6 — Page.** `app/(shell)/mx/precios/page.tsx`, server-rendered es-MX, `export const revalidate = 3600`.
+  Copy in `locales/es.json → precios` (read via `getOverriddenDictionary('es')`, like `/mx/vende/migracion`);
+  prices enter copy only as `{tokens}` filled from the catalog. Own `opengraph-image.tsx` via
+  `createSellerAcquisitionOgImage`. Shared `Card`/`Button`/`badge`, Iconoir, no emoji, no arbitrary
+  Tailwind values built by interpolation.
+- **D7 — About surfaces read the catalog through one token filler.** Pure `fillPricingTokens(text, catalog, locale)`
+  in `lib/pricing-catalog.ts`. `acerca.sections.pricing` (es + en, locales **and** `about-content.ts`
+  defaults) becomes token templates that name every extra (incl. ML sync, print ad, migration) and link
+  `/mx/precios`; `getOverriddenAboutSections()` builds the catalog via the server shell and fills tokens
+  (so an admin override with tokens is filled too). The `/s/` → `/mx/s/` drift is fixed in the locales.
+  `lib/about-agent.ts:161` drops «priced TBD» for a catalog-built summary; `llms.txt` gains the summary +
+  `/mx/precios` (it already renders through `aboutLlmsTxt`).
+- **D8 — Source-sweep spec** `e2e/pricing-source-sweep.spec.ts`. **Enforced paths** (the LEARNINGS rule —
+  gate exactly what was swept): `locales/es.json`, `locales/en.json`, `lib/about-content.ts`,
+  `app/(shell)/mx/vende/_components/page-config.ts`, `app/(shell)/mx/precios/**`. Fails on an MXN price
+  literal (`$n MXN`, `$n/año|/mes|/year|/mo`, `$n al año|al mes`) in any string. **Allowed negations**, each
+  pinned by a passing case: `{token}` interpolations; strings containing `USD`; JSON paths under an
+  explicit `ALLOWED_PATH_PREFIXES` list, each with its reason (`sellerAcquisition.anchor.benchmark.` —
+  competitor figures and the worked `$1,000 MXN` example; `partnersRecruiting.landing.benchmark.`). The
+  promotor glossary (P7) becomes tokens filled in `page-config.ts`. Observed red under a mutation.
+- **D9 — JSON-LD** `Offer`s only for fixed SKUs (subdomain yearly + monthly, domain yearly, ML sync yearly +
+  monthly), `priceCurrency: MXN`. Admin-set rows never get an Offer. Sitemap: `/mx/precios`, weekly, 0.8.
+- **D10 — Links + events.** Footer «Precios» in `PlatformShell` **only on the MX market** (the page is
+  es-MX; `/us` is out of scope). `/mx/vende`: a pricing link in the sections config, never the hero
+  (prompt-to-shop owns it). Comparador: «Ver precios» back-link. Events through `pushAnalyticsEvent`:
+  `precios_viewed` (dedupeKey), `precios_comparador_clicked`, `precios_signup_clicked`.
+- **D11 — T1 figures** (`t1.*` keys in the dataset, each with source + verifiedAt): plans Gratis 0 /
+  Básico 399 / Avanzado 1,499 MXN a month (`https://t1.com/mx/tienda/precios`, JSON-LD offers, 2026-10-28);
+  cards 3.5% + $1 MXN (standard, no chargeback cover) and SPEI $3 MXN per transfer (same page's payments
+  FAQ, 2026-10-28); Gratis cap 30 online orders a month (press source until t1.com shows it). Public rates
+  only — never negotiated freight or fleet.
+- **D12 — `computeT1Cost(inputs, tier, rates, appsMonthlyMxn)`** in `lib/cost-comparator.ts`, lines:
+  `plan`, `card` (card % + fixed on every order — the same assumption every other platform line makes),
+  `spei` (`$0` by default, labelled with its per-transfer rate, editable through the existing line-override
+  mechanism), `apps`. The Gratis cap is a note, not a cost; above 30 orders a month the note says the
+  volume exceeds the free tier.
+- **D13 — Codec.** `'t1'` joins `CompetitorPlatform` / `COMPARADOR_PLATFORMS`; `COMPARADOR_T1_TIERS =
+  ['gratis','basico','avanzado']`; the shared `tier` param is platform-gated exactly like Tiendanube's.
+- **D14 — Analyzer.** `'t1'` joins `DetectedPlatform` only with markers taken from a real T1 store's HTML;
+  if none can be verified on build day, detection is descoped and stated (manual picker is the fallback).
+- **D15 — `/mx/precios` compare link** → `/comparador?platform=t1&tier=basico` (S2; S1 links `/comparador`).
+- **D16 — Stack.** Storefront `feat/pricing-page` (S1) → `feat/pricing-page-s2` (S2), one PR each, merged
+  in order; root docs on root `feat/pricing-page`.
+- **D17 — Deploy + verify.** Storefront only: merge → image build → `update.sh` on the VM → verify the
+  container revision == merge SHA, then the sprint's anonymous render check on `main`.
+
+### Build contract — Sprint 1 (locked by the architect before the builder started)
+Files: `lib/pricing-catalog.ts` (D1, D3, D4, D5, D7 filler) · `lib/pricing-catalog-server.ts` (D2) ·
+`lib/cost-comparator-dataset.json` (+2 MP figures, D5) · `app/(shell)/mx/precios/{page.tsx,opengraph-image.tsx}`
++ client click component (D6, D9, D10) · `locales/{es,en}.json` (`precios`, `acerca.sections.pricing`,
+promotor glossary, footer label) · `lib/about-content.ts`, `lib/about-content-overrides.ts`, `lib/about-agent.ts`
+(D7) · `app/(shell)/mx/vende/_components/page-config.ts` (D8 glossary tokens, D10 link) · `lib/market-sitemap.ts`
+· `app/components/PlatformShell.tsx` · comparador back-link. Specs: `e2e/pricing-catalog.spec.ts`,
+`e2e/pricing-source-sweep.spec.ts` (each observed red under a mutation), `e2e/pricing-page-seo.spec.ts`
+(raw HTML: four sections, real prices, «Precio a cotizar», OG, JSON-LD, sitemap); existing about/agent/
+seller-acquisition specs updated, not weakened.
+
+### Build contract — Sprint 2 (locked by the architect before the builder started)
+Files: `lib/cost-comparator-dataset.json` (`t1.*`, D11) · `lib/cost-comparator-dataset.ts` (rates adapter) ·
+`lib/cost-comparator.ts` (D12) · `lib/cost-comparator-url.ts` (D13) · `lib/shop-url-analyzer.ts` (D14) ·
+`app/(shell)/comparador/{page.tsx,_components/ComparadorTool.tsx}` (Tiendanube's shape) · `/mx/precios`
+compare link (D15). Specs: `computeT1Cost` pure (observed red once); `comparador.spec.ts` /
+`comparador-prefill.spec.ts` gain a T1 prefill (initial-HTML totals, codec round-trip).
 
 ## Deploy order
 Storefront only, no backend or migration. Each sprint merges to `main`, the arm64 image builds, then

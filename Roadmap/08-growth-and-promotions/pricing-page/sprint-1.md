@@ -3,7 +3,7 @@ epic: pricing-page
 sprint: 1
 title: "One price source + /mx/precios"
 risk: low
-phase: Shaping
+phase: Building
 stories_total: 4
 stories:
   - id: S1.1

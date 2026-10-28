@@ -78,6 +78,8 @@ const CLOUD_SCHEDULER = {
   'print-pending': '08',
   'order-autoconfirm': '09',
   'merchant-lifecycle-sweep': '10',
+  // Born on the VM (prompt-to-shop S5.4, D19): never a Cloud Scheduler job. 15:00 UTC = 09:00 Mexico City.
+  'p2s-nudges': '15',
 }
 
 test('one timer per Cloud Scheduler cron, at the same UTC hour, calling the same route', () => {
@@ -211,4 +213,17 @@ test('a missing dump reaches the drill\'s alert instead of dying in pipefail (PR
 
 test('Medusa\'s DATABASE_URL disables TLS — Medusa forces TLS on any non-localhost URL otherwise', () => {
   assert.match(services.medusa, /DATABASE_URL: postgres:\/\/[^\n]*@postgres:5432\/medusa\?sslmode=disable\n/)
+})
+
+test('update.sh pings Telegram on every deploy: ✅ on success, ❌ on every other way out, token never in argv', () => {
+  const u = read('update.sh')
+  // The success ping is the LAST thing the script does, after both health waits.
+  assert.ok(u.lastIndexOf('notify "✅') > u.lastIndexOf('wait_for web'), 'success ping must follow the health waits')
+  assert.ok(u.indexOf('DEPLOYED=1') > u.lastIndexOf('wait_for web'), 'DEPLOYED=1 only after the health waits')
+  // An EXIT trap, not ERR: the Caddy rollback path leaves with an explicit `exit 1`, which ERR never sees.
+  assert.match(u, /trap '[^']*DEPLOYED[^']*notify "❌[^']*' EXIT/)
+  assert.ok(u.indexOf("' EXIT") < u.indexOf('git -C "$ROOT" fetch'), 'the trap is armed before the first step that can fail')
+  assert.match(u, /curl -s -m 10 -o \/dev\/null -K -/)
+  assert.doesNotMatch(u, /bot\$\{?TELEGRAM_BOT_TOKEN\}?\/sendMessage" *\\?\n?\s*--data/)
+  assert.match(u, /\) \|\| true\n\}/, 'a Telegram failure never fails the deploy')
 })

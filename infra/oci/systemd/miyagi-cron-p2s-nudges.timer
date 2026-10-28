@@ -1,0 +1,9 @@
+[Unit]
+Description=Miyagi: /api/cron/p2s-nudges daily at 15:00 UTC (09:00 America/Mexico_City) — prompt-to-shop day 1/3/7 nudges
+
+[Timer]
+OnCalendar=*-*-* 15:00:00 UTC
+Unit=miyagi-cron@p2s-nudges.service
+
+[Install]
+WantedBy=timers.target

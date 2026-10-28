@@ -78,6 +78,8 @@ const CLOUD_SCHEDULER = {
   'print-pending': '08',
   'order-autoconfirm': '09',
   'merchant-lifecycle-sweep': '10',
+  // Born on the VM (prompt-to-shop S5.4, D19): never a Cloud Scheduler job. 15:00 UTC = 09:00 Mexico City.
+  'p2s-nudges': '15',
 }
 
 test('one timer per Cloud Scheduler cron, at the same UTC hour, calling the same route', () => {

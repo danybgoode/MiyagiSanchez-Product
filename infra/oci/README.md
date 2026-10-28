@@ -35,6 +35,7 @@ manager**. `bootstrap.sh` is historical: its source (GCP Secret Manager) is dele
 | 04:45 daily | `miyagi-backup` | `backup.sh`: Medusa (as `backup_ro`) and Supabase → R2 `miyagi-db-escrow/{medusa,supabase}/YYYY/MM/DD/` **and** OCI bucket `miyagi-backups`, each read back and size-checked; Telegram on any failure |
 | 05:30 Sunday | `miyagi-restore-drill` | restores the newest Medusa dump into a scratch DB and compares counts with live |
 | 06:00–10:00 daily | `miyagi-cron-*` | launchpad-campaigns, domain-lapse-sweep, print-pending, order-autoconfirm, merchant-lifecycle-sweep → `/api/cron/<name>` with `CRON_SECRET` |
+| 15:00 daily | `miyagi-cron-p2s-nudges` | prompt-to-shop day 1/3/7 nudges → `/api/cron/p2s-nudges` with `CRON_SECRET` (09:00 Mexico City) |
 
 Logs: `sudo journalctl -u miyagi-backup.service -n 50`, `docker compose logs -f medusa`.
 

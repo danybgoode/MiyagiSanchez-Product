@@ -98,11 +98,11 @@ secrets/allow-list. Nothing here provisions infra or changes any account.
 ---
 
 ## Routine A — Review on every PR  *(stand up first)*
-**Prompt:** [`pr-review.prompt.md`](pr-review.prompt.md) · **Repos:** `danybgoode/miyagisanchezcommerce`
-+ `medusa-bonsai-backend` (add root `miyagi-product-management` only if you want Roadmap-doc PRs
+**Prompt:** [`pr-review.prompt.md`](pr-review.prompt.md) · **Repos:** `danybgoode/MiyagiSanchez-Storefront`
++ `MiyagiSanchez-Backend` (add root `MiyagiSanchez-Product` only if you want Roadmap-doc PRs
 reviewed too).
 
-1. **Install the Claude GitHub App** on `danybgoode/miyagisanchezcommerce` and `medusa-bonsai-backend`.
+1. **Install the Claude GitHub App** on `danybgoode/MiyagiSanchez-Storefront` and `MiyagiSanchez-Backend`.
 2. **Create the routine** from `pr-review.prompt.md`.
 3. **Trigger:** GitHub → `pull_request`, action **`opened`**, filter **Is draft = `false`**.
    ⚠️ A GitHub trigger takes **one specific action OR all-actions-in-category — you cannot combine
@@ -123,9 +123,9 @@ restored.)
 
 ## Routine C — Weekly roadmap/Notion hygiene  *(stand up second)*
 **Prompt:** [`roadmap-hygiene.prompt.md`](roadmap-hygiene.prompt.md) · **Repo:** root
-`miyagi-product-management`.
+`MiyagiSanchez-Product`.
 
-1. **Install the Claude GitHub App** on `miyagi-product-management` (root repo).
+1. **Install the Claude GitHub App** on `MiyagiSanchez-Product` (root repo).
 2. **Create the routine** from `roadmap-hygiene.prompt.md`.
 3. **Trigger:** Schedule, **weekly — Mon 14:00 UTC** (after the 08:00 nightly `notion-sync.yml`).
 4. **Env/connectors:** **No Notion connector** — no `.mcp.json`, no `NOTION_TOKEN`. The routine grooms
@@ -138,10 +138,10 @@ restored.)
 
 ## Routine B — Nightly smoke triage  *(now-unblocked fast-follow)*
 **Prompt:** [`smoke-triage.prompt.md`](smoke-triage.prompt.md) · **Repo:**
-`danybgoode/miyagisanchezcommerce` (frontend). **Gate:** `devops-reliability-cleanup` Story 1 (the
+`danybgoode/MiyagiSanchez-Storefront` (frontend). **Gate:** `devops-reliability-cleanup` Story 1 (the
 smoke fix) — done, so B is unblocked.
 
-1. **Install the Claude GitHub App** on `miyagisanchezcommerce` (already done for A).
+1. **Install the Claude GitHub App** on `MiyagiSanchez-Storefront` (already done for A).
 2. **Create the routine** from `smoke-triage.prompt.md`.
 3. **Trigger:** Schedule, **nightly ~10:00 UTC** (after the `0 9 * * *` `browser-smoke.yml`).
 4. **Env:** the `MS_TEST_*` secrets (`MS_TEST_BUYER_*`, `MS_TEST_SELLER_*`, `MS_TEST_PDP_LISTING_ID`,
@@ -188,8 +188,8 @@ never attempts a second fix in the same run.
 becomes a required check, and never weakens a spec.
 
 ## Routine ops-nightly — Daily standup + the nightly fixers  *(fourth routine, stand up any time after B)*
-**Prompt:** [`ops-nightly.prompt.md`](ops-nightly.prompt.md) · **Repo:** root `miyagi-product-management`
-(reads/writes `gh` across all 3 repos: root, `miyagisanchezcommerce`, `medusa-bonsai-backend`).
+**Prompt:** [`ops-nightly.prompt.md`](ops-nightly.prompt.md) · **Repo:** root `MiyagiSanchez-Product`
+(reads/writes `gh` across all 3 repos: root, `MiyagiSanchez-Storefront`, `MiyagiSanchez-Backend`).
 
 **Sprint 1** shipped step 4 alone (the standup). **Sprint 2**
 ([`ops-routines-reporting`](../../Roadmap/09-platform-infra/ops-routines-reporting/README.md) S2) added
@@ -198,7 +198,7 @@ steps 1–3 — the routine now runs, in order: `build-order-sync` (regen + docs
 repos — silent on a clean PR), then `standup-post` (reports what happened). Still **one** scheduled
 routine (cap-safe) — see the budget table below.
 
-1. **Install the Claude GitHub App** on `miyagi-product-management` (root repo) if not already done for
+1. **Install the Claude GitHub App** on `MiyagiSanchez-Product` (root repo) if not already done for
    Routine C.
 2. **Create the routine** from `ops-nightly.prompt.md`.
 3. **Trigger:** Schedule, **nightly ~10:30 UTC** — after both the frontend's `browser-smoke.yml`
@@ -236,7 +236,7 @@ routine (cap-safe) — see the budget table below.
         `|| true` makes the update non-fatal so the install step still runs. This runs once and is
         cached (~7-day expiry); it does not re-run every session.
      2. **`GH_TOKEN`** env var — a GitHub Personal Access Token with access to all 3 repos
-        (`miyagi-product-management`, `miyagisanchezcommerce`, `medusa-bonsai-backend`). `gh` reads
+        (`MiyagiSanchez-Product`, `MiyagiSanchez-Storefront`, `MiyagiSanchez-Backend`). `gh` reads
         `GH_TOKEN` automatically — no `gh auth login` step needed. A **fine-grained PAT** scoped to just
         those 3 repos with **Contents: Read & Write**, **Pull requests: Read & Write**, **Actions: Read &
         Write** (Metadata: Read is auto-included) is the least-privilege choice; a classic PAT with the
@@ -275,8 +275,8 @@ routine (cap-safe) — see the budget table below.
      [`sprint-2.md`](../../Roadmap/09-platform-infra/ops-routines-reporting/sprint-2.md)'s walkthrough.
 
 ## Routine weekly-recap — Weekly executive recap  *(fifth routine, the longer-horizon complement to ops-nightly)*
-**Prompt:** [`weekly-recap.prompt.md`](weekly-recap.prompt.md) · **Repo:** root `miyagi-product-management`
-(reads `gh` + `git log` across all 3 repos: root, `miyagisanchezcommerce`, `medusa-bonsai-backend`).
+**Prompt:** [`weekly-recap.prompt.md`](weekly-recap.prompt.md) · **Repo:** root `MiyagiSanchez-Product`
+(reads `gh` + `git log` across all 3 repos: root, `MiyagiSanchez-Storefront`, `MiyagiSanchez-Backend`).
 
 Shipped by [`ops-routines-reporting`](../../Roadmap/09-platform-infra/ops-routines-reporting/README.md)
 S3 — a dedicated **weekly** routine (mirroring Routine C's precedent of a standalone weekly schedule,
@@ -285,7 +285,7 @@ rather than a day-of-week-gated step folded into the nightly `ops-nightly` routi
 shipped/closed epics (README frontmatter `status:` flips), a merges-to-main deploy count per app repo,
 and a short retro digest per shipped epic — then posts one Telegram message.
 
-1. **Install the Claude GitHub App** on `miyagi-product-management` (root repo) if not already done for
+1. **Install the Claude GitHub App** on `MiyagiSanchez-Product` (root repo) if not already done for
    Routine C / `ops-nightly`.
 2. **Create the routine** from `weekly-recap.prompt.md`.
 3. **Trigger:** Schedule, **weekly — Mon 15:30 UTC** (after Routine C's Mon 14:00 roadmap-hygiene and
@@ -313,7 +313,7 @@ and a short retro digest per shipped epic — then posts one Telegram message.
    report. **Never** a PR, **never** a code change, **never** a required check.
 
 ## Routine pmo-report — Weekly PMO operational report  *(sixth routine, stakeholder report delivery)*
-**Prompt:** [`pmo-report.prompt.md`](pmo-report.prompt.md) · **Repo:** root `miyagi-product-management`
+**Prompt:** [`pmo-report.prompt.md`](pmo-report.prompt.md) · **Repo:** root `MiyagiSanchez-Product`
 (reads `gh` + `git log` across all 3 repos; posts to Telegram; writes `claude/pmo-reports-log`).
 
 Shipped by [`pmo-operational-reports`](../../Roadmap/09-platform-infra/pmo-operational-reports/README.md)
@@ -321,7 +321,7 @@ S3. One step: the `pmo-report` skill (`scripts/pmo-report.mjs --weekly`) gathers
 metrics, renders a story-deck URL, posts headline numbers plus the deck link to Telegram, and
 then advances the PMO window log.
 
-1. **Install the Claude GitHub App** on `miyagi-product-management` if not already done for Routine C /
+1. **Install the Claude GitHub App** on `MiyagiSanchez-Product` if not already done for Routine C /
    `ops-nightly`.
 2. **Create the routine** from `pmo-report.prompt.md`.
 3. **Trigger:** Schedule, **weekly — Mon 16:30 UTC** (after roadmap-hygiene and weekly-recap, so the PMO
@@ -340,7 +340,7 @@ then advances the PMO window log.
    **Never** a PR, **never** a merge, **never** a required check.
 
 ## Routine prod-smoke — Daily production watchdog  *(seventh routine — a REWRITE of the oldest one)*
-**Prompt:** [`prod-smoke.prompt.md`](prod-smoke.prompt.md) · **Repo:** root `miyagi-product-management`
+**Prompt:** [`prod-smoke.prompt.md`](prod-smoke.prompt.md) · **Repo:** root `MiyagiSanchez-Product`
 (runs `scripts/prod-smoke.mjs` against live prod; posts to Telegram; may open a `claude/` draft PR).
 
 **This one replaces an existing routine rather than adding a new load.** The original *"Miyagi prod
@@ -377,7 +377,7 @@ asserts a structural body marker — status alone could not tell the selector an
 > asserting `/l` → 200 (a false alarm; that route legitimately 308s), once from this one. Disabling
 > the old routine is owed, and it is the only remaining step.
 
-1. **Install the Claude GitHub App** on `miyagi-product-management` if not already done for Routine C /
+1. **Install the Claude GitHub App** on `MiyagiSanchez-Product` if not already done for Routine C /
    `ops-nightly` / `pmo-report`.
 2. **Create the routine** from `prod-smoke.prompt.md`. (Originally written as "replace the old
    routine's prompt, keep its trigger" — that turned out to be impossible; see the box above.)

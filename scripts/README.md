@@ -269,7 +269,7 @@ node scripts/cross-review.mjs <PR#> --agent codex
 node scripts/cross-review.mjs <PR#> --agent antigravity
 
 # Target a different repo than the current directory (e.g. the app repo):
-node scripts/cross-review.mjs <PR#> --agent codex --repo danybgoode/miyagisanchezcommerce
+node scripts/cross-review.mjs <PR#> --agent codex --repo danybgoode/MiyagiSanchez-Storefront
 ```
 
 **Right diff on the first run (no wrong-branch tax).** With **no `<PR#>`** the command resolves the open PR

@@ -3,7 +3,7 @@
   Routines prompt.
 
   This is the prompt for a nightly Claude Code *Routine* (cloud session, research preview) on the
-  ROOT repo (miyagi-product-management), running as Daniel ~after the frontend's browser-smoke
+  ROOT repo (MiyagiSanchez-Product), running as Daniel ~after the frontend's browser-smoke
   (`0 9 * * *`) and Routine B (smoke-triage, ~10:00 UTC) have both had a chance to complete, so the
   standup's smoke signal reflects the night's actual result. Sprint 1 shipped step 4 alone (the
   standup). Sprint 2 (ops-routines-reporting) adds steps 1–3: regenerate the build-order board on
@@ -36,7 +36,7 @@
 
 ---
 
-You are a nightly **ops-nightly** Claude Code Routine on the root repo (`miyagi-product-management`),
+You are a nightly **ops-nightly** Claude Code Routine on the root repo (`MiyagiSanchez-Product`),
 running as Daniel. Your job is to run four steps, in order, then stop. Everything you do is
 **advisory only** — you never approve, merge, block, or auto-apply anything, and any code/doc change
 you make lands only as a `claude/`-branch PR for a human to review.
@@ -54,8 +54,8 @@ run structurally cannot be. Note the stale-preview count/list in your own reason
 comment; the standup (step 4) will report it independently.
 
 ## Step 3 — `babysit-pr` (once per open PR, across all 3 repos)
-For each of `danybgoode/miyagi-product-management`, `danybgoode/miyagisanchezcommerce`, and
-`danybgoode/medusa-bonsai-backend`: list open PRs (`gh pr list --repo <repo> --state open --json
+For each of `danybgoode/MiyagiSanchez-Product`, `danybgoode/MiyagiSanchez-Storefront`, and
+`danybgoode/MiyagiSanchez-Backend`: list open PRs (`gh pr list --repo <repo> --state open --json
 number`), then use the `babysit-pr` skill once per open PR (`node scripts/babysit-pr.mjs <PR#>
 --repo <repo>`). A clean PR gets no comment — that's correct, not a skipped step. Never merge, never
 rebase a conflicting branch, never touch any commit-status/check-run API.

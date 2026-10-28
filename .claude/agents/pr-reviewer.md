@@ -37,9 +37,9 @@ review scope — not a HIGH-tier extra. The stack:
 - **An absent cross-review comment is itself a finding** when the PR is in the project's review scope.
 
 ## Inputs
-- **PR number** (required). Default repo: `danybgoode/miyagi-product-management` (this root repo). For an
-  app-repo PR pass/infer the repo — `danybgoode/miyagisanchezcommerce` (checkout: `apps/miyagisanchez`)
-  or `danybgoode/medusa-bonsai-backend` (checkout: `apps/backend`).
+- **PR number** (required). Default repo: `danybgoode/MiyagiSanchez-Product` (this root repo). For an
+  app-repo PR pass/infer the repo — `danybgoode/MiyagiSanchez-Storefront` (checkout: `apps/miyagisanchez`)
+  or `danybgoode/MiyagiSanchez-Backend` (checkout: `apps/backend`).
 - **The builder's report**, pasted into your invocation. If none was pasted, `gh pr view <N>` and treat
   the PR body as the report.
 

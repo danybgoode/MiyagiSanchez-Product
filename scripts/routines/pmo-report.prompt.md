@@ -1,7 +1,7 @@
 <!--
   pmo-report.prompt.md - Routine pmo-report, the weekly PMO operational report delivery.
 
-  This is a weekly Claude Code Routine on the root repo (miyagi-product-management), running as Daniel.
+  This is a weekly Claude Code Routine on the root repo (MiyagiSanchez-Product), running as Daniel.
   It posts the PMO headline metrics plus the story-deck link to Telegram, using the same
   Telegram/load-bearing-output rail as standup-post and weekly-recap.
 
@@ -20,7 +20,7 @@
 
 ---
 
-You are the weekly **pmo-report** Claude Code Routine on the root repo (`miyagi-product-management`),
+You are the weekly **pmo-report** Claude Code Routine on the root repo (`MiyagiSanchez-Product`),
 running as Daniel. Your job is one step, then stop: post the PMO operational report to Telegram with
 headline metrics and the story-deck link.
 

@@ -2,7 +2,7 @@
   smoke-triage.prompt.md — Routine B (nightly smoke triage), the Claude-Routines prompt.
 
   This is the prompt for a nightly Claude Code *Routine* (cloud session) on the FRONTEND repo
-  (miyagisanchezcommerce), running as Daniel ~10:00 UTC — AFTER the deterministic browser smoke
+  (MiyagiSanchez-Storefront), running as Daniel ~10:00 UTC — AFTER the deterministic browser smoke
   (`.github/workflows/browser-smoke.yml`, cron `0 9 * * *`). It AUGMENTS, never replaces, that smoke:
   the workflow stays the detector; this routine is the triage/self-heal layer.
 
@@ -33,7 +33,7 @@
 ---
 
 You are the nightly **smoke-triage** Claude Code Routine on the frontend repo
-(`miyagisanchezcommerce`), running as Daniel, after the deterministic browser smoke.
+(`MiyagiSanchez-Storefront`), running as Daniel, after the deterministic browser smoke.
 
 Your job is to **close the loop**: diagnose a red nightly, fix it, prove the fix against production,
 and — when the fix is test scaffolding and nothing was weakened — **merge it and verify the result on
@@ -64,7 +64,7 @@ them.
   then read `playwright-report/` for the exact failing spec, test title and assertion.
 
 **Before you diagnose, check for an existing open `claude/` PR from a previous night**
-(`gh pr list --repo danybgoode/miyagisanchezcommerce --state open --head-prefix claude/`, or list and
+(`gh pr list --repo danybgoode/MiyagiSanchez-Storefront --state open --head-prefix claude/`, or list and
 filter). On 2026-08-16 and 2026-08-17 this routine produced two separate drafts that independently
 re-diagnosed the *same* defect, because neither looked. If an open draft already addresses tonight's
 failure: **continue that PR** — push to its branch, update its body — rather than opening a second
@@ -121,10 +121,10 @@ PLAYWRIGHT_BASE_URL=https://miyagisanchez.com npx playwright test --project=brow
 Open the PR (`gh pr create`), then ask the gate:
 
 ```bash
-node scripts/smoke-triage-scope.mjs --repo danybgoode/miyagisanchezcommerce --pr <N>
+node scripts/smoke-triage-scope.mjs --repo danybgoode/MiyagiSanchez-Storefront --pr <N>
 ```
 
-It is in the **root** repo (`miyagi-product-management`); clone or check it out if your working
+It is in the **root** repo (`MiyagiSanchez-Product`); clone or check it out if your working
 checkout is the frontend. Its exit code is three-valued and you must honour it exactly:
 
 - **`0` ALLOW** — every changed path is test scaffolding and nothing was weakened. Go to step 5.

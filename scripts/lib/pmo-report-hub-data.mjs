@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { buildDocViewerUrl } from './pmo-templates.mjs';
 import { isFunnelSeed } from './roadmap-status-buckets.mjs';
 
-const DEFAULT_SOURCE_BASE = 'https://github.com/danybgoode/miyagi-product-management/blob/main';
+const DEFAULT_SOURCE_BASE = 'https://github.com/danybgoode/MiyagiSanchez-Product/blob/main';
 const HASH_BASE = 'https://pmo-smalldocs.local';
 
 const STATUS_ORDER = {
@@ -352,7 +352,7 @@ export function buildReportHubData(rows, { readDoc, generatedAt = new Date(), so
     schemaVersion: 1,
     generatedAt: generatedAt.toISOString(),
     source: {
-      repo: 'danybgoode/miyagi-product-management',
+      repo: 'danybgoode/MiyagiSanchez-Product',
       branch: 'main',
       baseUrl: sourceBaseUrl,
       projection: 'scripts/roadmap-to-notion.mjs --extract',

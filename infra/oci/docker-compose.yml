@@ -58,7 +58,7 @@ services:
     networks: [miyagi]
 
   medusa:
-    image: ${MEDUSA_IMAGE:-ghcr.io/danybgoode/medusa-web:main}
+    image: ${MEDUSA_IMAGE:-ghcr.io/danybgoode/miyagisanchez-backend:main}
     restart: unless-stopped
     depends_on:
       postgres: { condition: service_healthy }
@@ -90,7 +90,7 @@ services:
         aliases: [miyagi-medusa]
 
   web:
-    image: ${WEB_IMAGE:-ghcr.io/danybgoode/miyagi-web:main}
+    image: ${WEB_IMAGE:-ghcr.io/danybgoode/miyagisanchez-storefront:main}
     restart: unless-stopped
     depends_on: [medusa]
     env_file: [./web.env]

@@ -1,95 +1,53 @@
-# Miyagi Sánchez — `miyagi-product-management`
+# MiyagiSanchez-Product
 
-**Mission:** make the best of modern e-commerce — trust, fair payments, negotiation, AI-native
-shopping — free and high-quality for everyone in Mexico. Miyagi Sánchez is a multi-seller
-marketplace where anyone can open a shop, list anything (products, services, rentals, digital
-goods), and sell with no commission — across the marketplace, their own domain, an embeddable
-widget, or to AI shopping agents.
+**[Miyagi Sánchez](https://miyagisanchez.com) makes the best of modern e-commerce — trust, fair payments,
+negotiation and AI-native shopping — free and high-quality for everyone in Mexico.**
 
-*(Mission statement from [`Roadmap/README.md`](Roadmap/README.md), the product poster — the
-source of truth for what's live.)*
+It is a marketplace where anyone can open a shop in minutes and sell anything — products, services,
+rentals, digital goods, event tickets — with no commission. This repository is the product itself on
+paper: the roadmap, what is live, what comes next, and how we build it.
 
-This repo — `miyagi-product-management` — is the **product and orchestration docs repo**: the
-roadmap, the working practice, and the engineering-delivery log for the whole platform. It does
-not build or deploy anything itself.
+## What Miyagi Sánchez does
 
-## The four repos
+**Open a shop by describing it.** A seller types one sentence about their business and watches their shop
+take shape on their phone — name, colours, story and example products — before signing up. One tap keeps
+it; their own photos turn into products; they choose how they get paid and how they deliver, and publish.
 
-| Repo | Owns | Deploys |
-|---|---|---|
-| **`miyagi-product-management`** (this repo) | Product roadmap (`Roadmap/`), engineering delivery log (`tasks/`), vendored Stripe skills + planning/ops skills consumed from the `golden-frijoles` plugin (`skills/`), infra scripts (`infra/`) | No deploy — docs display on GitHub on merge |
-| [`medusa-bonsai-backend`](https://github.com/danybgoode/medusa-bonsai-backend) (`apps/backend`) | Medusa v2 — the commerce engine: products, orders, payments, fulfillment, sellers, subscriptions | Cloud Build (us-east4) → Cloud Run `medusa-web` on merge to `main`, ~12 min, no per-branch preview |
-| [`miyagisanchezcommerce`](https://github.com/danybgoode/miyagisanchezcommerce) (`apps/miyagisanchez`) | Next.js 16 — the UI layer, UCP/MCP agent-commerce endpoints, non-commerce APIs | Cloud Build (us-east4) → Cloud Run `miyagi-web` behind Cloudflare on merge to `main`; each PR still gets a Vercel preview for review |
-| `miyagi-trifold-studio` (`apps/zine`) | The print/zine design studio for the ad-funded local magazine | **Local-only** — no remote, no CI, no deploy |
+**Sell without giving up a cut.** Buyers pay sellers directly — card, Mercado Pago, SPEI bank transfer or
+cash — into the seller's own account. There is no commission.
 
-The three `apps/*` directories are each their own independent git repository (git-ignored from
-this one — see `.gitignore`); this repo versions only the product/orchestration docs above it.
+**Buy like a local.** Buyers find independent Mexican sellers in one place, make offers instead of paying
+the sticker price, chat with the seller, and know exactly how delivery works before they pay.
 
-## Engineering practice
+**One shop, everywhere.** Every shop lives on the marketplace, on the seller's own domain, embedded in their
+website, and where AI shopping assistants can find and buy from it.
 
-- **Plan → build → ship, one user story at a time**, with a deterministic gate before every merge
-  and a named smoke-test stage on every plan — see
-  [`Roadmap/WAYS-OF-WORKING.md`](Roadmap/WAYS-OF-WORKING.md).
-- **Risk-tiered merges.** Low-risk PRs (docs, non-commerce UI, tests) can be merged by an agent other
-  than the builder on green CI; anything touching payments, checkout, fulfillment, auth, DB migrations,
-  or shared infra is always a human merge — see *Review & merge* in
-  [`WAYS-OF-WORKING.md`](Roadmap/WAYS-OF-WORKING.md#review--merge--cross-agent).
-  Green CI is the deterministic gate; the review layers above it are sized to the tier.
-- **The `groom` skill** (`golden-frijoles` plugin, [`golden-frijoles`](https://github.com/golden-frijoles/skills) marketplace) is the front door for any new idea — it turns a raw
-  ask into sliced, Definition-of-Ready user stories before a line of code is written, reframing
-  toward existing Medusa/platform primitives before inventing new ones.
-- **Cross-agent review on every PR — required.** [`scripts/cross-review.mjs`](scripts/cross-review.mjs)
-  pipes the diff into a different model family (Codex or Antigravity) for one independent pass, and
-  every finding must be fixed or answered on the PR before merge. A third layer, the fresh
-  `pr-reviewer` subagent, is mandatory on HIGH-risk PRs and optional on LOW.
-  [`scripts/cross-panel.mjs`](scripts/cross-panel.mjs) does the same for a plan before code is
-  written — that one stays advisory, since a plan has no gate to pass.
-- **Model split: Opus plans, Sonnet builds.** Grooming, spikes, plan mode, and review run on the
-  stronger model with full deep-thinking; once a plan and its slices are approved, per-story
-  execution is mechanical and runs on the faster model — see *Model tiers* in
-  [`WAYS-OF-WORKING.md`](Roadmap/WAYS-OF-WORKING.md#conventions).
-- **Retros feed forward.** Every epic closes with a retrospective, and durable, generalizable
-  learnings get promoted into [`Roadmap/LEARNINGS.md`](Roadmap/LEARNINGS.md) — the distilled,
-  cross-cutting digest every agent reads at session start, so a past retro reaches the next
-  session instead of dying in its own folder.
+**From screen to street.** A printed local magazine, funded by its ads, brings Miyagi Sánchez shops to the
+neighbourhoods they serve.
 
-## Quickstart
+## Who it is for
 
-This repo has no dev server of its own — it's docs plus tooling scripts. To run an app, go into
-its own repo and follow its README:
+The micro-merchant who sells through WhatsApp, Instagram or in person, from a phone, and has never had an
+online shop — and the buyers who want to support them. Spanish first, phone first, free to start. A US
+marketplace brings the same shops to buyers in the United States.
 
-```bash
-# Backend (Medusa v2) — apps/backend, own repo
-cd apps/backend
-npm install
-npx medusa develop          # :9000
+## Follow along
 
-# Frontend (Next.js 16) — apps/miyagisanchez, own repo
-cd apps/miyagisanchez
-npm install
-npm run dev                 # :3001, Turbopack
-```
+- **[The product poster](Roadmap/README.md)** — every feature, by area, and whether it is live.
+- **[How we work](Roadmap/WAYS-OF-WORKING.md)** — how an idea becomes a shipped, verified feature.
+- **[What we learned](Roadmap/LEARNINGS.md)** — the lessons each release taught us.
 
-This repo's own tooling (`scripts/*.mjs` — doc hygiene, cross-review, roadmap sync) uses
-`npm@11` / Node ≥20 / [Turborepo](https://turbo.build):
+## The Miyagi Sánchez repositories
 
-```bash
-npm install
-```
+| Repository | What it is |
+|---|---|
+| [MiyagiSanchez-Storefront](https://github.com/danybgoode/MiyagiSanchez-Storefront) | The marketplace, every shop and the seller dashboard |
+| [MiyagiSanchez-Backend](https://github.com/danybgoode/MiyagiSanchez-Backend) | The commerce engine: catalog, orders and payments |
+| **MiyagiSanchez-Product** (this one) | The product roadmap and how we build |
 
-## Where things live
+---
 
-- [`Roadmap/README.md`](Roadmap/README.md) — the product poster: every feature by domain, current
-  status.
-- [`Roadmap/WAYS-OF-WORKING.md`](Roadmap/WAYS-OF-WORKING.md) — how planning, building, and shipping
-  actually work here.
-- [`Roadmap/LEARNINGS.md`](Roadmap/LEARNINGS.md) — the cross-cutting retro digest.
-- [`tasks/`](tasks/) — the engineering delivery log: what was built, decisions, commit hashes,
-  runbooks.
-- [`skills/`](skills/) — vendored Stripe skills that stay repo-local; the planning/ops skills
-  (`groom`, doc hygiene, and others) are consumed from the `ways-of-work` plugin via
-  `.claude/settings.json`.
+Visit **[miyagisanchez.com](https://miyagisanchez.com)** · Open your shop at
+**[miyagisanchez.com/mx/vende](https://miyagisanchez.com/mx/vende)**
 
-## License
-
-[MIT](LICENSE)
+*Contributing? Start with [`AGENTS.md`](AGENTS.md) · how it is built: [`DEVELOPING.md`](DEVELOPING.md).*

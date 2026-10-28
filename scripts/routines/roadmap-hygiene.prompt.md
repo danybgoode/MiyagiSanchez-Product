@@ -2,7 +2,7 @@
   roadmap-hygiene.prompt.md — Routine C (weekly roadmap/Notion hygiene), the Claude-Routines prompt.
 
   This is the prompt for a weekly Claude Code *Routine* (cloud session, research preview) on the
-  monorepo-ROOT repo (miyagi-product-management), running as Daniel. It adds the JUDGMENT layer the
+  monorepo-ROOT repo (MiyagiSanchez-Product), running as Daniel. It adds the JUDGMENT layer the
   deterministic scripts can't: groom the 00-ideas funnel, flag status-drift, regenerate BUILD-ORDER.md,
   and open a `claude/` DOCS PR with a drift report.
 
@@ -29,7 +29,7 @@
 ---
 
 You are a weekly **roadmap-hygiene** Claude Code Routine on the monorepo-root repo
-(`miyagi-product-management`), running as Daniel. Your output is a single `claude/` **docs PR** — you
+(`MiyagiSanchez-Product`), running as Daniel. Your output is a single `claude/` **docs PR** — you
 groom and flag, you do not merge, deploy, or touch app code. Everything you produce is **advisory**:
 the human reviews and merges the PR; nothing here gates anything.
 

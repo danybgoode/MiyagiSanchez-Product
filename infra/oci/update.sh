@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Deploy Miyagi on `panfleto-prod`: pull main, pin the newest arm64 images by digest, (re)start the stack,
+# Deploy Miyagi Sánchez (MiyagiSanchez-Storefront + MiyagiSanchez-Backend) on `panfleto-prod`: pull main, pin the newest arm64 images by digest, (re)start the stack,
 # install the Caddy site file, reload Caddy, and wait for both apps to answer. Run ON the VM:
 #   /opt/miyagi/infra/oci/update.sh
 #
-# Images: `ghcr.io/danybgoode/{medusa-web,miyagi-web}:main` is resolved to an immutable DIGEST and that
-# digest is what runs — the moving tag never does. To roll back, pin an older sha in infra/oci/.env:
-#   MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/medusa-web:<sha>      (or WEB_IMAGE_PIN=…)
+# Images: `ghcr.io/danybgoode/{miyagisanchez-backend,miyagisanchez-storefront}:main` is resolved to an
+# immutable DIGEST and that digest is what runs — the moving tag never does. To roll back, pin an older sha in
+# infra/oci/.env:
+#   MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>      (or WEB_IMAGE_PIN=…)
+# (Until 2026-10-28 the images were `medusa-web` / `miyagi-web`; a pin to an old-name sha still works.)
 # and re-run; delete the line to roll forward. A pin always wins over :main.
 #
 # When a commit changes THIS script, bash keeps reading the old inode — re-run it after the pull.
@@ -20,9 +22,9 @@ for f in .env medusa.env web.env; do
   [ -s "$f" ] || { echo "✗ infra/oci/$f is missing — restore it from Daniel's password manager (0600, owner ubuntu); bootstrap.sh's source is deleted" >&2; exit 1; }
 done
 
-# Telegram: one line to the CI/CD chat when a deploy finishes, ✅ or ❌. The push to main already pings (📦, the
-# app repos' notify-telegram.yml); this is its pair. It went missing with Cloud Build, and from 10-16 to 10-28 a
-# deploy said nothing. Same bot, chat and `curl -K -` (token never in argv) as backup.sh, read from backup.env in
+# Telegram: the 🚀 pair of each merge's 📦 (notify-telegram.yml in the app repos), one per app whose running
+# commit CHANGED, mirroring that commit's subject and first paragraph (deploy-notice.sh). A re-run that changes
+# nothing posts nothing. It went missing with Cloud Build, and from 10-16 to 10-28 a deploy said nothing. Same bot, chat and `curl -K -` (token never in argv) as backup.sh, read from backup.env in
 # a subshell so nothing else in that file reaches this script. Best effort: a Telegram outage never fails a deploy.
 notify() {
   ( set +x
@@ -34,11 +36,35 @@ notify() {
         --data-urlencode "parse_mode=HTML" --data-urlencode "disable_web_page_preview=true" \
         --data-urlencode "text=$1" ) || true
 }
-# rev IMAGE — the commit an image was built from, short.
-rev() { docker image inspect "$1" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' 2>/dev/null | cut -c1-7; }
-# Every way out that is not the success line below (set -e, an explicit `exit 1`, a failed health wait) pages.
-DEPLOYED=0
-trap 'rc=$?; [ "$DEPLOYED" = 1 ] || notify "❌ <b>miyagi</b> deploy FAILED (exit $rc) — ssh in and run update.sh; logs: docker compose logs"' EXIT
+# shellcheck source=infra/oci/deploy-notice.sh
+. "$DEPLOY/deploy-notice.sh"
+# rev IMAGE — the full commit an image was built from.
+rev() { docker image inspect "$1" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' 2>/dev/null || true; }
+# running_rev SERVICE — the commit the CURRENT container of a compose service runs, or nothing.
+running_rev() {
+  local id; id="$(docker compose ps -q "$1" 2>/dev/null | head -1)"
+  [ -n "$id" ] && docker inspect -f '{{index .Config.Labels "org.opencontainers.image.revision"}}' "$id" 2>/dev/null || true
+}
+# notice REPO NEW PREV STATUS — the 🚀 for one app (deploy-notice.sh builds it; GitHub supplies the prose).
+notice() { notify "$(dn_text "$1" "$2" "$3" "$4" "$(dn_commit_message "$1" "$2")" "$(dn_ahead "$1" "$3" "$2")")"; }
+# Every way out that is not the success path below pages. Before the swap it is one Miyagi Sánchez line; after it,
+# the app that failed its health check says so under its own name.
+DEPLOYED=0 SWAPPED=0 STEP="pulling the repo" FAILED_APP=""
+on_exit() {
+  local rc=$?
+  [ "$DEPLOYED" = 1 ] && return
+  if [ "$SWAPPED" = 1 ] && [ "$FAILED_APP" = web ]; then
+    notice "$STOREFRONT_REPO" "$(rev "$WEB_IMAGE")" "$PREV_WEB" "fail:MiyagiSanchez-Storefront did not pass its health check (exit $rc)"
+  elif [ "$SWAPPED" = 1 ] && [ "$FAILED_APP" = medusa ]; then
+    notice "$BACKEND_REPO" "$(rev "$MEDUSA_IMAGE")" "$PREV_MEDUSA" "fail:MiyagiSanchez-Backend did not pass its health check (exit $rc)"
+  else
+    notify "$(dn_fail_text "while ${STEP} (exit $rc)")"
+  fi
+}
+trap on_exit EXIT
+
+# The repository was renamed 2026-10-28 (GitHub redirects the old URL; this makes the clone say so).
+git -C "$ROOT" remote set-url origin https://github.com/danybgoode/MiyagiSanchez-Product.git
 
 git -C "$ROOT" fetch -q origin main
 git -C "$ROOT" reset -q --hard origin/main
@@ -58,15 +84,20 @@ resolve() {
   docker pull -q "$2:main" >/dev/null
   docker image inspect "$2:main" --format '{{index .RepoDigests 0}}'
 }
-MEDUSA_IMAGE="$(resolve MEDUSA_IMAGE ghcr.io/danybgoode/medusa-web)"
-WEB_IMAGE="$(resolve WEB_IMAGE ghcr.io/danybgoode/miyagi-web)"
+STEP="pulling the images"
+MEDUSA_IMAGE="$(resolve MEDUSA_IMAGE ghcr.io/danybgoode/miyagisanchez-backend)"
+WEB_IMAGE="$(resolve WEB_IMAGE ghcr.io/danybgoode/miyagisanchez-storefront)"
 set_env MEDUSA_IMAGE "$MEDUSA_IMAGE"
 set_env WEB_IMAGE "$WEB_IMAGE"
 for img in "$MEDUSA_IMAGE" "$WEB_IMAGE"; do
   echo "  $img → commit $(docker image inspect "$img" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' | cut -c1-7)"
 done
 
+# What runs NOW, before the swap: the "previous" each 🚀 names, and how a re-run that changes nothing stays quiet.
+PREV_WEB="$(running_rev web)"; PREV_MEDUSA="$(running_rev medusa)"
+STEP="starting the containers"
 docker compose up -d --remove-orphans
+SWAPPED=1
 
 # The backup's own read-only role (pg_read_all_data) — backup.sh never dumps as the app's role. Idempotent;
 # the password reaches psql by environment NAME (`-e` with no value, then \getenv), never on a command line.
@@ -83,6 +114,7 @@ echo "✓ backup_ro role"
 # failed reload keeps the old config live, but the next restart of panfleto's Caddy (its own deploy, a
 # reboot) would not start, taking panfleto and aomx down with Miyagi (PR #209 review). Install, VALIDATE
 # inside the running container, and put the previous file back on any failure.
+STEP="installing the Caddy site file"
 SITE=/opt/edge/sites/miyagi.caddy
 [ -f "$SITE" ] && cp "$SITE" "$SITE.prev"
 install -m 0644 "$DEPLOY/miyagi.caddy" "$SITE"
@@ -103,6 +135,7 @@ wait_for() { # service url
     fi
     sleep 5
   done
+  FAILED_APP="$1"
   echo "✗ $1 did not become healthy in 5 min — docker compose logs $1" >&2; return 1
 }
 wait_for medusa http://127.0.0.1:8080/health
@@ -110,6 +143,7 @@ wait_for web http://127.0.0.1:8080/
 
 DEPLOYED=1
 WEB_REV="$(rev "$WEB_IMAGE")"; MEDUSA_REV="$(rev "$MEDUSA_IMAGE")"
-notify "✅ <b>miyagi</b> deployed · 🚀
-web <a href=\"https://github.com/danybgoode/miyagisanchezcommerce/commit/${WEB_REV}\"><code>${WEB_REV}</code></a> · medusa <a href=\"https://github.com/danybgoode/medusa-bonsai-backend/commit/${MEDUSA_REV}\"><code>${MEDUSA_REV}</code></a>"
-echo "✓ deployed (Telegram notified)"
+sent=0
+if [ "$WEB_REV" != "$PREV_WEB" ]; then notice "$STOREFRONT_REPO" "$WEB_REV" "$PREV_WEB" ok; sent=$((sent + 1)); fi
+if [ "$MEDUSA_REV" != "$PREV_MEDUSA" ]; then notice "$BACKEND_REPO" "$MEDUSA_REV" "$PREV_MEDUSA" ok; sent=$((sent + 1)); fi
+echo "✓ deployed — Storefront ${WEB_REV:0:7}, Backend ${MEDUSA_REV:0:7} (${sent} Telegram notice(s); an unchanged app posts none)"

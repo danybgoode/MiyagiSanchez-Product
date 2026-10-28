@@ -16,16 +16,15 @@
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
-## 📋 Ready to build (scaffolded, not started) (6)
+## 📋 Ready to build (scaffolded, not started) (5)
 
 - [In person: POS-lite and payment links](../../02-checkout-and-payments/in-person-sales/README.md) — 02 Checkout & Payments · 0/12 stories · risk: High
 - [Share kit](../../03-selling-and-shops/share-kit/README.md) — 03 Selling & Shops · 0/9 stories · risk: High
 - [BYO Envía connect](../../04-shipping-and-delivery/envia-byo-connect/README.md) — 04 Shipping · 0/11 stories · risk: High
-- [Pricing page](../../08-growth-and-promotions/pricing-page/README.md) — 08 Growth · 0/6 stories · risk: Low
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
-## ✅ Shipped (155)
+## ✅ Shipped (156)
 
 - [Cars vertical — tratocar-grade browse & trust](../../01-discovery-and-shopping/cars-vertical-tratocar-parity/README.md) — 01 Discovery · 8/8 stories
 - [Discovery Polish](../../01-discovery-and-shopping/discovery-polish/README.md) — 01 Discovery · 7/7 stories
@@ -116,6 +115,7 @@
 - [Merchant lifecycle projection — the Miyagi half of Golden Beans' event router](../../08-growth-and-promotions/merchant-lifecycle-projection/README.md) — 08 Growth · 0 sprints
 - [Merchant Partner lifecycle](../../08-growth-and-promotions/merchant-partner-lifecycle/README.md) — 08 Growth · 18/18 stories · risk: High · #5-fm
 - [Operator program — one offering, two markets, new voice ✅ shipped 2026-08-17](../../08-growth-and-promotions/operator-program-copy/README.md) — 08 Growth · 0 sprints
+- [Pricing page ✅](../../08-growth-and-promotions/pricing-page/README.md) — 08 Growth · 6/6 stories · risk: Low
 - [Promoter funnel fixes — `{url}` prompt, `/promotor/cerrar` 404, promoter-aware "Agente IA" sheet](../../08-growth-and-promotions/promoter-funnel-fixes/README.md) — 08 Growth · 3/3 stories
 - [Promoter Funnel v2 — the offer packet, self-serve application, and the street-money close ✅](../../08-growth-and-promotions/promoter-funnel-v2/README.md) — 08 Growth · 19/19 stories
 - [Promoter Program — in-person seller acquisition force (commission-paid)](../../08-growth-and-promotions/promoter-program/README.md) — 08 Growth · 12/12 stories

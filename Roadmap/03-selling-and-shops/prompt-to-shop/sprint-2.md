@@ -12,39 +12,39 @@ stories:
     i_want: "a pure adapter from a draft to the props the real storefront components take, and presentational halves of any component that fetches its own data"
     so_that: "the preview is the real shop, not a mock"
     risk: low
-    status: planned
+    status: done
   - id: S2.2
     title: "Describe box on /mx/vende and the /sell first run"
     as_a: "a merchant who just heard of Miyagi"
     i_want: "one box that says «Cuéntanos qué vendes» with three tappable examples, right where I land"
     so_that: "I start by describing, not by filling forms"
     risk: low
-    status: planned
+    status: in-progress
   - id: S2.3
     title: "Taking-shape screen"
     as_a: "a merchant who just tapped «Armar mi tienda»"
     i_want: "to watch my shop skeleton fill block by block with a narration line per step"
     so_that: "I trust something real is being made for me"
     risk: low
-    status: planned
+    status: in-progress
   - id: S2.4
     title: "Preview canvas: EJEMPLO cards, inline edits, versions counter"
     as_a: "a merchant looking at my new shop"
     i_want: "to change the name, pick one of three colour alternates, change the tone and ask for another version, with every change saved"
     so_that: "shaping it feels like play, and nothing is lost"
     risk: low
-    status: planned
+    status: in-progress
   - id: S2.5
     title: "View-only draft link"
     as_a: "a merchant who wants to show my draft to my partner before deciding"
     i_want: "«Compartir vista previa» that gives a link anyone can open but nobody can edit or keep"
     so_that: "I can get a second opinion without giving my shop away"
     risk: high
-    status: planned
+    status: in-progress
 ---
 # Prompt-to-shop — Sprint 2: Describe, shape, preview
 
-**Status:** ⬜ not started
+**Status:** 🟡 merged + deployed (storefront #439 → `cd894f0`, live 2026-10-28). The phone walkthrough below is owed to Daniel.
 
 ## Stories
 
@@ -96,3 +96,11 @@ Env: production · https://miyagisanchez.com   (or the preview URL while testing
    → the shop shows, with no edit controls and no «Quedármela»
 
 If any step fails, note the step number + what you saw — that's the bug report.
+
+### Results — 2026-10-28, production (`miyagi-web` at `cd894f0`)
+- **Step 1 (partial) ✅** — `/mx/vende` serves the new hero line «Describe tu negocio. En segundos tienes tienda…» and the «Cuéntanos qué vendes» box. Whether it sits above the fold at 375 px is not checked (needs a phone).
+- **Draft pages ✅** — an unknown `/p2s/<id>` and `/p2s/v/<token>` both return the friendly 404 with `cache-control: private, no-store`, `x-robots-tag: noindex, nofollow` and `cf-cache-status: DYNAMIC`.
+- **Steps 2–6 — OWED to Daniel.** They need a real browser, because the Turnstile token comes only from the widget. The Chrome extension was not connected on 2026-10-28, and headless browsers do not get a token. These steps are also S1's owed generation smoke: SSE through Cloudflare and Caddy, latency, and the `via: vertex` log line.
+- **Found, pre-existing:** `/mx/vende`'s `<title>` reads «… — Miyagi Sánchez | Miyagi Sánchez»; the layout template appends the brand a second time. The old title had the same pattern. To be fixed in S3.
+- **Review:** the fresh verifier found two should-fixes and agy's general pass two more plus a nit; all are fixed and spec-guarded. The security lens is DARK: vibe stalls, and agy's fallback model cannot fit the 42-file diff. Said so on #439.
+- **Folded in this wave:** the Supabase grants hardening (#438 → `bf71f79`, migrations `20261028120000` + `20261028130000`, verified live).

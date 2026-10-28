@@ -127,7 +127,10 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
 **Storage and spend**
 - **D1 — Supabase, service role only.** `shop_drafts` and `ai_allowance` are non-commerce staging (AGENTS rule 2).
   RLS on, `REVOKE ALL … FROM anon, authenticated`, functions `SECURITY DEFINER SET search_path = public`, `EXECUTE`
-  granted to `service_role` only. That is the shape of `20261008170000_shop_created_welcome_deliveries.sql`; copy it.
+  granted to `service_role` only, and **`REVOKE ALL ON FUNCTION … FROM PUBLIC, anon, authenticated`**. Supabase grants
+  EXECUTE on new functions to anon/authenticated directly, so revoking PUBLIC alone leaves an RPC callable with the
+  browser's anon key. The S1 verifier caught that; `20261008170000_shop_created_welcome_deliveries.sql`, the template
+  this decision first pointed to, has the same gap (reported, not fixed here).
   Nothing reaches Medusa before a claim (S3.2), and no example product ever does.
 - **D2 — `shop_drafts`:** `id uuid pk default gen_random_uuid()`, `device_id uuid not null`, `description text not
   null check (char_length <= 500)`, `identity jsonb`, `words jsonb`, `catalog jsonb` (null = not generated yet),
@@ -143,14 +146,15 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
 - **D4 — Spend is one conditional write.** `spend_ai_allowance(p_subject, p_kind, p_period, p_cap) returns int` is a
   single `INSERT … ON CONFLICT (subject, kind, period) DO UPDATE SET count = ai_allowance.count + 1 WHERE
   ai_allowance.count < p_cap RETURNING count`: the new count, or `NULL` at the cap. `p_cap >= 1` is checked.
-  Generation uses `spend_p2s_generation(p_device, p_version_cap, p_budget_period, p_budget_cap) returns jsonb`, which in ONE transaction spends the device version, then the global budget, and gives the device version
+  Generation uses `spend_p2s_generation(p_device, p_version_cap, p_budget_period, p_budget_cap) returns jsonb` (plus `refund_p2s_generation` when the draft write after a spend fails, and `save_p2s_block`, the atomic,
+  version-guarded block write), which in ONE transaction spends the device version, then the global budget, and gives the device version
   back if the budget refuses, returning `{ok, reason: 'allowance'|'budget'|null, versions_used}`. A merchant never
   loses a version to a closed budget. Two concurrent calls at 2 of 3 spend at most one: the row lock in `ON CONFLICT
   DO UPDATE` serialises them.
 - **D5 — The budget is NOT on Upstash.** `checkRateLimit` passes everything through when Redis is unconfigured and
   on any Redis error (`lib/ratelimit.ts`, "fail open, never block business logic"). That is right for burst limits
   and wrong for the one control that bounds spend, which must fail **closed**. So: per-IP and per-device burst
-  limits are new `LimitKey`s (`p2s_generate`, `p2s_photo`) and may fail open; the allowance and the 300/day budget
+  limits are new `LimitKey`s (`p2s_generate_ip`, `p2s_generate_device`; `p2s_photo` in S4) and may fail open; the allowance and the 300/day budget
   are D4 rows and fail closed (an RPC error refuses the generation).
 - **D6 — One module owns every number.** `lib/prompt-to-shop/allowance.ts` exports `P2S_LIMITS = { anonVersions: 3,
   ownerVersionsPerMonth: 10, photosPerMonth: 20, dailyBudgetDefault: 300 }` plus the pure decision helpers. Routes,

@@ -15,9 +15,9 @@ GITHUB_OWNER=danybgoode
 
 # esc TEXT — Telegram HTML escaping (the same three characters notify-telegram.yml escapes).
 dn_esc() {
-  local s="${1:-}"
-  s="${s//&/&amp;}"; s="${s//</&lt;}"; s="${s//>/&gt;}"
-  printf '%s' "$s"
+  # sed, not ${s//&/&amp;}: bash 5.2 (CI, the VM) reads `&` in a pattern REPLACEMENT as the matched text, so the
+  # parameter-expansion form printed `<lt;b>gt;`; macOS's bash 3.2 hid it (caught by deploy-notice.test.mjs on CI).
+  printf '%s' "${1:-}" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
 }
 
 # dn_prose < MESSAGE — the commit's first plain paragraph, one line. The SAME rule as notify-telegram.yml:

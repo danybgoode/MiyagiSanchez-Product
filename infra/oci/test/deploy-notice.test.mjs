@@ -63,3 +63,10 @@ test('HTML in a commit is escaped, and a long paragraph is capped on a word', ()
 test('a failure before the swap is one Miyagi Sánchez line — the brand, never "miyagi"', () => {
   assert.match(run('dn_fail_text', 'while pulling the images (exit 1)'), /^<b>Miyagi Sánchez<\/b> · 🚀 deploy FAILED — while pulling the images \(exit 1\)/)
 })
+
+test('a failure AFTER the swap says the new containers are running — never "nothing new is running"', () => {
+  const t = run('dn_fail_text', 'while installing the Caddy site file (exit 1)', 'Storefront 16bcd1f, Backend 6cf1431')
+  assert.match(t, /The new containers ARE running \(Storefront 16bcd1f, Backend 6cf1431\)/)
+  assert.doesNotMatch(t, /Nothing new is running/)
+  assert.match(run('dn_fail_text', 'while pulling the images (exit 1)'), /Nothing new is running/)
+})

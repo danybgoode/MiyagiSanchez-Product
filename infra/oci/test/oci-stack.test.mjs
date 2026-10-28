@@ -227,6 +227,8 @@ test('update.sh pings Telegram on every deploy: 🚀 per changed app on success,
   assert.ok(u.indexOf('PREV_WEB="$(running_rev web)"') < u.indexOf('docker compose up -d'), 'previous revisions are read before the swap')
   // An EXIT trap, not ERR: the Caddy rollback path leaves with an explicit `exit 1`, which ERR never sees.
   assert.match(u, /trap on_exit EXIT/)
+  // After the swap, a failure no app owns still names what is running (codex, PR #230).
+  assert.match(u, /elif \[ "\$SWAPPED" = 1 \]; then\n\s*notify "\$\(dn_fail_text "while \$\{STEP\} \(exit \$rc\)" "Storefront/)
   assert.ok(u.indexOf('trap on_exit EXIT') < u.indexOf('git -C "$ROOT" fetch'), 'the trap is armed before the first step that can fail')
   assert.match(u, /curl -s -m 10 -o \/dev\/null -K -/)
   assert.doesNotMatch(u, /bot\$\{?TELEGRAM_BOT_TOKEN\}?\/sendMessage" *\\?\n?\s*--data/)

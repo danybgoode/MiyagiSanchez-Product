@@ -57,6 +57,8 @@ on_exit() {
     notice "$STOREFRONT_REPO" "$(rev "$WEB_IMAGE")" "$PREV_WEB" "fail:MiyagiSanchez-Storefront did not pass its health check (exit $rc)"
   elif [ "$SWAPPED" = 1 ] && [ "$FAILED_APP" = medusa ]; then
     notice "$BACKEND_REPO" "$(rev "$MEDUSA_IMAGE")" "$PREV_MEDUSA" "fail:MiyagiSanchez-Backend did not pass its health check (exit $rc)"
+  elif [ "$SWAPPED" = 1 ]; then
+    notify "$(dn_fail_text "while ${STEP} (exit $rc)" "Storefront $(rev "$WEB_IMAGE" | cut -c1-7), Backend $(rev "$MEDUSA_IMAGE" | cut -c1-7)")"
   else
     notify "$(dn_fail_text "while ${STEP} (exit $rc)")"
   fi
@@ -98,6 +100,7 @@ PREV_WEB="$(running_rev web)"; PREV_MEDUSA="$(running_rev medusa)"
 STEP="starting the containers"
 docker compose up -d --remove-orphans
 SWAPPED=1
+STEP="creating the backup role"
 
 # The backup's own read-only role (pg_read_all_data) — backup.sh never dumps as the app's role. Idempotent;
 # the password reaches psql by environment NAME (`-e` with no value, then \getenv), never on a command line.

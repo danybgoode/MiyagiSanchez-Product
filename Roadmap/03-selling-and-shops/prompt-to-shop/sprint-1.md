@@ -12,32 +12,32 @@ stories:
     i_want: "an anonymous shop draft store and a usage ledger whose spend is one conditional write"
     so_that: "a merchant can see their shop before signup and a double tap can never spend an allowance twice"
     risk: high
-    status: planned
+    status: done
   - id: S1.2
     title: "Pure generation planner, prompts and per-block validation"
     as_a: "the builder"
     i_want: "a pure `lib/prompt-to-shop/` seam that turns one description into three structured Gemini calls (identity → words → example catalog) and validates each block"
     so_that: "generation is tested without the network and always lands a valid `MiyagiSetupFile`"
     risk: low
-    status: planned
+    status: done
   - id: S1.3
     title: "POST /api/p2s/drafts + SSE block stream + device cookie"
     as_a: "a merchant on a phone"
     i_want: "to send one description and receive my shop in three narrated blocks"
     so_that: "I watch it take shape instead of waiting on a spinner"
     risk: high
-    status: planned
+    status: in-progress
   - id: S1.4
     title: "Rate limits, Turnstile, daily budget"
     as_a: "the platform"
     i_want: "the public describe box protected by per-IP and per-device limits, a Cloudflare Turnstile check and a global daily generation budget"
     so_that: "inference cost is bounded and bots cannot spend it"
     risk: high
-    status: planned
+    status: in-progress
 ---
 # Prompt-to-shop — Sprint 1: Generation rail
 
-**Status:** ⬜ not started
+**Status:** 🟡 merged + deployed (storefront #436 → `2ae4b25`, live 2026-10-28); migration `20261027120000` applied + verified live. Generation smoke owed: blocked on `GEMINI_API_KEY` + Turnstile keys, which are not yet on the VM.
 
 ## Stories
 
@@ -80,3 +80,9 @@ Env: production · https://miyagisanchez.com   (or the preview URL while testing
    → one row with three saved blocks, `claimed_by` null, `expires_at` 7 days out; no new Medusa seller or product exists
 
 If any step fails, note the step number + what you saw — that's the bug report.
+
+### Results — 2026-10-28, production (`miyagi-web` at `2ae4b25`)
+- **Step 3 ✅** — a POST without a Turnstile token returned 403 «No pudimos verificar que eres tú…». It was `private, no-store` and `cf-cache-status: DYNAMIC`. The log line was `[p2s] {"event":"turnstile_refused","reason":"not_configured"}`, and `shop_drafts` and `ai_allowance` both held 0 rows afterwards. A 500-plus or empty description returned 400 with the friendly copy; GET returned 405.
+- **Step 4 (partial) ✅** — the migration was verified live inside a transaction that rolled back: spends 1–3 ok, the 4th refused `allowance`; a budget refusal gave the version back; a stale-version save was rejected; `block_status` merged; `expires_at` 7 days out. RLS is on, and anon/authenticated hold no table grants and no EXECUTE on any of the four functions.
+- **Steps 1, 2 and the rest of 4 — OWED.** They need `GEMINI_API_KEY`, `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` in `/opt/miyagi/infra/oci/web.env`; none is set, and `P2S_DAILY_BUDGET='300'` is. The route fails closed until they land. Once they do, also settle: (a) whether the `gemini-3.5-flash` default is a real model (a 404 shows as `error` in `[p2s] block` and as `status: fallback`), (b) latency against the 20 s budget, (c) whether SSE frames arrive unbuffered through Cloudflare and Caddy.
+- The fresh verifier ran two rounds, plus agy (general), agy and vibe (security); every finding is fixed or answered on #436. Codex was at its usage cap.

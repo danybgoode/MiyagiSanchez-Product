@@ -1,7 +1,8 @@
 ---
 status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Shaping       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
+locked_at: "2026-10-28T01:04:00Z"
 slug: prompt-to-shop
 title: "Prompt-to-shop"
 area: 03-selling-and-shops
@@ -118,6 +119,151 @@ start (S1.4, env default, retuned from S1's token logs).
 
 **Flag:** none: WAYS-OF-WORKING *Feature flags — OFF by default*; rollback is `git revert`. The runtime safety
 valves (daily budget, rate limits) are env and code, not flags.
+
+## Architecture lock (2026-10-27, against storefront `origin/main` 841dd7a)
+
+Builders **cite** these by number. Where a decision corrects the sprint docs, the correction is the contract.
+
+**Storage and spend**
+- **D1 — Supabase, service role only.** `shop_drafts` and `ai_allowance` are non-commerce staging (AGENTS rule 2).
+  RLS on, `REVOKE ALL … FROM anon, authenticated`, functions `SECURITY DEFINER SET search_path = public`, `EXECUTE`
+  granted to `service_role` only. That is the shape of `20261008170000_shop_created_welcome_deliveries.sql`; copy it.
+  Nothing reaches Medusa before a claim (S3.2), and no example product ever does.
+- **D2 — `shop_drafts`:** `id uuid pk default gen_random_uuid()`, `device_id uuid not null`, `description text not
+  null check (char_length <= 500)`, `identity jsonb`, `words jsonb`, `catalog jsonb` (null = not generated yet),
+  `block_status jsonb not null default '{}'` (`{identity|words|catalog: 'ok'|'fallback'}`), `versions_used int not
+  null default 0`, `view_token uuid not null unique default gen_random_uuid()`, `claimed_by text`,
+  `claimed_seller_id text`, `claimed_at timestamptz`, `created_at`/`updated_at timestamptz default now()`,
+  `expires_at timestamptz not null default now() + interval '7 days'`. Index on `device_id`. The **view token is a
+  separate column from the device id** so S2.5 never has to derive one from the other.
+- **D3 — `ai_allowance`:** `(subject text, kind text check (kind in ('version','photo','daily_budget')), period text,
+  count int not null default 0, updated_at)`, primary key `(subject, kind, period)`. Subjects: `device:<uuid>`,
+  `user:<clerk id>`, `global`. Periods: `all` (anonymous versions, for the cookie's life), `YYYY-MM` (owner versions,
+  photos), `YYYY-MM-DD` in `America/Mexico_City` (the budget).
+- **D4 — Spend is one conditional write.** `spend_ai_allowance(p_subject, p_kind, p_period, p_cap) returns int` is a
+  single `INSERT … ON CONFLICT (subject, kind, period) DO UPDATE SET count = ai_allowance.count + 1 WHERE
+  ai_allowance.count < p_cap RETURNING count`: the new count, or `NULL` at the cap. `p_cap >= 1` is checked.
+  Generation uses `spend_p2s_generation(p_device, p_draft_id, p_version_cap, p_budget_period, p_budget_cap) returns
+  jsonb`, which in ONE transaction spends the device version, then the global budget, and gives the device version
+  back if the budget refuses, returning `{ok, reason: 'allowance'|'budget'|null, versions_used}`. A merchant never
+  loses a version to a closed budget. Two concurrent calls at 2 of 3 spend at most one: the row lock in `ON CONFLICT
+  DO UPDATE` serialises them.
+- **D5 — The budget is NOT on Upstash.** `checkRateLimit` passes everything through when Redis is unconfigured and
+  on any Redis error (`lib/ratelimit.ts`, "fail open, never block business logic"). That is right for burst limits
+  and wrong for the one control that bounds spend, which must fail **closed**. So: per-IP and per-device burst
+  limits are new `LimitKey`s (`p2s_generate`, `p2s_photo`) and may fail open; the allowance and the 300/day budget
+  are D4 rows and fail closed (an RPC error refuses the generation).
+- **D6 — One module owns every number.** `lib/prompt-to-shop/allowance.ts` exports `P2S_LIMITS = { anonVersions: 3,
+  ownerVersionsPerMonth: 10, photosPerMonth: 20, dailyBudgetDefault: 300 }` plus the pure decision helpers. Routes,
+  copy («Te quedan 2 versiones») and, later, the pricing page import it. `P2S_DAILY_BUDGET` overrides only the budget;
+  an unparseable value falls back to 300, never to unlimited.
+
+**Generation**
+- **D7 — Request order (validate → protect → claim → apply).** Parse and validate the body (pure) → verify Turnstile
+  → burst limit → `spend_p2s_generation` → create or update the draft → Gemini. Nothing that costs money runs before
+  the spend has been claimed, and a refusal at any step makes **no** Gemini call. Specs record a trace of effects and
+  assert the ORDER, not only the status (LEARNINGS → *assert the ordering*).
+- **D8 — Turnstile fails closed.** Server-side verification at `https://challenges.cloudflare.com/turnstile/v0/siteverify`
+  with `TURNSTILE_SECRET_KEY` and `remoteip`. A missing secret, missing token, network error or `success: false` all
+  refuse with the friendly closed message. The site key is a **runtime** env (`TURNSTILE_SITE_KEY`, passed to the
+  client as a prop from a server component), deliberately not `NEXT_PUBLIC_*`, so it needs no Docker build arg.
+  Tokens are single use, so every generation, «Otra versión» included, needs a fresh one.
+- **D9 — Three structured calls, the validator decides.** Identity → words → catalog, sequentially, each a Gemini REST
+  `generateContent` call shaped like `app/api/sell/import/extract/route.ts` (`GEMINI_MODEL`, default
+  `gemini-3.5-flash`) with `generationConfig.responseMimeType: 'application/json'` and a `responseSchema`. The
+  schema is a hint; `validateConfig` / `validateRows` are the truth. Invalid output or any non-200 response → one
+  retry → a deterministic fallback block built from the description, with the event marked `status: 'fallback'`.
+  The description is isolated in tags and treated as data, as the extract route does. **Corrected premise:** the
+  sprint doc asks the lock to confirm `responseSchema` support and latency on `gemini-3.5-flash`. There is no
+  `GEMINI_API_KEY` in this checkout and the VM env read was refused, so neither could be measured here. The design
+  above does not depend on schema support (a 400 is just a failed block), and the latency against the 20 s
+  narration budget is measured in the **S1 live smoke**, with per-block timings logged.
+- **D10 — Block shapes.** `identity` = `profile` fields `name, tagline, description, state, city, accent_color,
+  theme_preset` + `accent_alternates: [hex, hex, hex]`. `words` = `profile.announcement` + `profile.hero` (promo copy
+  only, no image URL) + an `about` paragraph. `catalog` = 4–6 `ExampleRow`s, where `ExampleRow = CatalogImportRow &
+  { example: true; illustration: IllustrationKey }` is a **draft-only** type: `CatalogImportRow` has no example field,
+  and `MiyagiSetupFile` is not widened. `illustration` is a closed enum keyed to `CATALOG_CATEGORY_KEYS`; `images` is
+  always empty. A generated colour must still pass the theme contrast guard; a failing one is replaced, not shipped.
+- **D11 — SSE contract.** `POST /api/p2s/drafts`, `runtime = 'nodejs'`, `dynamic = 'force-dynamic'`, response
+  `text/event-stream` with `Cache-Control: private, no-store`. Events: `block` `{key, status, data}` ×3, then `done`
+  `{draft_id, versions_left}`; a refusal is a plain JSON 4xx/503 with no stream. Each block is written to the draft
+  (conditional on `id` + `device_id`, `.select()` back) **before** it is enqueued. A re-run sends `{draft_id}` and
+  regenerates the same draft. Tokens (`usageMetadata`) and milliseconds per block are logged as `[p2s] block`.
+- **D12 — Device cookie.** `p2s_device`: a server-minted uuid, `httpOnly; Secure; SameSite=Lax; Path=/`, 30 days. It
+  is an allowance subject and a draft-ownership proof and nothing more. Clearing it resets the anonymous allowance;
+  that hole is bounded by Turnstile, the per-IP limit and the global budget, which is why all three exist.
+
+**Surfaces and tests**
+- **D13 — Pure specs live in `e2e/*.spec.ts`** (Playwright `api` project), not `lib/prompt-to-shop/*.test.ts` as
+  the sprint docs say: this app has no other unit runner, and a spec the gate does not run tests nothing.
+- **D14 — The preview is the real shop.** `ShopHeader`, `ShopHero`, `WallFeed` and `ShopThemeShell` are props-only
+  already. `ShopIndexBody` fetches (`getShopListings`, `getDictionary`), so S2.1 extracts a `ShopIndexGrid` taking
+  listings as props, and the live `ShopIndexBody` keeps calling it. The adapter maps a draft onto
+  `ShopPresentationContext` plus example cards.
+- **D15 — The view token is read only by construction (S2.5).** `/p2s/v/[token]` reads by `view_token` and renders
+  with no controls. Every mutating route resolves its draft by `id` + the device cookie and never accepts a view token.
+- **D16 — Claim, then apply, never over HTTP to ourselves (S3.2).** The claim is one conditional `UPDATE … WHERE id
+  AND device_id AND claimed_by IS NULL AND expires_at > now() RETURNING` (`.select()` back). Zero rows → re-read:
+  same Clerk user → idempotent, return the existing shop; anything else → «Esta tienda se armó en otro teléfono».
+  The shop is created by calling the logic behind `POST /api/sell/shop` **in-process** (extracted to a shared
+  function if it is not already), never by `fetch()`-ing our own authed route, which drops the cookie (team memory,
+  PR 244). Only `profile` + `config` are applied; the examples stay in the draft.
+- **D17 — The checklist is `getSetupSteps`, unchanged (S4.1).** **Corrected premise:** its steps are `perfil · catalogo
+  · pagos · envios · comparte`; there is no "publicar" or "fotos" step. The canvas labels `catalogo` as Fotos,
+  `pagos` as Cobros and `envios` as Entregas, uses the same % as Resumen, and «Publicar» is the canvas's action, not a
+  % step. Adding a step would break Resumen parity.
+- **D18 — The «Con IA» pricing row leaves S4.2.** **Corrected premise:** `/mx/precios` does not exist and
+  `pricing-page` is build #9, after this epic (#6). S4.2 ships the numbers in D6's module; the row ships with
+  `pricing-page`, reading that module. The rule "never retyped" holds.
+- **D19 — Nudges need a preference group (S5.4).** `EVENT_GROUPS` is `orders · offers · payments · returns · mensajes`.
+  S5.4 adds `onboarding`; re-verify at S5 start whether the preferences table constrains `event_group` (a CHECK would
+  make it a migration). The VM timer is a new `infra/oci/systemd/miyagi-cron-p2s-nudges.timer` in the root repo,
+  enabled on the VM by the orchestrator.
+- **D20 — Found while locking, out of scope:** of the ten `app/api/cron/*` routes, five have no VM timer
+  (`offer-reminders`, `portfolio-reminders`, `listing-cleanup`, `reconcile-checkouts`, `sweepstakes-draw`); only five
+  `miyagi-cron-*.timer` units exist. Reported to Daniel, not fixed here.
+- **D21 — Routing.** S1 and S3 (spend, auth, claim) to the strongest model; S2, S4.1, S4.3 and S5.2/S5.3 to the
+  workhorse; S4.2, S5.1 and S5.4 strong. Every PR: `review-route.mjs` passes plus the fresh `verifier` (high risk).
+- **Waves.** The bet is funded one wave at a time. **Wave 1 = this lock + S1** (the rail); S2–S5 are re-bet at each
+  boundary.
+
+### Build contract — S1 · Generation rail
+- **1.1** `supabase/migrations/<ts>_prompt_to_shop_drafts.sql` per D1–D4, with a "how this gets applied" header
+  (orchestrator, MCP, realign `schema_migrations`). Pure `lib/prompt-to-shop/allowance.ts` per D6. Spec: the decision
+  helpers, observed red under a mutation.
+- **1.2** `lib/prompt-to-shop/{planner,prompts,blocks,fallback}.ts`, pure (no `next/*`, no fetch): build each call's
+  request body and schema; parse and validate a response into a block or a failure; fallback blocks; mark examples
+  (D10). Specs: planner, validation, fallback, example marking; each observed red.
+- **1.3** `app/api/p2s/drafts/route.ts` per D7, D11, D12, with injected I/O (Gemini, Supabase, Turnstile, clock) so the
+  `api` spec drives it with fakes. No Medusa import in the route's module graph.
+- **1.4** D5 limit keys, D8 Turnstile, D4 budget. Refusal copy: allowance → «Ya usaste tus 3 versiones. Quédate con
+  la que más te guste.»; budget → «Hoy ya armamos muchas tiendas. Vuelve mañana o déjanos tu correo.»; Turnstile or
+  config missing → «No pudimos verificar que eres tú. Recarga la página e inténtalo de nuevo.»
+- **Gate:** `tsc --noEmit`, `npm run build`, `npm run test:e2e` green; the migration applied and verified live
+  **before** merge.
+
+### Build contract — S2 · Describe, shape, preview
+D14 extraction with a visual check of one live shop; the describe box and the new hero copy in
+`locales/es.json` → `sellerAcquisition.anchor`; the taking-shape screen consumes D11's events; the canvas autosaves
+through `PATCH /api/p2s/drafts/[id]` (device-cookie-owned, D15), with versions through D4; `noindex`, `private`; the
+forbidden-word spec covers screens 1–3; `/p2s/v/[token]` per D15.
+
+### Build contract — S3 · Keep it
+The keep sheet uses `signUpFallbackRedirectUrl` / `signInFallbackRedirectUrl` (fallback, never force); claim + apply
+per D16; `sendShopCreatedWelcome` stays on its existing reserve-once path (`reserve_shop_created_welcome`);
+`/sell/bienvenida` and `/sell/puertas` redirect to the new first run, and `/sell`'s
+`onboarding.three_doors_enabled` branch is removed; a source sweep finds no link to the old routes.
+
+### Build contract — S4 · Make it yours
+D17 checklist; photo → product through `/api/sell/upload` → R2, Gemini vision → one `CatalogImportRow` →
+`validateRows` → one Medusa **draft** product on confirm, spending `photo` through D4 (20/month); D18 descope;
+replacing an example deletes it from the draft's `catalog`; «Publicar» disabled until ≥ 1 real product.
+
+### Build contract — S5 · Pay, deliver, publish, return
+The existing rails only (Mercado Pago OAuth, SPEI CLABE, cash/arranged; arranged delivery, Correos económico, manual
+carrier); checkout preview pure-derived from the chosen methods; publish + `SuccessCard` + `lib/share-link.ts`; the
+seven funnel events through `pushAnalyticsEvent`, once per step; nudges per D19, with the VM timer confirmed by one
+fired run.
 
 ## Deploy order
 1. **S1.1 migration first**, applied by the orchestrator through Supabase MCP `apply_migration` (never

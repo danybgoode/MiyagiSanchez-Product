@@ -3,7 +3,7 @@ epic: prompt-to-shop
 sprint: 1
 title: "Generation rail"
 risk: high
-phase: Shaping
+phase: Building
 stories_total: 4
 stories:
   - id: S1.1

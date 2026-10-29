@@ -106,6 +106,8 @@ test('one timer per Cloud Scheduler cron, at the same UTC hour, calling the same
     assert.match(t, new RegExp(`Unit=miyagi-cron@${name}\\.service`), name)
   }
   assert.match(read('systemd/miyagi-cron@.service'), /\/api\/cron\/%i'.*'x-cron-secret':process\.env\.CRON_SECRET/)
+  // Both shapes: some routes read x-cron-secret, others only `Authorization: Bearer` (13 days of silent 401s).
+  assert.match(read('systemd/miyagi-cron@.service'), /'authorization':'Bearer '\+process\.env\.CRON_SECRET/)
 })
 
 test('install-host enables backups but NOT the cron timers (no double-run with Cloud Scheduler)', () => {

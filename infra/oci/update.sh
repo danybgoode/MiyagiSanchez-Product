@@ -6,7 +6,7 @@
 # Images: `ghcr.io/danybgoode/{miyagisanchez-backend,miyagisanchez-storefront}:main` is resolved to an
 # immutable DIGEST and that digest is what runs — the moving tag never does. To roll back, pin an older sha in
 # infra/oci/.env:
-#   MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>      (or WEB_IMAGE_PIN=…)
+#   MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>      (or WEB_IMAGE_PIN=…, PRINT_PDF_IMAGE_PIN=…)
 # (Until 2026-10-28 the images were `medusa-web` / `miyagi-web`; a pin to an old-name sha still works.)
 # and re-run; delete the line to roll forward. A pin always wins over :main.
 #
@@ -18,9 +18,16 @@ DEPLOY="$ROOT/infra/oci"
 ENV_FILE="$DEPLOY/.env"
 cd "$DEPLOY"
 
-for f in .env medusa.env web.env; do
+for f in .env medusa.env web.env print.env; do
   [ -s "$f" ] || { echo "✗ infra/oci/$f is missing — restore it from Daniel's password manager (0600, owner ubuntu); bootstrap.sh's source is deleted" >&2; exit 1; }
 done
+
+# The renderer and the web app read PRINT_PDF_SECRET from two files. A missing or mismatched copy still passes the
+# /health wait, then every PDF answers 401, so it is checked here. The values are compared, never printed.
+secret_of() { grep -E '^PRINT_PDF_SECRET=' "$1" | tail -1 | cut -d= -f2- || true; }
+if [ -z "$(secret_of print.env)" ] || [ "$(secret_of print.env)" != "$(secret_of web.env)" ]; then
+  echo "✗ PRINT_PDF_SECRET must be set, and identical, in infra/oci/print.env and web.env" >&2; exit 1
+fi
 
 # Telegram: the 🚀 pair of each merge's 📦 (notify-telegram.yml in the app repos), one per app whose running
 # commit CHANGED, mirroring that commit's subject and first paragraph (deploy-notice.sh). A re-run that changes
@@ -102,9 +109,12 @@ resolve() {
 STEP="pulling the images"
 MEDUSA_IMAGE="$(resolve MEDUSA_IMAGE ghcr.io/danybgoode/miyagisanchez-backend)" || exit 1
 WEB_IMAGE="$(resolve WEB_IMAGE ghcr.io/danybgoode/miyagisanchez-storefront)" || exit 1
+# The PDF renderer (share-kit S2.1), built from the storefront repo's services/print-pdf. Pinned by digest like the others.
+PRINT_PDF_IMAGE="$(resolve PRINT_PDF_IMAGE ghcr.io/danybgoode/miyagisanchez-print-pdf)" || exit 1
 set_env MEDUSA_IMAGE "$MEDUSA_IMAGE"
 set_env WEB_IMAGE "$WEB_IMAGE"
-for img in "$MEDUSA_IMAGE" "$WEB_IMAGE"; do
+set_env PRINT_PDF_IMAGE "$PRINT_PDF_IMAGE"
+for img in "$MEDUSA_IMAGE" "$WEB_IMAGE" "$PRINT_PDF_IMAGE"; do
   echo "  $img → commit $(docker image inspect "$img" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' | cut -c1-7)"
 done
 
@@ -143,8 +153,11 @@ fi
 rm -f "$SITE.prev"
 echo "✓ caddy validated + reloaded"
 
-# Wait for both apps from INSIDE their containers — a 200 here is the app, not Caddy or Cloudflare.
+# Wait for the apps from INSIDE their containers — a 200 here is the app, not Caddy or Cloudflare. STEP names the
+# service, so a failure notice says which one (a print-pdf failure used to be paged as "installing the Caddy site
+# file" against the web commit; verifier, PR 235).
 wait_for() { # service url
+  STEP="waiting for $1 to answer its health check"
   for _ in $(seq 1 60); do
     if docker compose exec -T "$1" node -e "fetch('$2').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" 2>/dev/null; then
       echo "✓ $1 healthy"; return 0
@@ -156,6 +169,7 @@ wait_for() { # service url
 }
 wait_for medusa http://127.0.0.1:8080/health
 wait_for web http://127.0.0.1:8080/
+wait_for print-pdf http://127.0.0.1:8080/health
 
 DEPLOYED=1
 WEB_REV="$(rev "$WEB_IMAGE")"; MEDUSA_REV="$(rev "$MEDUSA_IMAGE")"

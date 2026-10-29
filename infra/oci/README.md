@@ -8,22 +8,26 @@ GCP is deleted; nothing of Miyagi runs anywhere else.
 | Host | `panfleto-prod`, OCI A1 Always Free (2 OCPU / 12 GB), mx-queretaro-1, `159.54.158.4` |
 | Access | `ssh -i ~/.ssh/panfleto_oci ubuntu@159.54.158.4`. When it times out, your IP rotated: run `../fluxonline/deploy/allow-my-ip.sh` |
 | Neighbours | panfleto (`/opt/panfleto`, owns Caddy `deploy-caddy-1`) and aomx. Restarting Caddy takes **every** tenant offline |
-| Stack | `/opt/miyagi/infra/oci`: `docker-compose.yml` (postgres, redis, medusa, web), capped ≤ 5 GB / ≤ 1.75 CPU |
+| Stack | `/opt/miyagi/infra/oci`: `docker-compose.yml` (postgres, redis, medusa, web, print-pdf), capped ≤ 5 GB / ≤ 1.75 CPU |
 | Edge | Cloudflare (proxied, Full Strict) → Caddy → `/opt/edge/sites/miyagi.caddy` → the `edge` network. Origin CA certs in `/opt/edge/certs`, valid until 2041 |
 
 ## Deploy and roll back
 A merge to `main` in either app repo only **builds** `ghcr.io/danybgoode/{miyagisanchez-storefront,miyagisanchez-backend}:main` (arm64,
-public). Nothing deploys by itself. Once the image build is green:
+public), plus `miyagisanchez-print-pdf:main` when the storefront's `services/print-pdf` changed. Nothing deploys by
+itself. Once the image build is green:
 
 ```bash
-/opt/miyagi/infra/oci/update.sh   # pulls this repo + both :main images by digest, migrates, health-checks, validates Caddy
+/opt/miyagi/infra/oci/update.sh   # pulls this repo + the three :main images by digest, migrates, health-checks, validates Caddy
 ```
 
-To roll back, add `MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>` (or `WEB_IMAGE_PIN=…`) to
+**When a merge changed `update.sh` itself, run it twice** (or `git -C /opt/miyagi pull` first). bash keeps reading the
+old file, so the first run deploys with the old checks; the second run is the checked one.
+
+To roll back, add `MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>` (or `WEB_IMAGE_PIN=…`, `PRINT_PDF_IMAGE_PIN=…`) to
 `/opt/miyagi/infra/oci/.env` and re-run `update.sh`. A pin always wins over `:main`; delete the line to roll forward.
 
 ## Secrets: two copies, and only two
-`.env` (DB passwords), `medusa.env`, `web.env` and `backup.env` hold production's secrets: 0600, owner `ubuntu`. The
+`.env` (DB passwords), `medusa.env`, `web.env`, `print.env` (the PDF renderer's secret, share-kit S2.1) and `backup.env` hold production's secrets: 0600, owner `ubuntu`. The
 **only** other copy is Daniel's password manager (one note per file, plus `CLOUDFLARE_API_TOKEN`,
 `CLOUDFLARE_ACCOUNT_ID`, `SERPAPI_KEY`, `GOLDEN_BEANS_FLAG_SYNC_KEY_{BACKEND,FRONTEND}`). The nightly backups do
 **not** include these files. To change a value, edit the VM file, run `update.sh`, **and update the password

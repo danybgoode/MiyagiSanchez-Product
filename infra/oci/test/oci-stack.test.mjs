@@ -16,18 +16,33 @@ const OCI = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const read = (f) => fs.readFileSync(path.join(OCI, f), 'utf8')
 const compose = read('docker-compose.yml')
 const caddy = read('miyagi.caddy')
+const update = read('update.sh')
 
 // services: block → { name: body }
 const services = Object.fromEntries(
   compose
     .slice(compose.indexOf('\nservices:'), compose.indexOf('\nnetworks:'))
-    .split(/\n  (?=[a-z]+:\n)/)
+    .split(/\n  (?=[a-z][a-z-]*:\n)/)
     .slice(1)
     .map((b) => [b.slice(0, b.indexOf(':')), b]),
 )
 
-test('the four services were parsed (a vacuous loop asserts nothing)', () => {
-  assert.deepEqual(Object.keys(services).sort(), ['medusa', 'postgres', 'redis', 'web'])
+test('the five services were parsed (a vacuous loop asserts nothing)', () => {
+  assert.deepEqual(Object.keys(services).sort(), ['medusa', 'postgres', 'print-pdf', 'redis', 'web'])
+})
+
+test('the PDF renderer is reachable only from inside the stack (share-kit S2.1)', () => {
+  const body = services['print-pdf']
+  assert.doesNotMatch(body, /edge/, 'print-pdf must never join the shared edge network')
+  assert.doesNotMatch(body, /ports:/)
+  assert.match(body, /\n    networks: \[miyagi\]\n/)
+  assert.match(body, /env_file: \[\.\/print\.env\]/)
+})
+
+test('update.sh pins the renderer by digest, requires its env file, and waits for it', () => {
+  assert.match(update, /PRINT_PDF_IMAGE="\$\(resolve PRINT_PDF_IMAGE ghcr\.io\/danybgoode\/miyagisanchez-print-pdf\)"/)
+  assert.match(update, /for f in \.env medusa\.env web\.env print\.env; do/)
+  assert.match(update, /wait_for print-pdf http:\/\/127\.0\.0\.1:8080\/health/)
 })
 
 test('nothing publishes a port — the shared Caddy is the only public entrypoint', () => {
@@ -250,7 +265,13 @@ test('a failed image pull fails the deploy instead of pinning the cached :main (
   const fn = update.slice(update.indexOf('resolve() {'), update.indexOf('\n}\n', update.indexOf('resolve() {')))
   assert.match(fn, /docker pull -q "\$pin" >\/dev\/null \|\| \{[^}]*return 1; \}/)
   assert.match(fn, /docker pull -q "\$2:main" >\/dev\/null \|\| \{[^}]*return 1; \}/)
-  for (const name of ['MEDUSA_IMAGE', 'WEB_IMAGE']) {
+  for (const name of ['MEDUSA_IMAGE', 'WEB_IMAGE', 'PRINT_PDF_IMAGE']) {
     assert.match(update, new RegExp(`${name}="\\$\\(resolve ${name} [^)]+\\)" \\|\\| exit 1`), name)
   }
+})
+
+test('the renderer secret must be set and identical in print.env and web.env, never echoed (share-kit S2.1)', () => {
+  assert.match(update, /secret_of\(\) \{ grep -E '\^PRINT_PDF_SECRET=' "\$1"/)
+  assert.match(update, /\[ -z "\$\(secret_of print\.env\)" \] \|\| \[ "\$\(secret_of print\.env\)" != "\$\(secret_of web\.env\)" \]/)
+  assert.doesNotMatch(update, /echo[^\n]*\$\(secret_of/)
 })

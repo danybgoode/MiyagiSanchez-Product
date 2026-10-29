@@ -47,7 +47,7 @@ _Crew (actual): claude-opus-5-5 ≈$49.75 (orchestrator, builder of all three sp
 ## Gaps / follow-ups
 - **Owed to Daniel:**
   - The phone walkthroughs in all three sprint files: the signed-in Comparte tiles, a QR scan, admin «Descargar PDF» on a print edition, and editing a price then downloading again.
-  - Adding one real feed in Meta Commerce Manager. `angela` is a claimed shop with a valid row. This is sprint 3's acceptance step.
+  - Adding one real feed in Meta Commerce Manager. `angela` is a claimed shop with a valid row. This is sprint 3's product-owner acceptance step: the sprint is shipped (merged, deployed, agent-verified), and this acceptance is owed, not assumed.
   - An agent call with a real `ms_agent_` token.
   - The `_Intent:` line above.
   - **Putting `print.env` and the two new `web.env` lines in the password manager.**

@@ -1418,8 +1418,8 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
 - **A deploy step inside `$(…)` does not inherit `set -e` — a failed image pull reported success on the OLD
   build.** `update.sh` resolved `:main` with `docker pull` inside a command substitution. When the pull timed out,
   it fell through to the locally cached image, and the deploy printed ✓ for the previous commit. Check every pull
-  (`|| return 1`) and exit on a failed resolve; then **verify the running container's revision label equals the
-  merge SHA**, never the script's own ✓. Related: a pull that hangs at the same byte count across docker restarts is
+  (`|| return 1`) and exit on a failed resolve, and verify the revision label (see the bot-token entry below),
+  never the script's own ✓. Related: a pull that hangs at the same byte count across docker restarts is
   a stuck containerd ingest (`/var/lib/containerd/io.containerd.content.v1.content/ingest/<id>`), not the network.
   *(share-kit, 2026-10-28.)*
 - **GitHub Actions minutes only bill on PRIVATE repos — a chatty private docs repo can silently

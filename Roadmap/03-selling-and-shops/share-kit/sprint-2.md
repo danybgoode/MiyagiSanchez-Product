@@ -3,7 +3,7 @@ epic: share-kit
 sprint: 2
 title: "The catalog PDF"
 risk: high
-phase: Shaping
+phase: Shipped
 stories_total: 3
 stories:
   - id: S2.1

@@ -3,7 +3,7 @@ epic: share-kit
 sprint: 3
 title: "Instagram and WhatsApp catalogs"
 risk: low
-phase: Shaping
+phase: Shipped
 stories_total: 3
 stories:
   - id: S3.1
@@ -69,7 +69,7 @@ stories:
 - `tools/list` includes `get_share_kit`. An unauthenticated call is refused with the seller-token hint.
 - The catalog page's order buttons carry `data-product` (16 of 16 on el-manchon) for the tap events.
 - `e2e/share-kit-feed.spec.ts` and `share-kit-catalog.spec.ts` against prod: 27/27 green.
-- **Owed to Daniel:** step 1 (the signed-in Comparte tile), step 3 (add one real feed in Meta Commerce Manager, the sprint's acceptance step; `angela` is a claimed shop with a valid row), and step 4 (an agent with a real `ms_agent_` token).
+- **Owed to Daniel:** step 1 (the signed-in Comparte tile), step 3 (add one real feed in Meta Commerce Manager, the sprint's product-owner acceptance step; `angela` is a claimed shop with a valid row). **"Shipped" here means merged, deployed and agent-verified against Meta's column spec, as for every epic. The product-owner acceptance is tracked as owed, not assumed.**, and step 4 (an agent with a real `ms_agent_` token).
 - **Follow-ups:**
   - `get_share_kit` and the Comparte tile read counts from a partial model during a Medusa outage.
   - Meta's title and description length limits.

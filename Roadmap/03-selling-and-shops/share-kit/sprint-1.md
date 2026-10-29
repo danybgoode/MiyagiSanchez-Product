@@ -3,7 +3,7 @@ epic: share-kit
 sprint: 1
 title: "The catalog link"
 risk: low
-phase: Building
+phase: Shipped
 stories_total: 3
 stories:
   - id: S1.1

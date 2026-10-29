@@ -3,8 +3,9 @@
 # row counts to Telegram. A backup that has never been restored is a hope, not a backup — and on this
 # single VM the dump is the backup-of-record (Cloud SQL's PITR is gone). Run by miyagi-restore-drill.timer.
 #
-# The throwaway container has no volume and no network, and is removed on exit; production is never
-# touched. The counts are compared with the live DB so a "successful" restore of an empty or truncated
+# The throwaway container has no network and is removed on exit WITH its volume; production is never
+# touched. `rm -f` alone is not enough: postgres:17-alpine declares VOLUME /var/lib/postgresql/data, so every
+# drill until 2026-10-29 left an anonymous volume holding a full copy of the restored production data. The counts are compared with the live DB so a "successful" restore of an empty or truncated
 # dump fails the drill instead of passing it.
 set -euo pipefail
 
@@ -24,7 +25,7 @@ say() {
   echo "$*"
 }
 fail() { say "🛑 miyagi restore drill FAILED: $*"; exit 1; }
-trap 'docker rm -f "$NAME" >/dev/null 2>&1 || true' EXIT
+trap 'docker rm -fv "$NAME" >/dev/null 2>&1 || true' EXIT
 
 [ -n "$DUMP" ] || fail "no local dump in /data/miyagi/backups"
 docker run -d --name "$NAME" --network none -e POSTGRES_PASSWORD=drill -e POSTGRES_DB=drill \

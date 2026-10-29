@@ -277,3 +277,8 @@ test('the renderer secret must be set and identical in print.env and web.env, ne
   assert.match(update, /\[ -z "\$\(secret_of print\.env\)" \] \|\| \[ "\$\(secret_of print\.env\)" != "\$\(secret_of web\.env\)" \]/)
   assert.doesNotMatch(update, /echo[^\n]*\$\(secret_of/)
 })
+
+test('the restore drill removes its throwaway container WITH its anonymous volume', () => {
+  // postgres images declare a VOLUME; `docker rm -f` without -v stranded a copy of production data every Sunday.
+  assert.match(read('restore-drill.sh'), /trap '[^']*docker rm -fv "\$NAME"/)
+})

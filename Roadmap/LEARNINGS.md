@@ -1415,6 +1415,13 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   mid-build. *(2026-07-10, frontend-vercel-to-cloudrun S4.3.)*
 
 ## Repo & deploy hygiene
+- **A deploy step inside `$(…)` does not inherit `set -e` — a failed image pull reported success on the OLD
+  build.** `update.sh` resolved `:main` with `docker pull` inside a command substitution. When the pull timed out,
+  it fell through to the locally cached image, and the deploy printed ✓ for the previous commit. Check every pull
+  (`|| return 1`) and exit on a failed resolve, and verify the revision label (see the bot-token entry below),
+  never the script's own ✓. Related: a pull that hangs at the same byte count across docker restarts is
+  a stuck containerd ingest (`/var/lib/containerd/io.containerd.content.v1.content/ingest/<id>`), not the network.
+  *(share-kit, 2026-10-28.)*
 - **GitHub Actions minutes only bill on PRIVATE repos — a chatty private docs repo can silently
   eat the whole plan while the busy public app repo costs nothing.** The 2,000-min/month plan hit
   100% mid-cycle (2026-07-18); the breakdown showed the private root repo was the entire bill
@@ -1544,6 +1551,17 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   ops-routines-reporting S3 close-out.)*
 
 ## Build & QA
+- **An edit script must assert its anchor matched — a silent no-op replace shipped a production outage.** A Python
+  `str.replace` that should have added an import matched nothing. `node --check` parsed the file, every test
+  passed (the I/O shell had no harness), and every PDF failed in production with `… is not defined`. Write
+  `assert anchor in s` before every scripted edit. For a harness-less shell, add a mechanical guard: an
+  import-coverage test, or `no-undef` lint. And **run the shell end to end before opening the PR**; the hotfix
+  was, the original was not. *(share-kit #450 → #451, 2026-10-29.)*
+- **Headless-Chromium PDFs: load print pages with scripts off, wait for `load`, and use JPEG photos.** The app
+  shell keeps requests open (two `blob:` fetches never settled), so `networkidle0` never fired and every render
+  timed out. Chromium's PDF writer keeps a JPEG as-is but stores a WebP losslessly: 12.6 MB and 24 s in
+  `page.pdf()`, against 1.6 MB with JPEG. JPEG has no alpha, so flatten onto white or transparent logos print
+  black. Measure each phase inside the container before changing the budget. *(share-kit, 2026-10-29.)*
 
 - **"Existing specs green" means the WHOLE deterministic project, not the specs you think you touched
   (2026-10-28, pricing-page).** The S1 builder ran a targeted subset and reported green; the fresh reviewer ran

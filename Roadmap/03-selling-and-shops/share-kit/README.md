@@ -1,7 +1,8 @@
 ---
-status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Shaping       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped        # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
+locked_at: "2026-10-28T23:09:50Z"
 slug: share-kit
 title: "Share kit"
 area: 03-selling-and-shops
@@ -35,6 +36,10 @@ satisfied_min_score: null   # the score (1–5) a satisfaction_rated answer need
 build_order: 11      # integer position in the ONE global build sequence — the SSOT once the epic
                      # exists (the seed's value is only a fallback). Fill it in at the betting
                      # table; plain integers, no "#2a" suffixes. See 00-ideas/README.md → Ordering.
+actual_usd: 49.75
+actual_mtok: 145.1
+actual_models: "claude-opus-5-5 ≈$49.75"
+actual_basis: "this machine · 2026-10-29 · 1 session · prices 2026-10-02"
 ---
 
 # Epic: Share kit
@@ -98,6 +103,155 @@ merchant's number, else «Comprar»; the Meta feed at a public per-shop URL; app
 
 **Flag:** none (WAYS-OF-WORKING default); rollback is `git revert`, plus removing the renderer from the compose file.
 
+## Architecture lock (2026-10-28, against storefront `origin/main` 78e73d2 and live data)
+
+Builders **cite** these by number. Where a decision corrects the sprint docs, the correction is the contract.
+
+**Corrections the live system made to the scope (said out loud)**
+- **The data seam stops at 20 products.** `getShopListings` calls `/store/sellers/:slug/products` with no `limit`; the
+  backend defaults to 20 (cap 50). Live today the largest shop has 16 published products (`el-manchon`), so nobody is
+  truncated yet — the 21st product would silently vanish from `/tienda`, the sitemap, the story image and every
+  surface of this epic. Fixed in S1.1 (D2).
+- **"Paused, draft, deleted and private products excluded" is already true upstream**, and the model adds no second
+  rule (D1). "Private" in the scope means a preview-private *shop*, which 404s as a whole.
+- **The publish screen is not `/sell/armar/listo`.** prompt-to-shop S5.2 shipped it as
+  `app/(shell)/p2s/_components/PublishedMoment.tsx` (rendered by `KeptShop.tsx`). It is merged, so S1.3 and S2.3 add
+  their tiles there.
+- **There is no product `updated_at` to key the PDF cache on.** The backend's field list for the seller-products route
+  omits it, and adding it would be a backend change for a weaker key. The cache key is a hash of the rendered model
+  (D15) — any visible change (price, photo, name, colour, number) makes a new PDF.
+- **The compose file and `update.sh` live in THIS repo** (`infra/oci/`), not the storefront. S2.1 is two PRs: the
+  storefront (service + image) and the root (compose + `update.sh`), merged storefront first.
+- **WhatsApp numbers are rare.** None of the seven largest live shops has `whatsapp_cta` on, and all seven are
+  unclaimed, so «Comprar» is the common case today, not the fallback.
+- **The catalog is Mexico-only** (D5). The order link's `52` prefix and the es-MX copy are wrong for a US shop.
+
+**Data**
+- **D1 — One seam, already filtered.** The model is built from `getShopListings(slug)` (the shop's own channel — the
+  same read `/tienda` uses on every channel), never `getMarketplaceShopListings`. Visibility is enforced where it
+  already lives and is imported, not restated: the backend route returns `status: published` only, drops
+  `isHiddenCatalogProduct`, and 404s a seller `sellerRowEnforcement` does not admit; `getShopListings` drops print
+  placements; `resolveShopPresentation` refuses a preview-private shop and a market mismatch. Owned-channel-only
+  products are included — it is the merchant's own catalog.
+- **D2 — `getShopListings` pages.** It requests `limit=50` and follows `offset` until `count` is reached (the backend's
+  own `take: 2000` stops it). Same `unstable_cache` key and tags. ⚠ S1 verifier: that `take: 2000` is platform-wide
+  (filtered to the seller afterwards), not per seller — past 2000 published products a shop can silently lose some with
+  `count` agreeing. A backend follow-up, outside this epic. A failed page after the first returns what was read
+  plus a `console.error`, never a silent partial presented as complete — the caller gets the same array type, so the
+  log is the signal.
+- **D3 — The merchant's WhatsApp number has one definition.** Pure `shopWhatsAppNumber(metadata)` in
+  `lib/share-kit/whatsapp.ts`: `settings.checkout.whatsapp_cta ? (settings.theme.social.whatsapp ||
+  settings.checkout.phone || null) : null`. The two existing copies (`ListingRenderer.tsx:303`,
+  `lib/trust-inputs.ts:75`) import it. Number normalization (digits only, `52` prefixed unless present) moves out of
+  `SellerTrustCard.whatsappUrl` into the same file as `whatsappDigits(raw)`, and `SellerTrustCard` imports it.
+- **D4 — The order action.** `isShopClaimed(shop)` **and** a number ⇒ «Pedir por WhatsApp» →
+  `https://wa.me/<digits>?text=` «Hola, quiero pedir "<title>" (<price>): <product short link>». Otherwise «Comprar» →
+  the product page. An unclaimed shop is always «Comprar» (the PDP already shows it contact-only, `lib/claim.ts`).
+- **D5 — Mexico shops only.** `readPublicSellerMarket(shop)?.market_code === 'mx'`, else the catalog, print page, PDF
+  and feed 404 and Comparte shows no catalog tiles. US share kit is not in this epic.
+- **D6 — The pure model.** `lib/share-kit/catalog.ts` exports `buildCatalogModel({ shop, listings })` → `{ shop: {
+  slug, name, logoUrl, description, accent, accentText, whatsapp: digits | null, claimed }, links: { catalog,
+  catalogShort, shop, pdf, feed }, items: [{ id, title, description, imageUrl | null, priceCents | null,
+  priceLabel, url, shortUrl, order: { kind: 'whatsapp' | 'buy', href } }] }`. No `server-only`, no `next/*` imports,
+  so the `api` Playwright project unit-tests it (prompt-to-shop's pure specs live in `e2e/` the same way). URLs are
+  absolute on `PLATFORM_ORIGIN`: catalog `…/mx/s/<slug>/catalogo`, product `listingTarget(id)`, short links on
+  `SHORTLINK_ORIGIN` (`/s/<slug>/catalogo` and `/l/<id>` — both passthrough prefixes in `lib/shortlink.ts`). Price
+  label is `formatPrice(listing, 'es-MX')` («Precio a consultar» when null).
+- **D7 — Two-shop proof.** A spec feeds shop A's listings plus a stray listing of shop B and asserts the model
+  contains no item whose `shop_id`/`shop.slug` is not A's — the model drops any listing whose `shop.slug` differs
+  from the shop it is built for (a defence in depth against a seam regression, and the thing the spec mutates).
+
+**The catalog page (S1.2)**
+- **D8 — Routes, mirroring `/tienda`.** `app/(shell)/mx/s/[slug]/catalogo/page.tsx` (`market: 'mx'`),
+  `app/(shell)/s/[slug]/catalogo/page.tsx` (unprefixed marketplace host), `app/(shell)/catalogo/page.tsx` (owned host,
+  `resolveRequestShopPresentation`, shop from the unspoofable `x-miyagi-shop-slug` header). One body:
+  `app/(shell)/_shop-sections/CatalogBody.tsx`. It is a share destination, not a nav section: no `navSections` gate.
+  ⚠ S1 verifier: **no `revalidate`** on these pages — the `(shell)` layout reads headers, so it could never apply
+  (`revalidate-truth.spec.ts`); as for `/tienda`, the ISR literal lives on the public-read catch-all, which gains a
+  `catalogo` case. `app/(us-shell)/us/s/[slug]/catalogo` mirrors it (`market-route-population.spec.ts`) and 404s
+  through D5. `catalogo` joins `MARKETPLACE_SHOP_TAILS` in `lib/public-read-routing.ts` so the
+  edge caches it like `/tienda`.
+- **D9 — Weight.** Server component, zero client islands in S1 (plain anchors). Photos through
+  `lib/image-loader.ts` (`/api/img`, same origin). OG image from `generateMetadata`: the shop logo, else the first
+  photo. Empty state is the seed's: «Esta tienda todavía no tiene productos publicados.» + «Ver la tienda».
+
+**Comparte and publish (S1.3)**
+- **D10 — QR.** `shopQrPlan(slug, target)` gains `target: 'shop' | 'catalogo'`; `/api/sell/shop/qr?target=catalogo`
+  encodes `mschz.org/s/<slug>/catalogo`. Anything else for `target` is `shop`. Still seller-session scoped.
+- **D11 — Tiles.** A «Catálogo» `Card` in `ComparteClient` (copy, WhatsApp via `buildWhatsAppShareLink`, QR download)
+  and the same three actions in `PublishedMoment` (gated on `market === 'mx'`, passed from `KeptShop`). Each tap: `pushAnalyticsEvent('share_catalog_link', { channel })`
+  (no dedupe key — once per tap) and the existing `guide.share_done` write. Iconoir, no emoji.
+
+**The renderer (S2.1) — shared infra, security lens**
+- **D12 — Image.** `services/print-pdf` on `node:24-bookworm-slim` + Debian `chromium`; a second job in the storefront's
+  `image-arm64.yml` pushes `ghcr.io/danybgoode/miyagisanchez-print-pdf:<sha>` (+ `:main` on main), path-filtered so a
+  web-only merge does not rebuild it.
+- **D13 — Placement.** Root `infra/oci/docker-compose.yml` gains `print-pdf` on the `miyagi` network only (never
+  `edge`, no `ports:`), `mem_limit: 512m`, `cpus: 0.2` (512m, not the 768m first written: Daniel chose to fit inside the existing budget, with postgres 0.5→0.4 and web 0.55→0.45 CPU) (the CPU caps stay under the box's 2 OCPUs), `env_file:
+  [./print.env]`. `update.sh` resolves its digest like the other two (`PRINT_PDF_IMAGE`, pin-able) and waits for its
+  `/health`. Web reaches it at `PRINT_PDF_URL=http://print-pdf:8080`.
+- **D14 — `server.js` hardening.** (a) `x-internal-secret` compared with `crypto.timingSafeEqual`; empty secret ⇒
+  every call 401. (b) The top-level URL's origin must be in `PRINT_PDF_ALLOWED_ORIGINS` (comma list, default
+  `https://miyagisanchez.com`), else 403 without launching Chromium. (c) Request interception: every subrequest whose
+  origin is not allow-listed is aborted (`data:`/`blob:` allowed), and redirects are re-checked — so a merchant's image
+  URL can never make Chromium fetch an internal host. (d) One render at a time; up to 4 waiting; a fifth gets 503
+  `busy`. A job that waited more than 10 s is refused as `busy` too (the web client gives up at 55 s; verifier,
+  PR 448). In practice a second download during a slow render gets `busy` rather than a wait. (e) A 45 s hard timeout per render, browser always closed. The allow-list decision is a pure exported
+  function with a `node:test` spec beside it (the service has no Playwright). Secrets: `PRINT_PDF_SECRET` in both
+  `web.env` and `print.env` — a production secret, so it is one focused question to Daniel before S2.1 merges, with
+  the VM memory headroom read (the classifier refuses agent production reads).
+
+**The PDF (S2.2, S2.3)**
+- **D15 — Print page.** `app/(shell)/mx/s/[slug]/catalogo/imprimir/page.tsx`: `robots: noindex`, `dynamic =
+  'force-dynamic'` (a render must never read a CDN-stale page), unlinked, built from the D6 model. A4 `@page`, cover
+  (logo, name, accent), a grid with photo, name, price and a QR to the product short link (server-rendered SVG via
+  `qrcode`, no network), last page with the shop link and WhatsApp. Photos via `/api/img`, so every subrequest is the
+  allow-listed origin.
+- **D16 — PDF routes.** `GET /api/catalogo/[slug]/pdf` (public, the shareable URL) and `GET /api/sell/catalogo/pdf`
+  (seller session ⇒ own slug ⇒ the same handler). Key: `catalog-pdf/<slug>/<sha256(JSON(model) + TEMPLATE_VERSION)>.pdf`
+  in the public images bucket. Hit ⇒ stream from `R2_PUBLIC_URL`, no render, no rate-limit charge. Miss ⇒ rate limits
+  (`catalog_pdf_shop` 6/h per slug, `catalog_pdf_ip` 10/h per IP), `renderPrintPdf`, `uploadToR2`, stream. Any failure
+  ⇒ 503 + «No pudimos preparar tu PDF. Inténtalo en un minuto.». `checkRateLimit` fails open without Upstash, so the
+  renderer's queue (D14d) is the hard bound; the rate limits are the polite one.
+- **D17 — Tiles.** «Catálogo PDF» in Comparte and `PublishedMoment`: «Descargar» (fetch → blob, «Preparando tu PDF…»
+  while waiting, the error copy on failure) and «Compartir por WhatsApp» (the public PDF URL).
+  `share_catalog_pdf` once per tap.
+
+**The Meta feed and the agent (S3)**
+- **D18 — Feed.** Pure `buildMetaFeed(model)` in `lib/share-kit/meta-feed.ts` → `{ csv, included, excluded: { no_photo,
+  no_price } }`; columns re-confirmed against Meta's spec page when S3 starts. `id` = Medusa product id (stable).
+  Route `app/api/feeds/meta/[slug]/route.ts` accepts `<slug>.csv` only, `Cache-Control: public, s-maxage=3600`, 404
+  for an unclaimed or non-MX shop.
+- **D19 — Agent.** MCP `get_share_kit` through `resolveToolShop` (seller credentials ignore any slug argument — the
+  existing parity rule — so another shop is unreachable by construction), added to `MCP_SELLER_TOOLS` and
+  `SELLER_MCP_TOOLS`. One small client island on the catalog page fires `catalog_order_whatsapp` /
+  `catalog_order_buy`; `pushAnalyticsEvent` already skips white-label hosts, so owned-host taps are not counted (named,
+  accepted).
+
+**Process**
+- **D20 — No migration, no flag, no new npm dependency.** `qrcode` and `puppeteer-core` are already in the trees.
+- **D21 — Routing.** The orchestrator (Claude Opus) builds all three sprints in place in storefront worktrees
+  (`~/dobby/.worktrees/sk-s1…s3`); one PR per sprint, stacked `feat/share-kit` → `-s2` → `-s3`, plus the root infra
+  PR for S2.1. Review: `review-route.mjs` external pass(es) **and** the fresh `verifier` on every PR (high-risk epic).
+
+### Build contract — S1 · The catalog link
+D1–D11. Files: `lib/share-kit/{catalog,whatsapp}.ts`, `lib/listings.ts` (D2 only), `lib/share-link.ts` (D10),
+`SellerTrustCard.tsx` / `ListingRenderer.tsx` / `lib/trust-inputs.ts` (D3 imports only), the three `catalogo` routes +
+`CatalogBody.tsx`, `lib/public-read-routing.ts`, `app/api/sell/shop/qr/route.ts`, `ComparteClient.tsx`,
+`PublishedMoment.tsx`. Specs: model + two-shop + order link + pagination (pure, `api`), catalog server HTML on a live
+fixture shop (`api`), QR plan targets. Each observed red under a mutation.
+
+### Build contract — S2 · The catalog PDF
+D12–D17. Storefront: `services/print-pdf/*`, `image-arm64.yml`, the print page, both PDF routes,
+`lib/share-kit/catalog-pdf.ts` (pure key + plan), `lib/ratelimit.ts` (two keys), tiles. Root: `infra/oci/{docker-compose.yml,update.sh}`.
+Specs: allow-list refusal (`node:test` in the service), cache key changes with the model and not otherwise, hit ⇒ no
+render (injected deps), rate-limit ordering, print page scoped to its shop. Gate before merge: Daniel sets the secret.
+
+### Build contract — S3 · Instagram and WhatsApp catalogs
+D18–D19. `lib/share-kit/meta-feed.ts`, the feed route, the «Instagram y WhatsApp» tile, `get_share_kit` in
+`app/api/ucp/mcp/route.ts` + `lib/ucp/capabilities.ts` + `lib/setup-spec.ts`, the order-tap island. Specs: columns,
+price format «199.00 MXN», exclusions by reason, CSV escaping, feed route 404s, MCP unauthenticated refusal.
+
 ## Deploy order
 1. Sprint 1 is storefront-only.
 2. **S2.1 before S2.2/S2.3:** the renderer image builds on arm64, joins the VM's compose stack on the internal network
@@ -109,16 +263,16 @@ merchant's number, else «Comprar»; the Meta feed at a public per-shop URL; app
    sprint says so.
 
 ## Definition of Done (epic)
-- [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
-- [ ] Each `sprint-N.md` has its smoke walkthrough (real URLs)
-- [ ] This README marked ✅; every sprint status ticked with commit refs
-- [ ] `RETROSPECTIVE.md` written
-- [ ] Product poster (`Roadmap/README.md`) updated
-- [ ] Team memory + `MEMORY.md` index updated
-- [ ] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
-- [ ] **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
+- [x] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
+- [x] Each `sprint-N.md` has its smoke walkthrough (real URLs)
+- [x] This README marked ✅; every sprint status ticked with commit refs
+- [x] `RETROSPECTIVE.md` written
+- [x] Product poster (`Roadmap/README.md`) updated
+- [x] Team memory + `MEMORY.md` index updated
+- [x] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
+- [x] **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
       exists **in Golden Frijoles, in every env**, with the stated polarity, **and its switch is set there** —
       `frijoles flags get <key>` must print `on vN` or `off vN` in its PRODUCTION row (a bare `off` with no version
       means nothing is served there, so the app runs on its own built-in default). A newly synced flag goes live as written in its file; a sync never switches an existing one. *Verify-only — not a new gate; whether a high-risk epic needs one
-      is decided at refining, not here.*
-- [ ] Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)
+      is decided at refining, not here.* — **N/A: none was planned (D20: no flag).**
+- [x] Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)

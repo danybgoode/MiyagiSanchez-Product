@@ -3,7 +3,7 @@ epic: share-kit
 sprint: 1
 title: "The catalog link"
 risk: low
-phase: Shaping
+phase: Shipped
 stories_total: 3
 stories:
   - id: S1.1
@@ -12,25 +12,25 @@ stories:
     i_want: "one pure model of a shop's shareable catalog, built only from that shop's visible listings, plus a WhatsApp order-link builder"
     so_that: "the page, the PDF and the feed share one source and can never leak another shop's products"
     risk: low
-    status: planned
+    status: done
   - id: S1.2
     title: "/mx/s/[slug]/catalogo on every shop channel"
     as_a: "a customer who got the link in a WhatsApp chat"
     i_want: "a fast single scroll of the shop's products with one big order button on each"
     so_that: "I can order in one tap without browsing a whole store"
     risk: low
-    status: planned
+    status: done
   - id: S1.3
     title: "Comparte «Catálogo» tile + QR + the prompt-to-shop publish tile"
     as_a: "a merchant"
     i_want: "a tile in Comparte to copy, send by WhatsApp or download a QR of my catalog link"
     so_that: "I can put my catalog in chats, my status and on paper"
     risk: low
-    status: planned
+    status: done
 ---
 # Share kit — Sprint 1: The catalog link
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-10-28 · Storefront PR #447 → `3daba88`, live on the VM (web container revision `3daba88c`)
 
 ## Stories
 
@@ -48,6 +48,19 @@ stories:
 **As** a merchant, **I want** a tile in Comparte to copy, send by WhatsApp or download a QR of my catalog link, **so that** I can put my catalog in chats, my status and on paper.
 **Acceptance:** A «Catálogo» tile in Comparte with copy, WhatsApp share (`buildWhatsAppShareLink`) and a QR PNG download; the same tile on prompt-to-shop's publish screen (needs its S5.2 merged); `share_catalog_link` fires once per tap. Shared `Card` / `Button`, Iconoir, no emoji.
 **Risk:** low
+
+## Shipped
+
+- **PR:** MiyagiSanchez-Storefront #447 → squash `3daba88`. Reviews: the fresh `verifier` (two rounds: one blocking, one should-fix, both fixed), plus codex general and security passes on gpt-6-luna @ xhigh (clean on `c7a521d`). agy was out of quota and vibe stalled, so codex ran both passes.
+- **Deviation from the acceptance, per the lock (D8):** no explicit `revalidate` on the catalog pages. The `(shell)` layout forbids one (`revalidate-truth`), and the public-read edge cache serves the page.
+- **Deploy:** the first deploy silently re-ran the old image because `update.sh` swallowed a failed pull. Root PR #234 (`a19631c`) makes a failed pull stop the deploy. A stalled partial layer on the VM was then cleared, and the deploy completed on 2026-10-28.
+
+### Verified live (agent, production, 2026-10-28)
+- `/mx/s/el-manchon/catalogo` → 200, 16 cards and 16 order buttons (the shop's whole catalog). `/mx/s/angela/catalogo` → 1 and 1.
+- No live shop has WhatsApp turned on yet, so every card reads «Comprar» (step 4 ✅). Step 3's WhatsApp link is covered by the spec.
+- `/mx/s/no-existe-esta-tienda-zz9/catalogo` → 404. `https://mschz.org/s/angela/catalogo` → 301 to the catalog (the QR's target).
+- `e2e/share-kit-catalog.spec.ts` and `public-renderer-parity.spec.ts` vs prod: 18/18 green.
+- **Owed to Daniel:** steps 1, 2, 3 and 5 on a phone (the signed-in Comparte tile, and a real scan).
 
 ## Sprint QA
 - **api specs:** two-shop scoping on the view model and the page; the WhatsApp order link; catalog page server HTML

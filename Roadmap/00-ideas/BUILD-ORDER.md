@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-10-28 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-10-29 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -16,15 +16,14 @@
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
-## 📋 Ready to build (scaffolded, not started) (5)
+## 📋 Ready to build (scaffolded, not started) (4)
 
 - [In person: POS-lite and payment links](../../02-checkout-and-payments/in-person-sales/README.md) — 02 Checkout & Payments · 0/12 stories · risk: High
-- [Share kit](../../03-selling-and-shops/share-kit/README.md) — 03 Selling & Shops · 0/9 stories · risk: High
 - [BYO Envía connect](../../04-shipping-and-delivery/envia-byo-connect/README.md) — 04 Shipping · 0/11 stories · risk: High
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
-## ✅ Shipped (156)
+## ✅ Shipped (157)
 
 - [Cars vertical — tratocar-grade browse & trust](../../01-discovery-and-shopping/cars-vertical-tratocar-parity/README.md) — 01 Discovery · 8/8 stories
 - [Discovery Polish](../../01-discovery-and-shopping/discovery-polish/README.md) — 01 Discovery · 7/7 stories
@@ -68,6 +67,7 @@
 - [Seller-catalog null-slot sweep — 23 unsafe reads across 21 runtime files](../../03-selling-and-shops/seller-catalog-null-slot-sweep/README.md) — 03 Selling & Shops · 3/3 stories · risk: High · tbd
 - [Seller-portal depth pass](../../03-selling-and-shops/seller-portal-depth-pass/README.md) — 03 Selling & Shops · 6/6 stories · risk: High · Wave 1
 - [Setup guide on dashboard](../../03-selling-and-shops/seller-portal-setup-guide/README.md) — 03 Selling & Shops · 4/4 stories · risk: Low · Wave 1
+- [Share kit](../../03-selling-and-shops/share-kit/README.md) — 03 Selling & Shops · 9/9 stories · risk: High
 - [Shop Settings refactor](../../03-selling-and-shops/shop-settings-refactor/README.md) — 03 Selling & Shops · 21/21 stories · risk: Low
 - [Shop-created welcome by market](../../03-selling-and-shops/shop-created-welcome/README.md) — 03 Selling & Shops · 1/1 stories · risk: Low
 - [Arranged-only delivery](../../04-shipping-and-delivery/arranged-only-delivery/README.md) — 04 Shipping · 5/5 stories

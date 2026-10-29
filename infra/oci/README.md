@@ -13,13 +13,17 @@ GCP is deleted; nothing of Miyagi runs anywhere else.
 
 ## Deploy and roll back
 A merge to `main` in either app repo only **builds** `ghcr.io/danybgoode/{miyagisanchez-storefront,miyagisanchez-backend}:main` (arm64,
-public). Nothing deploys by itself. Once the image build is green:
+public), plus `miyagisanchez-print-pdf:main` when the storefront's `services/print-pdf` changed. Nothing deploys by
+itself. Once the image build is green:
 
 ```bash
-/opt/miyagi/infra/oci/update.sh   # pulls this repo + both :main images by digest, migrates, health-checks, validates Caddy
+/opt/miyagi/infra/oci/update.sh   # pulls this repo + the three :main images by digest, migrates, health-checks, validates Caddy
 ```
 
-To roll back, add `MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>` (or `WEB_IMAGE_PIN=…`) to
+**When a merge changed `update.sh` itself, run it twice** (or `git -C /opt/miyagi pull` first). bash keeps reading the
+old file, so the first run deploys with the old checks; the second run is the checked one.
+
+To roll back, add `MEDUSA_IMAGE_PIN=ghcr.io/danybgoode/miyagisanchez-backend:<sha>` (or `WEB_IMAGE_PIN=…`, `PRINT_PDF_IMAGE_PIN=…`) to
 `/opt/miyagi/infra/oci/.env` and re-run `update.sh`. A pin always wins over `:main`; delete the line to roll forward.
 
 ## Secrets: two copies, and only two

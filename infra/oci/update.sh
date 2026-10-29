@@ -153,8 +153,11 @@ fi
 rm -f "$SITE.prev"
 echo "✓ caddy validated + reloaded"
 
-# Wait for both apps from INSIDE their containers — a 200 here is the app, not Caddy or Cloudflare.
+# Wait for the apps from INSIDE their containers — a 200 here is the app, not Caddy or Cloudflare. STEP names the
+# service, so a failure notice says which one (a print-pdf failure used to be paged as "installing the Caddy site
+# file" against the web commit; verifier, PR 235).
 wait_for() { # service url
+  STEP="waiting for $1 to answer its health check"
   for _ in $(seq 1 60); do
     if docker compose exec -T "$1" node -e "fetch('$2').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" 2>/dev/null; then
       echo "✓ $1 healthy"; return 0

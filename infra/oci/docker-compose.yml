@@ -2,7 +2,7 @@
 # Epic: Roadmap/09-platform-infra/miyagi-to-oracle-vm.
 #
 # The box is SHARED: panfleto (caddy, miniflux, landing, postgres) and aomx run here too. So:
-#   - nothing here publishes a port. The ONE Caddy (owned by panfleto's compose) reaches `miyagi-web` and
+#   - nothing here publishes a port. The ONE Caddy (`edge-caddy`, danybgoode/oracle-edge) reaches `miyagi-web` and
 #     `miyagi-medusa` over the external `edge` network; Postgres and Redis sit on `miyagi` only.
 #   - every container has a memory and CPU cap. Measured on Cloud Run (2026-10-15, 30d p99): medusa-web
 #     ≤62% of 1 GiB and ≤0.6 vCPU, miyagi-web hits 93–100% of 1 GiB (hence 1.5G here), Postgres ~0.8 GB
@@ -86,6 +86,14 @@ services:
       MEDUSA_WORKER_MODE: ${MEDUSA_WORKER_MODE:-server}
     mem_limit: 1280m
     cpus: 0.6
+    # The same probe update.sh's wait_for uses. Without it the container reads "Up" while Medusa is not answering,
+    # and neither a deploy nor the VM watchdog (oracle-edge host/watchdog.sh) can tell.
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
     networks:
       miyagi: {}
       edge:
@@ -104,6 +112,12 @@ services:
       HOSTNAME: 0.0.0.0
     mem_limit: 1536m
     cpus: 0.45
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
       miyagi: {}
       edge:
@@ -127,6 +141,6 @@ services:
 
 networks:
   miyagi: {}
-  # Created by install-host.sh and joined by panfleto's Caddy (danybgoode/justread deploy/docker-compose.yml).
+  # Created by install-host.sh and joined by the shared `edge-caddy` (danybgoode/oracle-edge edge/compose.yml).
   edge:
     external: true

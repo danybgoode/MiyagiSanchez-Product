@@ -176,6 +176,29 @@ test('update.sh validates the site file inside Caddy and restores the previous o
   assert.ok(u.indexOf('caddy validate') < u.indexOf('caddy reload'), 'validate runs before reload')
 })
 
+test('update.sh reloads the shared edge-caddy, not the retired deploy-caddy-1', () => {
+  // The proxy moved out of panfleto's compose into danybgoode/oracle-edge on 2026-10-29. Exec-ing the old name
+  // fails, and update.sh would report a valid site file as rejected.
+  const u = read('update.sh')
+  assert.doesNotMatch(u, /docker exec deploy-caddy-1/)
+  assert.match(u, /CADDY="\$\{EDGE_CADDY:-edge-caddy\}"/)
+})
+
+test('every long-running service has a health check', () => {
+  // A container without one reads "Up" while not answering; neither update.sh nor the VM watchdog can tell.
+  const servicesBlock = compose.slice(compose.indexOf('\nservices:\n'), compose.indexOf('\nnetworks:\n'))
+  const services = servicesBlock.split(/\n(?=  [a-z][a-z-]*:\n)/).filter((b) => /^  [a-z][a-z-]*:\n/.test(b))
+  // print-pdf's lives in its image (HEALTHCHECK in MiyagiSanchez-Storefront services/print-pdf/Dockerfile) and it
+  // reports `healthy` on the VM. Name such a service here rather than loosening the check for everyone.
+  const healthcheckInImage = new Set(['print-pdf'])
+  assert.ok(services.length >= 5)
+  for (const s of services) {
+    const name = s.match(/^  ([a-z][a-z-]*):/)[1]
+    if (healthcheckInImage.has(name)) continue
+    assert.match(s, /\n    healthcheck:/, name)
+  }
+})
+
 test('since the cutover the backup writes the PROD prefix, by default and from bootstrap; every failure alerts', () => {
   // The dark period wrote `medusa-oci/`; on 2026-10-16 this VM became prod. A provisioner default IS the live
   // config, so neither the script's fallback nor bootstrap may name the dark-period prefix any more.

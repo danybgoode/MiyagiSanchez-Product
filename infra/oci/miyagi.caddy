@@ -1,9 +1,9 @@
 # Miyagi Sánchez — site blocks for the shared Caddy on `panfleto-prod`.
 #
-# Installed by update.sh to /opt/edge/sites/miyagi.caddy, which panfleto's Caddyfile imports
-# (`import /etc/caddy/sites/*.caddy`, danybgoode/justread deploy/). It lives OUTSIDE panfleto's git
-# checkout on purpose: panfleto's update.sh runs `git reset --hard`, which silently erased the last route
-# another tenant (aomx) hand-added to that Caddyfile.
+# Installed by update.sh to /opt/edge/sites/miyagi.caddy, which the shared proxy's Caddyfile imports
+# (`import /etc/caddy/sites/*.caddy`, danybgoode/oracle-edge edge/Caddyfile). Each tenant owns its own site file
+# so no tenant's deploy can erase another's routes (panfleto's `git reset --hard` once erased a route aomx had
+# hand-added to the Caddyfile that panfleto owned until 2026-10-29).
 #
 # TLS: Cloudflare sits in front (proxied, SSL mode Full (Strict)), so the origin presents a Cloudflare
 # Origin CA certificate — never Let's Encrypt. That removes the HTTP-01 dance, and it is the only way a

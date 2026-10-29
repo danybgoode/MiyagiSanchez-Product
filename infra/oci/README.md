@@ -6,8 +6,8 @@ GCP is deleted; nothing of Miyagi runs anywhere else.
 | | |
 |---|---|
 | Host | `panfleto-prod`, OCI A1 Always Free (2 OCPU / 12 GB), mx-queretaro-1, `159.54.158.4` |
-| Access | `ssh -i ~/.ssh/panfleto_oci ubuntu@159.54.158.4`. When it times out, your IP rotated: run `../fluxonline/deploy/allow-my-ip.sh` |
-| Neighbours | panfleto (`/opt/panfleto`, owns Caddy `deploy-caddy-1`) and aomx. Restarting Caddy takes **every** tenant offline |
+| Access | `ssh -i ~/.ssh/panfleto_oci ubuntu@159.54.158.4`. When it times out, your IP rotated: run `../oracle-edge/ops/allow-my-ip.sh` |
+| Neighbours | panfleto (`/opt/panfleto`) and aomx. The shared proxy `edge-caddy`, the host baseline and the VM watchdog live in [danybgoode/oracle-edge](https://github.com/danybgoode/oracle-edge) (private), whose `TENANTS.md` lists every tenant. Restarting `edge-caddy` takes **every** tenant offline |
 | Stack | `/opt/miyagi/infra/oci`: `docker-compose.yml` (postgres, redis, medusa, web, print-pdf), capped ≤ 5 GB / ≤ 1.75 CPU |
 | Edge | Cloudflare (proxied, Full Strict) → Caddy → `/opt/edge/sites/miyagi.caddy` → the `edge` network. Origin CA certs in `/opt/edge/certs`, valid until 2041 |
 

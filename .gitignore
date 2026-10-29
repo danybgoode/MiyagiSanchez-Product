@@ -52,6 +52,9 @@ yarn-error.log*
 
 # Local env files
 **/.env
+# The VM's production secrets sit inside its /opt/miyagi checkout. Unignored, a `git clean` there deletes them.
+infra/oci/*.env
+infra/oci/.env.bak
 **/.env.local
 **/.env.development.local
 **/.env.test.local

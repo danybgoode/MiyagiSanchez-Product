@@ -106,6 +106,8 @@ test('one timer per Cloud Scheduler cron, at the same UTC hour, calling the same
     assert.match(t, new RegExp(`Unit=miyagi-cron@${name}\\.service`), name)
   }
   assert.match(read('systemd/miyagi-cron@.service'), /\/api\/cron\/%i'.*'x-cron-secret':process\.env\.CRON_SECRET/)
+  // Both shapes: some routes read x-cron-secret, others only `Authorization: Bearer` (13 days of silent 401s).
+  assert.match(read('systemd/miyagi-cron@.service'), /'authorization':'Bearer '\+process\.env\.CRON_SECRET/)
 })
 
 test('install-host enables backups but NOT the cron timers (no double-run with Cloud Scheduler)', () => {
@@ -274,4 +276,9 @@ test('the renderer secret must be set and identical in print.env and web.env, ne
   assert.match(update, /secret_of\(\) \{ grep -E '\^PRINT_PDF_SECRET=' "\$1"/)
   assert.match(update, /\[ -z "\$\(secret_of print\.env\)" \] \|\| \[ "\$\(secret_of print\.env\)" != "\$\(secret_of web\.env\)" \]/)
   assert.doesNotMatch(update, /echo[^\n]*\$\(secret_of/)
+})
+
+test('the restore drill removes its throwaway container WITH its anonymous volume', () => {
+  // postgres images declare a VOLUME; `docker rm -f` without -v stranded a copy of production data every Sunday.
+  assert.match(read('restore-drill.sh'), /trap '[^']*docker rm -fv "\$NAME"/)
 })

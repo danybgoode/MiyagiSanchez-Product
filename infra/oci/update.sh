@@ -84,10 +84,14 @@ set_env() {
 }
 
 # resolve NAME TAG_REPO — the pinned image if .env has one, else :main resolved to its digest.
+# A FAILED PULL MUST FAIL THE DEPLOY. `resolve` runs inside `$(…)`, where bash does not inherit `set -e`, so a pull that
+# timed out used to fall through to `image inspect` of the LOCALLY CACHED `:main` — the previous build — and the deploy
+# reported success on the old commit (share-kit S1, 2026-10-28: GHCR timed out from the VM; it "deployed" 78e73d2 over
+# the merge 3daba88). Every pull is checked, and the caller exits on a failed resolve.
 resolve() {
   local pin; pin="$(grep -E "^$1_PIN=" "$ENV_FILE" | tail -1 | cut -d= -f2- || true)"
-  if [ -n "$pin" ]; then docker pull -q "$pin" >/dev/null; echo "$pin"; return; fi
-  docker pull -q "$2:main" >/dev/null
+  if [ -n "$pin" ]; then docker pull -q "$pin" >/dev/null || { echo "✗ could not pull $pin" >&2; return 1; }; echo "$pin"; return; fi
+  docker pull -q "$2:main" >/dev/null || { echo "✗ could not pull $2:main — refusing to deploy a cached image" >&2; return 1; }
   # The digest UNDER THIS NAME. One image can carry several (during the 2026-10-28 rename the same build was pushed
   # as miyagi-web and miyagisanchez-storefront), and RepoDigests[0] is whichever was pulled first, so the old name won.
   local digest
@@ -96,8 +100,8 @@ resolve() {
   echo "$digest"
 }
 STEP="pulling the images"
-MEDUSA_IMAGE="$(resolve MEDUSA_IMAGE ghcr.io/danybgoode/miyagisanchez-backend)"
-WEB_IMAGE="$(resolve WEB_IMAGE ghcr.io/danybgoode/miyagisanchez-storefront)"
+MEDUSA_IMAGE="$(resolve MEDUSA_IMAGE ghcr.io/danybgoode/miyagisanchez-backend)" || exit 1
+WEB_IMAGE="$(resolve WEB_IMAGE ghcr.io/danybgoode/miyagisanchez-storefront)" || exit 1
 set_env MEDUSA_IMAGE "$MEDUSA_IMAGE"
 set_env WEB_IMAGE "$WEB_IMAGE"
 for img in "$MEDUSA_IMAGE" "$WEB_IMAGE"; do

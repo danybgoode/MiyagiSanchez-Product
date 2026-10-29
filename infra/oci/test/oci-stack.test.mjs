@@ -244,3 +244,13 @@ test('resolve picks the digest under the REQUESTED name, never RepoDigests[0] (t
   assert.doesNotMatch(u, /index \.RepoDigests 0/)
   assert.match(u, /grep -m1 "\^\$2@"/)
 })
+
+test('a failed image pull fails the deploy instead of pinning the cached :main (share-kit S1, 2026-10-28)', () => {
+  const update = read('update.sh')
+  const fn = update.slice(update.indexOf('resolve() {'), update.indexOf('\n}\n', update.indexOf('resolve() {')))
+  assert.match(fn, /docker pull -q "\$pin" >\/dev\/null \|\| \{[^}]*return 1; \}/)
+  assert.match(fn, /docker pull -q "\$2:main" >\/dev\/null \|\| \{[^}]*return 1; \}/)
+  for (const name of ['MEDUSA_IMAGE', 'WEB_IMAGE']) {
+    assert.match(update, new RegExp(`${name}="\\$\\(resolve ${name} [^)]+\\)" \\|\\| exit 1`), name)
+  }
+})

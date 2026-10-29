@@ -183,7 +183,7 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
   `image-arm64.yml` pushes `ghcr.io/danybgoode/miyagisanchez-print-pdf:<sha>` (+ `:main` on main), path-filtered so a
   web-only merge does not rebuild it.
 - **D13 — Placement.** Root `infra/oci/docker-compose.yml` gains `print-pdf` on the `miyagi` network only (never
-  `edge`, no `ports:`), `mem_limit: 768m`, `cpus: 0.2` (the CPU caps stay under the box's 2 OCPUs), `env_file:
+  `edge`, no `ports:`), `mem_limit: 512m`, `cpus: 0.2` (512m, not the 768m first written: Daniel chose to fit inside the existing budget, with postgres 0.5→0.4 and web 0.55→0.45 CPU) (the CPU caps stay under the box's 2 OCPUs), `env_file:
   [./print.env]`. `update.sh` resolves its digest like the other two (`PRINT_PDF_IMAGE`, pin-able) and waits for its
   `/health`. Web reaches it at `PRINT_PDF_URL=http://print-pdf:8080`.
 - **D14 — `server.js` hardening.** (a) `x-internal-secret` compared with `crypto.timingSafeEqual`; empty secret ⇒

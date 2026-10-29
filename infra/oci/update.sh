@@ -137,15 +137,17 @@ GRANT pg_read_all_data TO backup_ro;
 SQL
 echo "✓ backup_ro role"
 # The site file goes into a directory the SHARED Caddy imports, so a bad one must never stay there: a
-# failed reload keeps the old config live, but the next restart of panfleto's Caddy (its own deploy, a
-# reboot) would not start, taking panfleto and aomx down with Miyagi (PR #209 review). Install, VALIDATE
-# inside the running container, and put the previous file back on any failure.
+# failed reload keeps the old config live, but the next restart of the shared Caddy (a deploy of
+# danybgoode/oracle-edge, a reboot) would not start, taking panfleto and aomx down with Miyagi (PR #209 review).
+# Install, VALIDATE inside the running container, and put the previous file back on any failure.
+# The container is `edge-caddy` since 2026-10-29; before that it was panfleto's `deploy-caddy-1`.
+CADDY="${EDGE_CADDY:-edge-caddy}"
 STEP="installing the Caddy site file"
 SITE=/opt/edge/sites/miyagi.caddy
 [ -f "$SITE" ] && cp "$SITE" "$SITE.prev"
 install -m 0644 "$DEPLOY/miyagi.caddy" "$SITE"
-if ! docker exec deploy-caddy-1 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1 \
-   || ! docker exec deploy-caddy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null; then
+if ! docker exec "$CADDY" caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1 \
+   || ! docker exec "$CADDY" caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null; then
   if [ -f "$SITE.prev" ]; then mv "$SITE.prev" "$SITE"; else rm -f "$SITE"; fi
   echo "✗ Caddy rejected miyagi.caddy — previous site file restored; Caddy is unchanged" >&2
   exit 1
@@ -176,4 +178,7 @@ WEB_REV="$(rev "$WEB_IMAGE")"; MEDUSA_REV="$(rev "$MEDUSA_IMAGE")"
 sent=0
 if [ "$WEB_REV" != "$PREV_WEB" ]; then notice "$STOREFRONT_REPO" "$WEB_REV" "$PREV_WEB" ok; sent=$((sent + 1)); fi
 if [ "$MEDUSA_REV" != "$PREV_MEDUSA" ]; then notice "$BACKEND_REPO" "$MEDUSA_REV" "$PREV_MEDUSA" ok; sent=$((sent + 1)); fi
+# Superseded images (the previous :main, now untagged) only fill the boot disk, which reached 97% on 2026-10-29.
+# Dangling-only: an image a container still uses is never removed, and any older build can be pulled again by digest.
+docker image prune -f >/dev/null || true
 echo "✓ deployed — Storefront ${WEB_REV:0:7}, Backend ${MEDUSA_REV:0:7} (${sent} Telegram notice(s); an unchanged app posts none)"

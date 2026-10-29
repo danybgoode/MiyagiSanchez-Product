@@ -3,7 +3,7 @@
 #   sudo /opt/miyagi/infra/oci/install-host.sh
 #
 # Creates the state directories on the /data block volume, the shared `edge` docker network that
-# panfleto's Caddy joins, the /opt/edge/{sites,certs} folders Caddy mounts, installs rclone (R2 uploads),
+# the shared `edge-caddy` (danybgoode/oracle-edge) joins, the /opt/edge/{sites,certs} folders Caddy mounts, installs rclone (R2 uploads),
 # and installs + enables the systemd units in infra/oci/systemd/. The cron timers are installed but
 # NOT enabled: until the cutover, Cloud Scheduler still calls the Cloud Run copy, and both firing would
 # double-send every daily email.

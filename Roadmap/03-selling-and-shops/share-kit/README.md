@@ -1,6 +1,6 @@
 ---
-status: in-progress  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped        # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 locked_at: "2026-10-28T23:09:50Z"
 slug: share-kit
@@ -36,6 +36,10 @@ satisfied_min_score: null   # the score (1–5) a satisfaction_rated answer need
 build_order: 11      # integer position in the ONE global build sequence — the SSOT once the epic
                      # exists (the seed's value is only a fallback). Fill it in at the betting
                      # table; plain integers, no "#2a" suffixes. See 00-ideas/README.md → Ordering.
+actual_usd: 49.75
+actual_mtok: 145.1
+actual_models: "claude-opus-5-5 ≈$49.75"
+actual_basis: "this machine · 2026-10-29 · 1 session · prices 2026-10-02"
 ---
 
 # Epic: Share kit
@@ -191,7 +195,8 @@ Builders **cite** these by number. Where a decision corrects the sprint docs, th
   `https://miyagisanchez.com`), else 403 without launching Chromium. (c) Request interception: every subrequest whose
   origin is not allow-listed is aborted (`data:`/`blob:` allowed), and redirects are re-checked — so a merchant's image
   URL can never make Chromium fetch an internal host. (d) One render at a time; up to 4 waiting; a fifth gets 503
-  `busy`. (e) A 45 s hard timeout per render, browser always closed. The allow-list decision is a pure exported
+  `busy`. A job that waited more than 10 s is refused as `busy` too (the web client gives up at 55 s; verifier,
+  PR 448). In practice a second download during a slow render gets `busy` rather than a wait. (e) A 45 s hard timeout per render, browser always closed. The allow-list decision is a pure exported
   function with a `node:test` spec beside it (the service has no Playwright). Secrets: `PRINT_PDF_SECRET` in both
   `web.env` and `print.env` — a production secret, so it is one focused question to Daniel before S2.1 merges, with
   the VM memory headroom read (the classifier refuses agent production reads).
@@ -258,16 +263,16 @@ price format «199.00 MXN», exclusions by reason, CSV escaping, feed route 404s
    sprint says so.
 
 ## Definition of Done (epic)
-- [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
-- [ ] Each `sprint-N.md` has its smoke walkthrough (real URLs)
-- [ ] This README marked ✅; every sprint status ticked with commit refs
-- [ ] `RETROSPECTIVE.md` written
-- [ ] Product poster (`Roadmap/README.md`) updated
-- [ ] Team memory + `MEMORY.md` index updated
-- [ ] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
-- [ ] **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
+- [x] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
+- [x] Each `sprint-N.md` has its smoke walkthrough (real URLs)
+- [x] This README marked ✅; every sprint status ticked with commit refs
+- [x] `RETROSPECTIVE.md` written
+- [x] Product poster (`Roadmap/README.md`) updated
+- [x] Team memory + `MEMORY.md` index updated
+- [x] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
+- [x] **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
       exists **in Golden Frijoles, in every env**, with the stated polarity, **and its switch is set there** —
       `frijoles flags get <key>` must print `on vN` or `off vN` in its PRODUCTION row (a bare `off` with no version
       means nothing is served there, so the app runs on its own built-in default). A newly synced flag goes live as written in its file; a sync never switches an existing one. *Verify-only — not a new gate; whether a high-risk epic needs one
-      is decided at refining, not here.*
-- [ ] Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)
+      is decided at refining, not here.* — **N/A: none was planned (D20: no flag).**
+- [x] Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)

@@ -269,3 +269,9 @@ test('a failed image pull fails the deploy instead of pinning the cached :main (
     assert.match(update, new RegExp(`${name}="\\$\\(resolve ${name} [^)]+\\)" \\|\\| exit 1`), name)
   }
 })
+
+test('the renderer secret must be set and identical in print.env and web.env, never echoed (share-kit S2.1)', () => {
+  assert.match(update, /secret_of\(\) \{ grep -E '\^PRINT_PDF_SECRET=' "\$1"/)
+  assert.match(update, /\[ -z "\$\(secret_of print\.env\)" \] \|\| \[ "\$\(secret_of print\.env\)" != "\$\(secret_of web\.env\)" \]/)
+  assert.doesNotMatch(update, /echo[^\n]*\$\(secret_of/)
+})

@@ -22,6 +22,13 @@ for f in .env medusa.env web.env print.env; do
   [ -s "$f" ] || { echo "✗ infra/oci/$f is missing — restore it from Daniel's password manager (0600, owner ubuntu); bootstrap.sh's source is deleted" >&2; exit 1; }
 done
 
+# The renderer and the web app read PRINT_PDF_SECRET from two files. A missing or mismatched copy still passes the
+# /health wait, then every PDF answers 401, so it is checked here. The values are compared, never printed.
+secret_of() { grep -E '^PRINT_PDF_SECRET=' "$1" | tail -1 | cut -d= -f2- || true; }
+if [ -z "$(secret_of print.env)" ] || [ "$(secret_of print.env)" != "$(secret_of web.env)" ]; then
+  echo "✗ PRINT_PDF_SECRET must be set, and identical, in infra/oci/print.env and web.env" >&2; exit 1
+fi
+
 # Telegram: the 🚀 pair of each merge's 📦 (notify-telegram.yml in the app repos), one per app whose running
 # commit CHANGED, mirroring that commit's subject and first paragraph (deploy-notice.sh). A re-run that changes
 # nothing posts nothing. It went missing with Cloud Build, and from 10-16 to 10-28 a deploy said nothing. Same bot, chat and `curl -K -` (token never in argv) as backup.sh, read from backup.env in

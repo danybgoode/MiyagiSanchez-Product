@@ -1,6 +1,6 @@
 # In person: POS-lite and payment links — Retrospective
 
-_Closed: 2026-10-31 (all four sprints merged; S2–S4 deploy owed — see Gaps)_
+_Closed: 2026-10-31 (all four sprints merged and deployed: Backend `ba22692`, Storefront `8fd0046`)_
 _Intent: mostly_
 <!-- Did we build what the product owner meant? One word, THEIR answer: yes, mostly or no. Required by `epic-dod` only
      when the epic's seed or README carries a numeric `intent_match:` (intent-match D17); the calibration learns from
@@ -51,11 +51,12 @@ _Crew (actual): Opus 5.5 orchestrator (lock, every backend money path) · Sonnet
   the last double-decrement window that per-line "applied" flags left open.
 
 ## Gaps / follow-ups
-- **Deploy owed (Daniel).** The classifier began refusing `update.sh` on 2026-10-30. #219, S2, S3 and S4 are merged
-  but not live.
+- **Deployed 2026-10-31** on Daniel's go (Backend `ba22692`, Storefront `8fd0046`). Verified by behaviour: the routes
+  answer as designed, and the `payment_link` migration ran on boot.
 - **Owed to Daniel by name:**
   - the MX region repair run (`POST /internal/mx-region-payment-providers`, dry run first);
-  - a check of open or paid unbound Stripe sessions before #219 deploys (expected to be zero);
+  - a check of Stripe Checkout sessions opened before the #219 deploy that have no order (expected zero). The check
+    did not run before the deploy, so any such session is now refused at completion instead of being trusted;
   - the sweep for stuck «Pago directo» carts since about 2026-09-11;
   - the phone walkthroughs in sprint-1 to sprint-4;
   - the test-mode card QR and link payments;

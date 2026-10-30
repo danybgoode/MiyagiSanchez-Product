@@ -3,7 +3,7 @@ epic: in-person-sales
 sprint: 3
 title: "Offline cash"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 2
 stories:
   - id: S3.1
@@ -23,7 +23,7 @@ stories:
 ---
 # In person — Sprint 3: Offline cash
 
-**Status:** merged 2026-10-31, **deploy owed**. Backend MiyagiSanchez-Backend#220 → `74ed305`, storefront
+**Status:** ✅ shipped 2026-10-31: merged and deployed (Backend `ba22692`, Storefront `8fd0046`). Backend MiyagiSanchez-Backend#220 → `74ed305`, storefront
 MiyagiSanchez-Storefront#460 → `2898d47`.
 
 **Verified:** the money-path gate covers an offline oversell that is recorded and flagged (decrement capped,

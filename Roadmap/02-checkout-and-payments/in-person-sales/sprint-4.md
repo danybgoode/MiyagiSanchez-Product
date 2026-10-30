@@ -3,7 +3,7 @@ epic: in-person-sales
 sprint: 4
 title: "Payment links"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 4
 stories:
   - id: S4.1
@@ -37,7 +37,7 @@ stories:
 ---
 # In person — Sprint 4: Payment links
 
-**Status:** merged 2026-10-31, **deploy owed**. Backend MiyagiSanchez-Backend#221 → `ba22692`, storefront
+**Status:** ✅ shipped 2026-10-31: merged and deployed (Backend `ba22692`, Storefront `8fd0046`). Backend MiyagiSanchez-Backend#221 → `ba22692`, storefront
 MiyagiSanchez-Storefront#461 → `8fd0046`.
 
 **Verified:** the money-path gate covers a free-amount link priced on the hidden product, a pending transfer that

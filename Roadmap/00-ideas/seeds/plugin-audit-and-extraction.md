@@ -9,7 +9,7 @@ appetite: L
 underwritten_by: wave-2026-09-16
 risk: low
 epic: "09-platform-infra/plugin-audit-and-extraction"
-build_order: 13
+build_order: 14
 updated: 2026-09-16
 ---
 

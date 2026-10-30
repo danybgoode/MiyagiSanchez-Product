@@ -8,7 +8,7 @@ appetite: M
 underwritten_by: wave-2026-10
 risk: high
 epic: "04-shipping-and-delivery/envia-byo-connect"
-build_order: 10
+build_order: 12
 updated: 2026-10-27
 intent_ask: verbatim   # verbatim = the product owner's own words below · proxy = reconstructed after the fact
 hypothesis: "We believe that letting a merchant connect their own Envía account in a few guided steps will let small shops print real labels, because today Envía is off and only hand-picked shops ride ours. We'll know when connected shops print labels and get tracking with no platform money spent."

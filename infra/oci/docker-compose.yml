@@ -76,6 +76,11 @@ services:
       DATABASE_URL: postgres://medusa:${POSTGRES_PASSWORD}@postgres:5432/medusa?sslmode=disable
       REDIS_URL: redis://redis:6379
       PORT: "8080"
+      # The live MX region (public store API: GET /store/regions). Not a secret. Counter sales, payment links and
+      # the region provider repair resolve it from the market registry and refuse with MX_COMMERCE_UNCONFIGURED
+      # without it. Before in-person-sales only the storefront needed it, so medusa.env never carried it, and CI's
+      # suites set it themselves: the epic deployed green and refused every sale (2026-10-31).
+      MEDUSA_MXN_REGION_ID: reg_01KSK1HZAWN5ZCSPZ74ER97HD9
       # `server` until the cutover (S2): HTTP only — scheduled jobs do not run and NO event is PROCESSED. The
       # dark copy runs on a restored copy of prod with production credentials, and its jobs and subscribers
       # reach the real world (Mercado Libre reconciliation, the sweepstakes draw, emails).

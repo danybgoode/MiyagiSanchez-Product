@@ -83,6 +83,61 @@ Medusa change, no migration. Copy stays in the dictionary so `/admin/contenido` 
 | 2 | S2.3 "¿Vienes a comprar?" link to `/mx` | low |
 | 2 | S2.4 Mobile sweep 360/390/414, deploy + purge + smoke | low |
 
+## Architecture lock (2026-10-29, against storefront `ef36bb2`)
+
+Verified against live code and live production. Corrections to the pitch are stated as such.
+
+- **D1 — `/` is the seller page, in `(site)`.** `app/(site)/page.tsx` renders the anchor seller page that
+  `app/(shell)/mx/vende/page.tsx` renders today; the old file is deleted (moved, not copied). `(site)` already mounts
+  `PlatformShell market="mx"` and `ReferralAttribution`; `(shell)`'s extras (channel shell, seller mode, onboarding,
+  `AgentContextProvider`) are never reached by `/` on the platform host (middleware rewrites a tenant `/` to
+  `/s/<slug>` in `(shell)`), and no seller-page component consumes `AgentContext`. So no layout move.
+- **D2 — `/` renders per request** (`export const dynamic = 'force-dynamic'`): it reads `searchParams` (A/B `v`,
+  UTM) and the runtime `TURNSTILE_SITE_KEY` (prompt-to-shop D8). **Measured live 10-29, cache-busted:** `/` static
+  ≈ 0.28 s TTFB, `/mx/vende` dynamic ≈ 0.31 s — about 30 ms, inside the 300 ms limit. `force-dynamic` also ends
+  the CDN-pinning class of bug on `/` (no `s-maxage`; Cloudflare reports `DYNAMIC`, like `/mx/vende`).
+- **D3 — Metadata.** Title/description from `es.sellerAcquisition.anchor.metadata`; canonical
+  `https://miyagisanchez.com/`; `alternates` carries NO `en`/hreflang pair; JSON-LD `url` = `/`. `/en` keeps
+  `rootSelectorMetadata('en')`, untouched, so it still names `/` as its `es` alternate — accepted (pitch rabbit hole 4).
+- **D4 — OG.** `app/(site)/opengraph-image.tsx` becomes the seller OG (`createSellerAcquisitionOgImage`, path `/`);
+  `app/(shell)/mx/vende/opengraph-image.tsx` is deleted with its page.
+- **D5 — No language hop on `/`.** `/` renders no `RootLanguageSwitch`. `MarketSelector`, `RootLanguageSwitch`,
+  `MarketRecommendation` and `lib/root-language.ts` stay exactly where they are because `/en` imports them;
+  `ROOT_LANGUAGE_PATHS` is unchanged, so `/en`'s Español link and Spanish-browser hop still land on `/`.
+- **D6 — Redirects live in `next.config.ts`** (correction: the pitch said `middleware.ts`/`market-url.ts`; the
+  `/vende` 308s are in `next.config.ts` `redirects()`, deliberately kept out of the middleware). Exact rules first:
+  `/vende` → `/`, `/mx/vende` → `/`, `/mercado` → `/mx` (all `permanent: true` = 308, query carried by Next);
+  `/vende/:path*` → `/mx/vende/:path*` unchanged. One hop each.
+- **D7 — `SELLER_LANDING_PATHS.mx = '/'`.** Literal `/mx/vende` link targets move to `sellerLandingPath('mx')`:
+  `p2s/not-found.tsx`, `p2s/_components/ClaimRunner.tsx`, `sell/armar/page.tsx`, `mx/precios/page.tsx` (×2).
+  `lib/copy-overrides-routes.ts` anchor/aiChannel path → `/`. `lib/market-sitemap.ts` drops the `/mx/vende` row
+  (a redirect source must not be in a sitemap); `/` stays, priority raised to 1.
+- **D8 — The link guard is rewritten, not trusted.** `seller-landing-link-population`'s exemption
+  `literal.includes(SELLER_LANDING_PATHS.mx)` becomes vacuous when the path is `/` (every URL contains `/`), so the
+  guard would pass while checking nothing. New predicate: a literal that is exactly `/vende` or `/mx/vende`
+  (optionally followed by `?`/`#`) is stale; persona sub-paths (`/mx/vende/<x>`) are allowed.
+- **D9 — Old-root specs are rewritten for the new contract** (each new assertion seen red once):
+  `market-selector.browser` (root = describe box, no picker, no listings; `/en` = picker), `market-route-population`
+  (zero-catalog applies to `/en` + MarketSelector; `/` holds no catalog import and is `force-dynamic`),
+  `root-language-hop.browser` (`/` never hops; `/en` still does), `root-language` (seller landing for `mx` is `/`),
+  `market-root-layout` (root OG is the seller OG), `seller-acquisition-seo` (anchor at `/`).
+- **D10 — Market links on `/`.** A quiet strip at the end of the page: México (`/mx`) · Estados Unidos (`/us`) ·
+  English (`/en`). In the page, not `PlatformShell`, so no other page's chrome changes.
+- **D11 — S2 content.** Anchor order: hero + describe → what you get (`premiumFeatures` rewritten: shop + domain,
+  cobros, catálogo/PDF/feed, guía) → steps → pricing callout (figures through `fillFixedPricingTokens`, the one
+  catalog) → benchmark → persona router → AI channel → marketplace bonus + «¿Vienes a comprar?» → FAQ → closing.
+  Copy in `locales/es.json` (admin-editable). Persona pages keep their order.
+- **D12 — Signal and deploy.** No new event: `p2s_describe_submitted` already rides GTM with the page path. Deploy per
+  sprint: merge → arm64 image → `update.sh` → VM container == merge SHA → check `cf-cache-status` on `/`; purge only if
+  Cloudflare still serves the old selector after one `s-maxage` (60 s).
+
+### Build contract — S1
+Storefront PR `feat/root-shop-builder-home`: D1–D10. Gate: `tsc`, `npm run build`, Playwright `api` green; the
+rewritten specs each seen red once. Low risk → deterministic gate review (no money/auth paths).
+
+### Build contract — S2
+Storefront PR `feat/root-shop-builder-home-s2` on S1: D11. Gate as S1, plus 360/390/414 overflow spec.
+
 ## Deploy order
 Storefront only. Merge → arm64 image green → `ssh … /opt/miyagi/infra/oci/update.sh` → verify the VM container
 runs the merge SHA → purge Cloudflare for `/`, `/mx/vende` → live smoke. Once per sprint.

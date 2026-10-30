@@ -2822,6 +2822,25 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   pricing-money-path-remediation S1 — backend PR #89.)*
 
 ## Architecture
+- **Medusa's public store routes are a write surface for anyone holding an id — a server-built cart must be
+  server-OWNED.** `POST /store/carts/:id` accepts client `metadata`, the payment-collection and payment-session routes
+  accept caller `data`, and `/complete` is public. A cart our server builds and prices (counter sale, payment link)
+  needs three things together: the server's own record keyed by cart id (never the cart's metadata), a middleware
+  that locks the public mutation routes for that cart, and a `completeCartWorkflow` validate hook that re-checks lines,
+  total and provider. Ten review rounds on one PR were each a new form of this one fact. *(2026-10-31,
+  in-person-sales S2/S4.)*
+- **A payment provider may only trust the processor — and only for ITS OWN session.** The Stripe Connect provider
+  authorized any session whose `data.status` said `paid`, and that data is whatever the session's creator sent, so free
+  paid orders were possible on every Stripe cart. The fix asks Stripe and requires the Checkout Session to be bound to
+  this payment session (`metadata.medusa_payment_session_id === context.idempotency_key`), so one real payment cannot
+  be replayed onto another cart either. *(2026-10-30, Backend #219.)*
+- **Medusa ≥ 2.20 refuses to complete a cart whose provider its REGION does not enable — check the live region's
+  providers, not the config.** «Pago directo» moved to `pp_manual_manual` on 2026-06-01 and nobody added it to the MX
+  region; `GET /store/payment-providers?region_id=` is the cheap live read. *(2026-10-30, Backend #217.)*
+- **Take a hold after the expensive step, release it on failure — and prefer a native idempotent record over a flag
+  written after a side effect.** A hold taken before validation could be pinned by a request that fails later, and a
+  per-line "applied" flag written after `adjustInventory` still left a crash window. A reservation keyed to the order
+  line item closed it. *(2026-10-31, in-person-sales S3/S4.)*
 - **An idempotent create-or-get's 200 is not proof THIS call made the record — apply side data only on the 201.**
   The draft claim called `ensureShop` and poured the generated profile into whatever came back; a 200 (a shop
   made by another tab, the manual wizard, or after a failed keep) got overwritten. Mark "this flow made it" right

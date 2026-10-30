@@ -3,7 +3,7 @@ epic: in-person-sales
 sprint: 4
 title: "Payment links"
 risk: high
-phase: Shaping
+phase: Verifying
 stories_total: 4
 stories:
   - id: S4.1
@@ -12,32 +12,41 @@ stories:
     i_want: "to create a link for products or for any amount with a concept, and cancel it"
     so_that: "I can charge anyone without them browsing my shop"
     risk: high
-    status: planned
+    status: done
   - id: S4.2
     title: "/pagar/[token] → cart → existing checkout; free amount as a custom line"
     as_a: "a buyer who got a payment link"
     i_want: "to open it and pay with the shop's usual methods"
     so_that: "paying the merchant is as easy as an online purchase"
     risk: high
-    status: planned
+    status: done
   - id: S4.3
     title: "«Cobrar con un link» UI + shares + statuses"
     as_a: "a merchant"
     i_want: "a screen to make links, share them by WhatsApp, QR or short link, and see which were paid"
     so_that: "I chase fewer payments"
     risk: low
-    status: planned
+    status: done
   - id: S4.4
     title: "MCP payment-link tools for seller agents"
     as_a: "a seller's AI agent"
     i_want: "to create, list and cancel payment links for my shop"
     so_that: "my agent can charge customers in chat for me"
     risk: low
-    status: planned
+    status: done
 ---
 # In person — Sprint 4: Payment links
 
-**Status:** ⬜ not started
+**Status:** merged 2026-10-31, **deploy owed**. Backend MiyagiSanchez-Backend#221 → `ba22692`, storefront
+MiyagiSanchez-Storefront#461 → `8fd0046`.
+
+**Verified:** the money-path gate covers a free-amount link priced on the hidden product, a pending transfer that
+blocks a second buyer, the seller's confirmation that closes the link, a multi-use link giving a fresh cart per
+opener, the single-use hold, the cart lock over HTTP, a changed cart being refused, a closed link being refused, and
+a cart that skipped checkout being refused. Pay-page, cobros and MCP specs are mutation-observed. Codex ran 10 rounds
+on the backend and 4 on the storefront, and the fresh verifier ran on both.
+
+**Owed to Daniel:** the walkthrough below, the test-mode link payment and **one real low-value link charge**.
 
 ## Stories
 

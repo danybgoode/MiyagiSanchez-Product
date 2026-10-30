@@ -3,7 +3,7 @@ epic: in-person-sales
 sprint: 3
 title: "Offline cash"
 risk: high
-phase: Shaping
+phase: Verifying
 stories_total: 2
 stories:
   - id: S3.1
@@ -12,18 +12,27 @@ stories:
     i_want: "to keep selling for cash and have every sale upload once when the signal comes back"
     so_that: "I never lose a sale and never get duplicates"
     risk: high
-    status: planned
+    status: done
   - id: S3.2
     title: "Oversell on sync: recorded and flagged"
     as_a: "a merchant who sold offline what had just sold online"
     i_want: "the sale recorded anyway and a clear flag"
     so_that: "my records match what really happened"
     risk: high
-    status: planned
+    status: done
 ---
 # In person — Sprint 3: Offline cash
 
-**Status:** ⬜ not started
+**Status:** merged 2026-10-31, **deploy owed**. Backend MiyagiSanchez-Backend#220 → `74ed305`, storefront
+MiyagiSanchez-Storefront#460 → `2898d47`.
+
+**Verified:** the money-path gate covers an offline oversell that is recorded and flagged (decrement capped,
+shortfall recorded), a resend that returns the same order, and a stale-claim takeover after a restock that adopts the
+order instead of building a cart. Pure specs cover the queue state machine, the park list, the cross-tab diff, the
+service-worker scope and the cache-owner rule, each observed red under a mutation. Codex ran 5 rounds on the backend
+and 3 on the storefront, and the fresh verifier ran on both.
+
+**Owed to Daniel:** the airplane-mode walkthrough below, on a phone. It is not headless-testable.
 
 ## Stories
 
@@ -47,13 +56,15 @@ stories:
 ## Sprint 3 — Smoke walkthrough (do these in order)
 Env: production · https://miyagisanchez.com   (or the preview URL while testing pre-merge)
 
-1. Open https://miyagisanchez.com/shop/manage/en-persona, then turn on airplane mode
+1. With signal, open https://miyagisanchez.com/shop/manage/en-persona once and wait for it to load fully (the phone saves the screen for offline use)
+   → the counter with your products
+2. Turn on airplane mode
    → the «Sin señal» banner; only «Efectivo» is enabled
-2. Ring up three cash sales, then reload the page
+3. Ring up three cash sales, then reload the page
    → «3 ventas por subir» is still there
-3. Turn airplane mode off
+4. Turn airplane mode off
    → the count goes to 0 and exactly three orders appear
-4. Offline, sell your last unit of a product; online on another device, sell it too; reconnect
+5. Offline, sell your last unit of a product; online on another device, sell it too; reconnect
    → both orders exist and one is flagged «Vendiste más…»
 
 If any step fails, note the step number + what you saw — that's the bug report.

@@ -3,7 +3,7 @@ epic: in-person-sales
 sprint: 2
 title: "QR and transfers"
 risk: high
-phase: Shaping
+phase: Verifying
 stories_total: 3
 stories:
   - id: S2.1
@@ -12,25 +12,37 @@ stories:
     i_want: "to show a QR the buyer scans and pays on their own phone, and see the counter turn green when it's paid"
     so_that: "I take cards without a terminal"
     risk: high
-    status: planned
+    status: done
   - id: S2.2
     title: "SPEI / DiMo at the counter + «Ya me llegó» capture"
     as_a: "a merchant whose buyer pays by transfer"
     i_want: "to show my CLABE or DiMo QR and confirm when the money arrived"
     so_that: "transfers are recorded like any other sale"
     risk: high
-    status: planned
+    status: done
   - id: S2.3
     title: "Inbox + Ganancias source, no self-notifications, optional buyer receipt"
     as_a: "a merchant"
     i_want: "my counter sales beside my online orders, without emails about sales I rang up myself, and a receipt for the buyer when they want one"
     so_that: "I see everything in one place without noise"
     risk: low
-    status: planned
+    status: done
 ---
 # In person — Sprint 2: QR and transfers
 
-**Status:** ⬜ not started
+**Status:** merged 2026-10-31, **deploy owed** (the classifier refuses agent deploys since 2026-10-30; Daniel runs
+`update.sh`). Backend MiyagiSanchez-Backend#218 → `211b8db`, storefront MiyagiSanchez-Storefront#459 → `bae1775`.
+Shipped alongside: #217 → `b258f70` (the «Pago directo» region repair route, **deployed**; its production run is owed
+to Daniel) and #219 → `397b56d` (Stripe payments verified with Stripe and bound to their checkout; a live hole found
+in this sprint's review; **deploy owed**).
+
+**Verified:** the money-path CI gate covers card and transfer counter sales against a real database. It checks one
+cart per sale, that a card sale is never paid without a processor-confirmed order, cancelling with a payment in
+flight, a cancelled transfer, the cart lock over HTTP, and the swapped-session exploit. Codex ran 10 rounds and the
+fresh verifier ran on both PRs.
+
+**Owed to Daniel:** the walkthrough below. Test-mode card QR payment by name. Transfers need the region repair run
+first.
 
 ## Stories
 

@@ -47,13 +47,15 @@ stories:
 ## Sprint 3 — Smoke walkthrough (do these in order)
 Env: production · https://miyagisanchez.com   (or the preview URL while testing pre-merge)
 
-1. Open https://miyagisanchez.com/shop/manage/en-persona, then turn on airplane mode
+1. With signal, open https://miyagisanchez.com/shop/manage/en-persona once and wait for it to load fully (the phone saves the screen for offline use)
+   → the counter with your products
+2. Turn on airplane mode
    → the «Sin señal» banner; only «Efectivo» is enabled
-2. Ring up three cash sales, then reload the page
+3. Ring up three cash sales, then reload the page
    → «3 ventas por subir» is still there
-3. Turn airplane mode off
+4. Turn airplane mode off
    → the count goes to 0 and exactly three orders appear
-4. Offline, sell your last unit of a product; online on another device, sell it too; reconnect
+5. Offline, sell your last unit of a product; online on another device, sell it too; reconnect
    → both orders exist and one is flagged «Vendiste más…»
 
 If any step fails, note the step number + what you saw — that's the bug report.

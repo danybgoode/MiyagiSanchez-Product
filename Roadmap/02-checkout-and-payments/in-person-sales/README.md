@@ -231,6 +231,19 @@ are expected to fail at `/complete`, and `setup-mexico`'s `MX_PAYMENT_PROVIDERS`
   `clients.get(event.clientId)`. `respondWith` must be decided synchronously, and an async lookup would mean
   intercepting every request on the site.
 
+**Amendments at build (S4, 2026-10-31), from review:**
+- **D13:** a **free-amount link is single-use only**; product links may be single-use or multi-use. A single-use link
+  closes (`paid`) only on real money: a processor-confirmed card payment, or a «Pago directo» payment the seller
+  confirmed. A pending manual order is recorded on the link but does not close it. While a buyer has a payable checkout
+  open, a single-use link is **held** for that checkout's lifetime (31 min, the same TTL as counter checkouts), so two
+  buyers cannot both be charged. A second payment that still lands is recorded, never hidden.
+- **D15:** a link cart is recognised from `payment_link_cart` (never metadata). It gets every counter-cart protection
+  (public routes locked, lines and total frozen, seller forced, no escrow, offer price or coupon), and **a closed link
+  opens no new checkout**. The hidden «Cobro libre» product is refused in any non-link cart.
+- **D16:** the agent routes are `/internal/sellers/payment-links?seller_slug=` (create, list) and
+  `/internal/sellers/payment-links/:id/cancel?seller_slug=`. They take the slug, like every existing internal seller
+  route, rather than the `/internal/sellers/:id/…` the lock wrote.
+
 ### Sprint 1 — Build contract (locked by the architect before the builder started)
 - **Backend:** module `src/modules/in-person` (D4 model + migration); pure `src/lib/in-person-sale.ts` (validate
   payload, payload hash, the claim-outcome decision); `POST /store/sellers/me/in-person-orders` (Clerk `resolveSeller`)

@@ -96,6 +96,14 @@ accepted offer (`start-checkout/route.ts`, `rawItemsCents`). Anyone can create a
 product. This epic's carts never send it and the route ignores it for `in_person` / `payment_link` carts (D8), but the
 hole stays open for normal carts. The offers live in Supabase, so the fix needs its own small design.
 
+**Found at build, outside scope, owed to Daniel (a production money-config write, so asked, not done):** the live
+MX region's payment providers are `pp_system_default`, `pp_stripe-connect_stripe-connect`, `pp_mercadopago_mercadopago`,
+`pp_spei_spei` and `pp_cash_cash` (`GET /store/payment-providers?region_id=reg_01KSK1HZAWN5ZCSPZ74ER97HD9`). Since
+2026-06-01 every «Pago directo» checkout opens its session on `pp_manual_manual`, and Medusa 2.21.2's
+`validate-cart-payments` refuses to complete a cart whose provider the region lacks. So live «Pago directo» orders
+are expected to fail at `/complete`, and `setup-mexico`'s `MX_PAYMENT_PROVIDERS` does not list the provider. S2.2
+(transfer at the counter, D10) needs it too. The fix is to add `pp_manual_manual` to the list and run `setup-mexico`.
+
 1. **D1 — Channel and market.** Counter and link carts are created server-side on the MX operating channel and the MX
    region (`resolveOperatingChannelId('mx')`, `resolveRegionIdForMarket('mx')`). MX sellers only: a seller whose
    `readSellerOperatingMarket` is not `mx` gets 422 `IN_PERSON_MX_ONLY`. No sales-channel writer is added, so the
@@ -118,12 +126,14 @@ hole stays open for normal carts. The offers live in Supabase, so the fix needs 
    taken over, and the takeover reuses the recorded `cart_id`: `completeCartWorkflow` on a completed cart returns
    that cart's order, so a takeover cannot create a second order. `cart_id` is written to the claim before the cart
    is completed. Redis is not used: Redis-specific behaviour is ungated in CI. `client_id` must be a UUID.
-5. **D5 — Cash is captured at once.** Provider `pp_manual_manual` (the live unified manual provider) with data
-   `{ payment_method: 'cash' }`. The order is captured with `capturePaymentWorkflow`, reusing `confirm-payment`'s
+5. **D5 — Cash is captured at once.** Provider **`pp_cash_cash`** (amended at build, 2026-10-30: the live MX region
+   enables `pp_cash_cash` but not `pp_manual_manual`, and `completeCartWorkflow` refuses a provider the region lacks;
+   same `ManualMxPaymentProvider` class) with data `{ payment_method: 'cash' }`. The order is captured with `capturePaymentWorkflow`, reusing `confirm-payment`'s
    capture code rather than copying it. Order metadata: `source: 'in_person'`, `payment_method: 'cash'`,
    `payment_received: true`, `in_person: { client_id, kind, tendered_cents, change_cents, sold_at, offline }`, so
    `normalizeMedusaOrder` reports it as captured. `tendered_cents` must be at least the total (or absent).
-6. **D6 — Buyer.** No customer and no Clerk user. Email is the buyer's when the merchant types one; otherwise it is
+6. **D6 — Buyer.** No account and no Clerk user (amended at build: `createCartWorkflow` makes a Medusa **guest**
+   customer from the email, as every guest checkout does — `has_account: false`, no `clerk_user_id`). Email is the buyer's when the merchant types one; otherwise it is
    the constant `mostrador@sin-correo.miyagisanchez.com`, and `metadata.in_person.buyer_email_placeholder: true`
    means nothing is ever sent to it.
 7. **D7 — Self-notifications.** Orders that the backend creates in S1, S2.2 and S3 never pass through the

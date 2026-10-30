@@ -1551,6 +1551,18 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   ops-routines-reporting S3 close-out.)*
 
 ## Build & QA
+
+- **A path constant that becomes `/` breaks two idioms silently** (root-shop-builder-home, 2026-10-30): every
+  `${base}/child` concatenation becomes `//child` — a protocol-relative URL to a host named `child` — and every
+  `includes(base)` / `startsWith(base)` exemption now matches every URL, so a guard built on one passes while
+  checking nothing. When a base path moves, sweep for both idioms, not for the old value; give a family that hung
+  off the old base its own constant.
+- **A comment-stripper written as `//[^\n]*` also eats `https://…`** (same epic): the stale-link guard could not see
+  absolute URLs at all, and its fixtures never noticed because they called the predicate directly. Use
+  `(?<!:)//`, and run at least one fixture through the sweep's own preprocessing.
+- **Third-party iframes log into the page's console** (same epic): moving Cloudflare Turnstile onto `/` made a strict
+  console-error smoke flake 1 run in 4. Filter by the message's SOURCE (`message.location().url`), never by its
+  text, so first-party errors still fail.
 - **An edit script must assert its anchor matched — a silent no-op replace shipped a production outage.** A Python
   `str.replace` that should have added an import matched nothing. `node --check` parsed the file, every test
   passed (the I/O shell had no harness), and every PDF failed in production with `… is not defined`. Write

@@ -3,7 +3,7 @@ epic: in-person-sales
 sprint: 2
 title: "QR and transfers"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 3
 stories:
   - id: S2.1
@@ -30,11 +30,10 @@ stories:
 ---
 # In person — Sprint 2: QR and transfers
 
-**Status:** merged 2026-10-31, **deploy owed** (the classifier refuses agent deploys since 2026-10-30; Daniel runs
-`update.sh`). Backend MiyagiSanchez-Backend#218 → `211b8db`, storefront MiyagiSanchez-Storefront#459 → `bae1775`.
+**Status:** ✅ shipped 2026-10-31: merged and deployed (`update.sh`: Backend `ba22692`, Storefront `8fd0046`). Backend MiyagiSanchez-Backend#218 → `211b8db`, storefront MiyagiSanchez-Storefront#459 → `bae1775`.
 Shipped alongside: #217 → `b258f70` (the «Pago directo» region repair route, **deployed**; its production run is owed
 to Daniel) and #219 → `397b56d` (Stripe payments verified with Stripe and bound to their checkout; a live hole found
-in this sprint's review; **deploy owed**).
+in this sprint's review; deployed 2026-10-31).
 
 **Verified:** the money-path CI gate covers card and transfer counter sales against a real database. It checks one
 cart per sale, that a card sale is never paid without a processor-confirmed order, cancelling with a payment in

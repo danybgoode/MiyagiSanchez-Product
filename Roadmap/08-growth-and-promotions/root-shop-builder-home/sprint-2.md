@@ -3,7 +3,7 @@ epic: root-shop-builder-home
 sprint: 2
 title: "The upgraded pitch"
 risk: low
-phase: Shaping
+phase: Building
 stories_total: 4
 stories:
   - id: S2.1

@@ -3,7 +3,7 @@ epic: root-shop-builder-home
 sprint: 1
 title: "The shop builder opens at the root"
 risk: low
-phase: Shaping
+phase: In review
 stories_total: 6
 stories:
   - id: S1.1

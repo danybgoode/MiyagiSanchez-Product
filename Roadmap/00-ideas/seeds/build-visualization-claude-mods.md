@@ -9,7 +9,7 @@ appetite: M
 underwritten_by: wave-2026-09-16
 risk: low
 epic: "09-platform-infra/build-visualization-claude-mods"
-build_order: 14
+build_order: 15
 updated: 2026-09-16
 ---
 

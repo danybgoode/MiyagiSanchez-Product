@@ -8,7 +8,7 @@ appetite: L
 underwritten_by: wave-2026-10
 risk: high
 epic: "02-checkout-and-payments/in-person-sales"
-build_order: 12
+build_order: 13
 updated: 2026-10-27
 intent_ask: verbatim   # verbatim = the product owner's own words below · proxy = reconstructed after the fact
 hypothesis: "We believe that a phone counter for in-person sales and shareable payment links will make Miyagi the one place a micro-merchant records every sale, because today their counter and chat sales live outside it. We'll know when shops record in-person sales and get paid through links, with stock and margins right."

@@ -77,6 +77,18 @@ Status legend: ✅ Live (enforced in code) · 🚧 In progress / partial · 📋
 - ✅ Cart and guided checkout
 - ✅ Pay by card (Stripe), MercadoPago, SPEI bank transfer, DiMo, or cash
 - ✅ WhatsApp / arranged-payment path for in-person deals
+- 🟡 **In person: POS-lite and payment links** *(merged 2026-10-31; S1 live, S2–S4 deploy owed)*.
+  - **«Vender en persona»** is a phone counter: tap products and take cash with the change shown (works without
+    signal, uploads each sale exactly once), a card by QR the buyer pays on their own phone through the shop's own
+    Stripe or Mercado Pago, or a transfer by CLABE or DiMo with «Ya me llegó».
+  - Every sale is a real order on the shop's own rails, with stock, Pedidos («En persona» badge) and Ganancias by
+    source.
+  - **«Cobrar con un link»** charges catalog products or any amount with a concept, shared by WhatsApp, QR or a
+    `mschz.org` short link. Buyers pay at `/pagar/<token>`, and seller agents can create links over MCP.
+  - Counter and link carts are server-owned and locked against edits. A card sale counts as paid only on
+    processor-confirmed money.
+  - *(Phone walkthroughs, the test-mode card and link payments and one real link charge are owed to Daniel.)* See
+    [02 · Checkout & Payments › In person](02-checkout-and-payments/in-person-sales/).
 - ✅ Manual-payment lifecycle: "payment pending" → buyer marks paid → seller confirms — **durable & hardened**: the buyer's "ya pagué" persists (survives reload) and is one shared state across buyer, seller, inbox + agents; a seller **cannot ship before confirming payment** (UI + server-gated on both ship routes); refund language is honest for SPEI/cash ("registrado — transferencia pendiente")
 - ✅ Single-item and multi-seller bundle checkout — the pay-button total always equals the summary (coupon/shipping included); manual methods previewed before placement; stalled online payments show a recovery state, never a false success
 - ✅ Two-sided off-platform refund state machine (SPEI/cash): "registrado → transferencia pendiente → confirmado" — the seller marks the transfer sent and **only the buyer's "Recibí el reembolso" closes it**; one shared state across buyer, seller + agents (card/escrow auto-confirm)

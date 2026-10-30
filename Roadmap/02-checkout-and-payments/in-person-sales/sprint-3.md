@@ -3,7 +3,7 @@ epic: in-person-sales
 sprint: 3
 title: "Offline cash"
 risk: high
-phase: Shaping
+phase: Verifying
 stories_total: 2
 stories:
   - id: S3.1
@@ -12,18 +12,27 @@ stories:
     i_want: "to keep selling for cash and have every sale upload once when the signal comes back"
     so_that: "I never lose a sale and never get duplicates"
     risk: high
-    status: planned
+    status: done
   - id: S3.2
     title: "Oversell on sync: recorded and flagged"
     as_a: "a merchant who sold offline what had just sold online"
     i_want: "the sale recorded anyway and a clear flag"
     so_that: "my records match what really happened"
     risk: high
-    status: planned
+    status: done
 ---
 # In person — Sprint 3: Offline cash
 
-**Status:** ⬜ not started
+**Status:** merged 2026-10-31, **deploy owed**. Backend MiyagiSanchez-Backend#220 → `74ed305`, storefront
+MiyagiSanchez-Storefront#460 → `2898d47`.
+
+**Verified:** the money-path gate covers an offline oversell that is recorded and flagged (decrement capped,
+shortfall recorded), a resend that returns the same order, and a stale-claim takeover after a restock that adopts the
+order instead of building a cart. Pure specs cover the queue state machine, the park list, the cross-tab diff, the
+service-worker scope and the cache-owner rule, each observed red under a mutation. Codex ran 5 rounds on the backend
+and 3 on the storefront, and the fresh verifier ran on both.
+
+**Owed to Daniel:** the airplane-mode walkthrough below, on a phone. It is not headless-testable.
 
 ## Stories
 

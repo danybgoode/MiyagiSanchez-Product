@@ -207,6 +207,30 @@ are expected to fail at `/complete`, and `setup-mexico`'s `MX_PAYMENT_PROVIDERS`
 20. **D20 — Stacking.** One PR per sprint per repo touched. Branches are `feat/in-person-sales` (S1), then `-s2`,
     `-s3`, `-s4` in both app repos, merged in order, backend before storefront in each sprint.
 
+**Amendments at build (S2, 2026-10-30), from review:**
+- **D4:** a card or transfer claim settles in `awaiting_payment` once its cart exists. A resend returns the same cart
+  (`decideExistingClaim` → `awaiting`).
+- **D8:** `cart.metadata.source` is client-writable through Medusa's public cart routes, so `start-checkout` treats
+  a cart as a counter cart only when an `in_person_sale` claim records that cart id. It opens a checkout only while
+  the claim is `awaiting_payment`, and only once (`CHECKOUT_EXISTS`). Counter carts never use escrow.
+- **D9:** a card sale is `paid` only when its order's payment came from `pp_stripe-connect_stripe-connect` or
+  `pp_mercadopago_mercadopago`. A buyer can switch a public cart's session to `pp_cash_cash` and complete it; that
+  order is reported as `unverified`, never as paid. Cancel refuses with `PAYMENT_IN_PROGRESS` while a Stripe session
+  is `complete` or a Mercado Pago payment is approved or in process.
+
+**Amendments at build (S3, 2026-10-30), from review:**
+- **D4 / D12 — locking.** The offline-oversell fallback uses Medusa's locking module, not only the database. Its stock
+  plan and decrement run under `locking.execute(inventoryItemIds)`, the same keys `reserveInventoryStep` takes, so they
+  serialise with online reservations. Its check-then-create runs under a per-claim key. In production this is Redis
+  locking; CI runs the in-memory provider, so Redis-specific lock behaviour stays ungated. Exactly once still rests on
+  the claim's unique index and a token fence.
+- **D12 — resumable.** A claim that reached the fallback (`metadata.oversold_fallback_at`) resumes the fallback on
+  takeover. It adopts the order it already created, and the cart path never runs again. Stock is taken from a stored
+  plan with per-line `applied` markers.
+- **D11 — service-worker scope.** The counter's fetch handler decides scope from the request referrer, not from
+  `clients.get(event.clientId)`. `respondWith` must be decided synchronously, and an async lookup would mean
+  intercepting every request on the site.
+
 ### Sprint 1 — Build contract (locked by the architect before the builder started)
 - **Backend:** module `src/modules/in-person` (D4 model + migration); pure `src/lib/in-person-sale.ts` (validate
   payload, payload hash, the claim-outcome decision); `POST /store/sellers/me/in-person-orders` (Clerk `resolveSeller`)

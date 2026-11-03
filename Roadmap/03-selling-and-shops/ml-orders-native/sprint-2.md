@@ -157,7 +157,7 @@ order import alongside stock sync (same SKU/grant), not a second paywall surface
 1. Backend: `cd apps/backend && npx medusa build && npx tsc --noEmit && npm run test:unit` → build
    succeeds, `tsc` clean, 15/15 suites · 136/136 tests green (includes the new
    `decideMlOrderCancel`/`ml-orders-entitlement` specs and the signature-regression scenario).
-2. Frontend: `cd apps/miyagisanchez && npx tsc --noEmit && npx next build && npx playwright test
+2. Frontend: `cd apps/storefront && npx tsc --noEmit && npx next build && npx playwright test
    --project=api` → clean typecheck, build succeeds, `e2e/notification-preferences.spec.ts`'s
    event→group map covers all four new `ml_order_*` events.
 3. ✅ CI green on both PRs at merge time — backend #58 (`Type-check + build + unit`), frontend #172

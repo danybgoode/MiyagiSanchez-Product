@@ -92,7 +92,7 @@ or reassigned; both parties' views update consistently.
 
 Read `README.md` → *Build-time architecture decisions* first (D1–D9). Cite them; do not re-derive them.
 Branch: `feat/merchant-partner-lifecycle`, cut from `origin/main` (worktree
-`apps/miyagisanchez/.worktrees/mpl`).
+`apps/storefront/.worktrees/mpl`).
 
 ### What already exists — verified live 2026-07-24, do NOT rebuild
 

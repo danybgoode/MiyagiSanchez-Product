@@ -34,7 +34,7 @@ seed. Do not reopen them here.
 ## Medusa-first note
 
 **N/A — no commerce behaviour changes.** No app code, no migration, no flag. Touch surface:
-`apps/miyagisanchez/.github/workflows/ci.yml`, `apps/backend/Dockerfile`, and possibly
+`apps/storefront/.github/workflows/ci.yml`, `apps/backend/Dockerfile`, and possibly
 `apps/backend/cloudbuild.yaml`.
 
 ## Architect's locked decisions (D1–D4)

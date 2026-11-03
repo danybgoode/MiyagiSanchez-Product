@@ -12,9 +12,9 @@ The supply import was recently fixed in Claude Code (it previously wrote to a mo
 `/s/[slug]` page couldn't read, so imports 404'd — now resolved and verified). Because it
 just changed, **read the current code/docs and confirm the real import path yourself** before
 importing anything. Don't rely on memory or the steps below if they conflict with what you find.
-- `apps/miyagisanchez/AGENTS.md` (Rule #1, gitflow, DoD)
-- `apps/miyagisanchez/SUPPLY_IMPORT_SCHEMA.md` (should now reflect the working path)
-- `apps/miyagisanchez/app/api/supply/*`, `app/supply/*`, `lib/supply.ts`, `lib/listings.ts`, `app/s/[slug]/*`
+- `apps/storefront/AGENTS.md` (Rule #1, gitflow, DoD)
+- `apps/storefront/SUPPLY_IMPORT_SCHEMA.md` (should now reflect the working path)
+- `apps/storefront/app/api/supply/*`, `app/supply/*`, `lib/supply.ts`, `lib/listings.ts`, `app/s/[slug]/*`
 - `Roadmap/00-ideas/seeds/agent-native-gtm/ask-claude-campaign-brief.md` (§6–7) and `creative-variant-matrix.md`
 
 ## Per-gem workflow (the loop)
@@ -29,11 +29,11 @@ importing anything. Don't rely on memory or the steps below if they conflict wit
 
 ## Operational facts learned the hard way (treat as constraints)
 - **Photos go in the connected folder, not chat.** Chat attachments do NOT reach the
-  filesystem. Daniel drops each gem's photos in `medusa-bonsai/gems/<slug>/`; read them from there.
+  filesystem. Daniel drops each gem's photos in `miyagisanchez-product/gems/<slug>/`; read them from there.
 - **The sandbox has no external network** (DNS fails). You cannot host images or hit prod
   APIs from bash. **Do all imports + image hosting through the browser on prod** (Claude-in-Chrome),
   calling the site's own API same-origin with the admin secret in an `x-admin-secret` header
-  (read `ADMIN_SECRET` from `apps/miyagisanchez/.env.local`; keep it out of URLs).
+  (read `ADMIN_SECRET` from `apps/storefront/.env.local`; keep it out of URLs).
 - **Resolve the slug** after import by whatever the current code exposes; verify by actually
   loading the page, don't assume the slug.
 - **Consent posture:** public info only; link back to the gem's original content; opt-out

@@ -46,7 +46,7 @@ server-side record to validate a client amount against). A tamper spec asserts a
 amount is ignored.
 
 ## What already exists (reuse, don't rebuild)
-- **`apps/miyagisanchez/lib/rental-pricing.ts`** — pure, spec-proven pricing seam (`nightsBetween`, `rentalUnits`, `computeRentalTotal`, es-MX labels). Single source of truth for the math; ported (not re-derived) to the backend in S1.1.
+- **`apps/storefront/lib/rental-pricing.ts`** — pure, spec-proven pricing seam (`nightsBetween`, `rentalUnits`, `computeRentalTotal`, es-MX labels). Single source of truth for the math; ported (not re-derived) to the backend in S1.1.
 - **`app/(shell)/l/[id]/RentalBooking.tsx`** — the PDP date picker + exact-estimate breakdown; S2.2 flips its CTA, nothing else.
 - **`apps/backend/src/api/store/carts/[id]/start-checkout/route.ts`** — the override-amount rail, product-metadata load (`loadProductForCheckout`), order-metadata precedents, `FulfillmentMethod` already includes `'rental'`.
 - **`checkout-options`** (backend) — already emits the "Renta" delivery method.

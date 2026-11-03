@@ -1,7 +1,7 @@
 # Retrospective — Homepage Selección: bug sweep + admin curation + dynamic rotation
 
 **Macro-section:** 01 · Discovery & Shopping · **Status:** ✅ shipped 2026-06-23 (3 sprints) ·
-**Repos:** `apps/miyagisanchez` (all) + one `apps/backend` admin-scoped route (S2.1).
+**Repos:** `apps/storefront` (all) + one `apps/backend` admin-scoped route (S2.1).
 
 ## What shipped
 

@@ -100,9 +100,9 @@ Grounded against the actual repos (root `miyagi-product-management`, app `danybg
 
 | Existing infra | Where it lives | What it does today |
 |---|---|---|
-| Browser smoke | `apps/miyagisanchez/.github/workflows/browser-smoke.yml` | Playwright vs prod, cron `0 9 * * *`; on fail just uploads artifacts. Reads `MS_TEST_*` secrets, skips if unset. **Frontend repo, not root.** |
+| Browser smoke | `apps/storefront/.github/workflows/browser-smoke.yml` | Playwright vs prod, cron `0 9 * * *`; on fail just uploads artifacts. Reads `MS_TEST_*` secrets, skips if unset. **Frontend repo, not root.** |
 | Deploy-finish Telegram (backend) | `apps/backend/infra/gcp/cicd-telegram-notifier/index.js` | Cloud Build completion → Pub/Sub → Cloud Function → ✅/❌ ping. Lives outside the runtime (deploy-safe). |
-| Deploy-finish Telegram (frontend) | `apps/miyagisanchez/.github/workflows/notify-telegram.yml` (`vercel-production-deploy` job) | On push to `main`, polls the Vercel API for that commit's prod deploy and pings Telegram with the **terminal status** (✅ READY / ❌ ERROR / ❌ CANCELED). **Corrects the initial finding — the frontend DOES have a status-aware deploy notifier** (Daniel confirmed the ping). |
+| Deploy-finish Telegram (frontend) | `apps/storefront/.github/workflows/notify-telegram.yml` (`vercel-production-deploy` job) | On push to `main`, polls the Vercel API for that commit's prod deploy and pings Telegram with the **terminal status** (✅ READY / ❌ ERROR / ❌ CANCELED). **Corrects the initial finding — the frontend DOES have a status-aware deploy notifier** (Daniel confirmed the ping). |
 | Notion sync | `scripts/roadmap-to-notion.mjs` + `.github/workflows/notion-sync.yml` (nightly `0 8 * * *` + push) + `notion-pr-sync.yml` (PR overlay) | Mechanical, deterministic, **free** one-way docs→Notion. Does NOT groom the funnel or reason about drift. |
 | Build-order | `scripts/build-order.mjs` | Regenerates `BUILD-ORDER.md` from the same projection; `--check` for CI. |
 | Cross-agent review | `scripts/cross-review.mjs` + `scripts/lib/cross-agent-cli.mjs` | **Local-only** (no CI runs it; `scripts-guard.yml` only runs the unit tests). This is the descoped `cross-agent-review-always` goal. |

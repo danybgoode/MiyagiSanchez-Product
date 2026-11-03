@@ -31,7 +31,7 @@ stories:
 # Platform migrations — Sprint 2: Money path — `migration` SKU + quoted estimate
 
 **Status:** ✅ MERGED + LIVE 2026-07-11. PR [#224](https://github.com/danybgoode/miyagisanchezcommerce/pull/224),
-squash-merged `4dcd441` to `main` (apps/miyagisanchez), deployed via the frontend Cloud Run rail.
+squash-merged `4dcd441` to `main` (apps/storefront), deployed via the frontend Cloud Run rail.
 Built on `feat/platform-migrations-s2`, branched off `origin/main` `2b1a483` (Sprint 1 merged,
 PR #220). Commits (pre-squash): `f73e832` (Story 2.1), `2104be3` (Stories 2.2+2.3), `11a76fd`
 (spec fix), `94d7cba` (3 review-driven fixes), `f260b05` (CI-lint false-positive fix).

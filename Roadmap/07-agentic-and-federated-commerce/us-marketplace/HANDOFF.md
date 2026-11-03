@@ -32,7 +32,7 @@ pages: the rail, the shell chrome, the locale seam and the signup path are done.
 **Regenerate the population before starting** — a hand-counted number is stale on arrival:
 
 ```bash
-cd apps/miyagisanchez
+cd apps/storefront
 grep -rlE '"[^"]{4,80}"' --include="*.tsx" "app/(shell)/shop/manage" "app/(shell)/sell" \
   | xargs grep -lE '[áéíóúñ¿¡]' | wc -l      # 39 files at close
 grep -rhoE '"[^"]{4,60}"' --include="*.tsx" "app/(shell)/shop/manage" \
@@ -118,7 +118,7 @@ no rate and no label because none exists.
   shapes; `publicShopPaymentAvailability` is the one seam. Reading only v1 made every US shop
   permanently unbuyable, silently.
 - **The frontend checkout's `node_modules` is empty (0B).** A new worktree needs its own
-  `npm install` — symlinking to `apps/miyagisanchez/node_modules` gets you nothing, and `next` is not
+  `npm install` — symlinking to `apps/storefront/node_modules` gets you nothing, and `next` is not
   hoisted to the monorepo root.
 - **Local `npm run test:unit` in `apps/backend` shows 4 phantom failures** in
   `publishable-key-channel-move`: it reads `process.cwd()/node_modules/@medusajs/...`, which this

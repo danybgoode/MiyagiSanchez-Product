@@ -74,7 +74,7 @@ independently re-verified against the final commits — not just traced by hand)
 > ⚠️ **Plan-mode gate — RESOLVED 2026-07-06.** The gate's premise was wrong: there is no
 > `@medusajs/marketplace` plugin anywhere in this codebase (confirmed against `package.json`,
 > `node_modules`, `medusa-config.ts` — zero hits; already correctly documented in
-> `apps/miyagisanchez/.claude/context/medusa.md`, stale in `AGENTS.md` rule #1, fixed alongside this
+> `apps/storefront/.claude/context/medusa.md`, stale in `AGENTS.md` rule #1, fixed alongside this
 > sprint). Shops/sellers are a fully custom module (`apps/backend/src/modules/seller/`), and
 > product-to-seller scoping is a **module link** (`apps/backend/src/links/seller-product.ts`, a
 > pivot table) — no plugin namespace to fight.
@@ -90,7 +90,7 @@ independently re-verified against the final commits — not just traced by hand)
 > **Real risk found and folded into scope (Story 2.1a, ships first, standalone):**
 > `product_category.handle` has a **global unique index**, and the app today derives "the" category
 > positionally — `product.categories?.[0]?.handle` (`apps/backend/src/api/store/_utils/listing.ts:182`,
-> `apps/miyagisanchez/lib/listings.ts:183`) — which only holds because every product has 0-or-1
+> `apps/storefront/lib/listings.ts:183`) — which only holds because every product has 0-or-1
 > category today. Once seller collections attach to the same many-to-many pivot, `[0]` could
 > silently return a seller collection instead of the platform category, breaking the site's main
 > category filter. Fixed via explicit platform-vs-collection split (handle-prefix check), before

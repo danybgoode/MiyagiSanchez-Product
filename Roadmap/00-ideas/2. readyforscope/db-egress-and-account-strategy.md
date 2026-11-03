@@ -341,7 +341,7 @@ site-wide Clarity) into 09 · Platform & Infra with sprints.
 
 ### Investigation kickoff (paste into a session where the Neon/Supabase CLIs are authed)
 ```
-Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 Then read Roadmap/00-ideas/2. readyforscope/db-egress-and-account-strategy.md.
 
 This is a SPIKE — investigation only, no code, no branch. Work S0→S5 in the doc. For each step, run the

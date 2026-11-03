@@ -81,7 +81,7 @@ untouched (identity via `clerk_user_id`). **Agent surface:** MCP read/write of p
 | | S3.3 Polish: finalize taxonomy, es-MX (+ en) for all TG bodies + copy, empty/"no channel linked" states | HIGH |
 
 ## Deploy order (two repos, async)
-The seam + channel libs + routes + settings are **frontend** (`apps/miyagisanchez`); the prefs/link
+The seam + channel libs + routes + settings are **frontend** (`apps/storefront`); the prefs/link
 tables ship via the **Supabase CLI**. Confirm whether any in-scope event fires from the **backend**
 (Cloud Run) — if so, merge backend-first / degrade gracefully (LEARNINGS). Default-on prefs keep the
 99% path byte-for-byte unchanged during any deploy-lag window. Rebase latest `main` before each PR

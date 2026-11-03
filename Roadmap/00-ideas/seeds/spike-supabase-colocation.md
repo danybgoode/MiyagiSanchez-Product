@@ -83,7 +83,7 @@ architecture aesthetics. The product owner can point at the number that decided 
   framing blamed the wrong causes (traffic, backups) and whose value was in the measurement.
 - **`scripts/neon-egress.mjs`** — the durable measurement harness kept when that epic was superseded.
 - **`lib/cache-policy.ts`** — the revalidate SSOT; the cheap-intervention lever for Q5.
-- **`apps/miyagisanchez/supabase/migrations/`** — 95 files; the true scope of any migration.
+- **`apps/storefront/supabase/migrations/`** — 95 files; the true scope of any migration.
 - **AGENTS rule #2 table** — the authoritative list of what Supabase is allowed to own.
 
 ## Cross-agent planning panel

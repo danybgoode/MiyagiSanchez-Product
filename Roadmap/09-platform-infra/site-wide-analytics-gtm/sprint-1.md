@@ -30,7 +30,7 @@ stories:
 ---
 # Sprint 1 — GTM container, site-wide & static-safe
 
-**Epic:** [Site-wide analytics: GTM (GA4 + Clarity)](README.md) · **Risk:** all LOW · **Repo:** `apps/miyagisanchez`
+**Epic:** [Site-wide analytics: GTM (GA4 + Clarity)](README.md) · **Risk:** all LOW · **Repo:** `apps/storefront`
 **Goal:** a single GTM container loads across platform surfaces (incl. the seller dashboard), gated client-side
 so the static `(site)` subtree stays static, with GA4 + Clarity managed inside GTM.
 

@@ -120,7 +120,7 @@ orchestrator about to spawn a second parallel kickoff.
 the two edited files (no other context, no wider search) and asked to state the survival rules —
 it correctly listed all three (split one into two sub-points, same substance) with zero guessing.
 **Bonus fix, same file, same pass:** found two stale Miyagi-only lines in `kickoff.md`/`SKILL.md`
-while editing them for this story — `apps/miyagisanchez/AGENTS.md` (every spawned sibling's
+while editing them for this story — `apps/storefront/AGENTS.md` (every spawned sibling's
 `AGENTS.md` lives at repo root; confirmed against golden-beans) and a hardcoded "es-MX by default
 (AGENTS rule #5)" line the epic's own scope doc already says should be a per-project slot, not
 universal. Fixed + verified live: `emit-kickoff.mjs` against golden-beans now emits a correct
@@ -197,7 +197,7 @@ build (see each story's "verified live" note) and can be re-run identically any 
    `contract-broken: unparseable installed version (null) is never blessed as a bump` case.
 3. **✅ Agent-verified.** `node .../groom/emit-kickoff.mjs --epic commercial-shell --sprint 1
    --repo-root ~/dobby/golden-beans` (dobby-foundation, before vs after the Story 2.2 fix). → Before:
-   would read `apps/miyagisanchez/AGENTS.md` (doesn't exist in golden-beans) and tell the builder
+   would read `apps/storefront/AGENTS.md` (doesn't exist in golden-beans) and tell the builder
    "App copy is es-MX by default." After: reads `AGENTS.md` (golden-beans' real root file) and says
    "Follow this project's own copy/localization conventions."
 4. **✅ Agent-verified.** A fresh `general-purpose` subagent, given only

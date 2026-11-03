@@ -52,7 +52,7 @@ Daniel's account).
 ## What already exists (reuse, don't rebuild)
 - **Routine rail** — `routines-enablement` (shipped) + `scripts/routines/` prompt format + the Pro cap model
   (GitHub/API triggers don't eat the 5/day scheduled cap; scheduled load ≈ 1/night today).
-- **Telegram** — `apps/miyagisanchez/lib/telegram.ts` (`tg`), `TELEGRAM_BOT_TOKEN`/`CHAT_ID`, the backend
+- **Telegram** — `apps/storefront/lib/telegram.ts` (`tg`), `TELEGRAM_BOT_TOKEN`/`CHAT_ID`, the backend
   Cloud Build notifier + frontend `notify-telegram.yml`. The channel is solved — reuse it.
 - **`scripts/build-order.mjs`** (+ `build-order-guard.yml`) — regen + drift `--check`. `build-order-sync`
   wraps it; the standup reads its `--check` result.

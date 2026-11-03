@@ -69,7 +69,7 @@ permanent branch in the code.
    who is not holding a terminal, or because it gates a third-party integration that can fail
    independently of our code (a carrier account, a payment provider outage).
 3. **When one is requested, the existing machinery is the answer, unchanged.** Typed entry in
-   `apps/miyagisanchez/lib/flag-catalog.ts`, definition registered in Golden in every environment with
+   `apps/storefront/lib/flag-catalog.ts`, definition registered in Golden in every environment with
    the stated polarity, one server-side resolver seam, `platform_flags` shadow row. Never a code-only
    constant; an unregistered flag is not a switch.
 4. **Do not describe a flag as a security boundary.** Flags fail open. Authorization is authorization.
@@ -449,7 +449,7 @@ merely failed to check is exactly the confident falsehood the guard exists to st
 ## Automated QA — this project's harness
 The Playwright harness has **two layers** and grows by **one spec per new browser-/API-testable story** —
 coverage accretes with the work, not as a separate project. A spec replaces the equivalent hand-driven run on
-every future change: deterministic, fast, cheap. Details: `apps/miyagisanchez/e2e/README.md`.
+every future change: deterministic, fast, cheap. Details: `apps/storefront/e2e/README.md`.
 
 - **`api` project — the deterministic gate (always-on).** `npm run test:e2e`, API-level via the `request`
   fixture, no browser binaries. **GitHub Actions CI** runs `tsc` + `build` + this on every PR against the
@@ -478,7 +478,7 @@ every future change: deterministic, fast, cheap. Details: `apps/miyagisanchez/e2
 
 - **Smoke-tested** (on the branch's preview where applicable). The story's real behaviour is exercised
   end-to-end with an appropriate tool — the `live-smoke` skill (`node scripts/live-smoke.mjs`,
-  apps/miyagisanchez) is the **default** for rendered-page verification, cross-agent (Codex/Antigravity
+  apps/storefront) is the **default** for rendered-page verification, cross-agent (Codex/Antigravity
   can run it too, no Claude-specific tooling); `curl`, a Playwright spec, or a real artifact render fit
   API-only/non-browser checks. **Claude-in-Chrome stays a narrow fallback** — the one thing it can do that
   `live-smoke` structurally cannot is an *authed* check against **production** (Clerk rejects its

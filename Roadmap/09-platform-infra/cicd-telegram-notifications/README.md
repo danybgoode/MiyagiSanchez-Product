@@ -54,9 +54,9 @@ internal ops text to Daniel, not user-facing copy.
 
 ## What already exists (reuse, don't rebuild)
 
-- **`apps/miyagisanchez/lib/telegram.ts`** — the **message-format house style**: HTML mode, `esc()` for `& < >`, fire-and-forget with a 5 s timeout, emoji prefixes (📦 🚀 ✅ ❌ ⚠️). The *function* is reusable only in-app; CI pipelines mirror the **style**, not the call.
+- **`apps/storefront/lib/telegram.ts`** — the **message-format house style**: HTML mode, `esc()` for `& < >`, fire-and-forget with a 5 s timeout, emoji prefixes (📦 🚀 ✅ ❌ ⚠️). The *function* is reusable only in-app; CI pipelines mirror the **style**, not the call.
 - **`TELEGRAM_BOT_TOKEN`** — same bot, re-provisioned into GitHub Secrets (×2) + GCP Secret Manager.
-- **`apps/miyagisanchez/.github/workflows/ci.yml`** — already resolves a Vercel deployment by `meta.githubCommitSha` and polls `state`/`readyState` until terminal; **S3 reuses this exact loop** (scoped to `target=production`). Sibling workflow pattern for S1.
+- **`apps/storefront/.github/workflows/ci.yml`** — already resolves a Vercel deployment by `meta.githubCommitSha` and polls `state`/`readyState` until terminal; **S3 reuses this exact loop** (scoped to `target=production`). Sibling workflow pattern for S1.
 - **`apps/backend/cloudbuild.yaml`** — `build → push → deploy`; substitutions `$SHORT_SHA`/`$PROJECT_ID`/`$_REGION`/`$_SERVICE`; Cloud Build publishes status to the **`cloud-builds` Pub/Sub topic** (the clean success+failure hook for S2).
 - **`apps/backend/infra/gcp/cicd-setup.sh` / `deploy.sh`** — where the trigger + Cloud Run env/secrets were provisioned; S2's secret + Pub/Sub notifier wiring belongs in the same infra-as-script spirit.
 

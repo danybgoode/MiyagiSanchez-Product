@@ -204,7 +204,7 @@ Carried over this sprint, per Daniel's call to keep rather than drop the two zer
   Sprint 1's secret copy moved values, not IAM bindings, and nothing had tried to consume them since.
   The first deploy failed on all 10 at once. Granted, redeployed, `/health` 200. Trigger recreated
   via `cicd-setup-staging.sh`.
-- **`print-pdf`** — rebuilt from `apps/miyagisanchez/services/print-pdf` via Cloud Build in the new
+- **`print-pdf`** — rebuilt from `apps/storefront/services/print-pdf` via Cloud Build in the new
   project rather than copying the image across accounts (a cross-account image copy would have needed
   a temporary IAM grant on a project we are deleting). `PRINT_PDF_SECRET` carried over unchanged so
   the frontend's existing pairing still matches. *(Hygiene follow-up, pre-existing: that secret is a

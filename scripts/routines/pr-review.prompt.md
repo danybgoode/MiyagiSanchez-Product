@@ -3,7 +3,7 @@
 
   This is the prompt for a Claude Code *Routine* (cloud session, research preview) that runs as
   Daniel on a GitHub `pull_request` trigger. It mirrors the SUBSTANCE of `scripts/cross-review.prompt.md`
-  — the five AGENTS rules (apps/miyagisanchez/AGENTS.md) + the WAYS-OF-WORKING single-pass advisory
+  — the five AGENTS rules (apps/storefront/AGENTS.md) + the WAYS-OF-WORKING single-pass advisory
   discipline. It is NOT a new rubric: if the review CRITERIA change, change them in
   `scripts/cross-review.prompt.md` (the single source for the criteria) and re-sync this file.
 
@@ -62,7 +62,7 @@ once.
   whose result nobody checks (a non-2xx `fetch` that never throws; a 0-row DB update that "succeeds")?
 - Reuse & simplicity: is there an existing helper/seam this should have used instead of re-deriving it?
 
-**The five rules that cannot be violated** (from `apps/miyagisanchez/AGENTS.md`)
+**The five rules that cannot be violated** (from `apps/storefront/AGENTS.md`)
 1. **Medusa owns all commerce.** Products, orders, payments, fulfillment, returns, inventory, regions →
    Medusa module/Store API in `apps/backend`. Never new Supabase tables or custom Next routes for these.
 2. **Supabase is non-commerce only** — conversations, offers, favorites, supply/scrape staging, UCP

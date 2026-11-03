@@ -28,7 +28,7 @@ both matching the exact squash-merge commit SHAs) — this is the true integrati
 ad hoc pre-merge verification below, and it passed cleanly on the first try. Both live services
 (`https://api.miyagisanchez.com/health`, `https://miyagisanchez.com/`) confirmed 200 post-deploy.
 
-Both `apps/backend/cloudbuild.yaml` and `apps/miyagisanchez/cloudbuild.yaml` previously ran a
+Both `apps/backend/cloudbuild.yaml` and `apps/storefront/cloudbuild.yaml` previously ran a
 fully cold `docker build` on every push — no Kaniko, no buildx, no cache mechanism at all.
 Sprint 1's lockfiles gave this a stable key to cache against.
 

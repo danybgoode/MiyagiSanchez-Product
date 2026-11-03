@@ -4,7 +4,7 @@
     {
       "name": "miyagisanchez",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "apps/miyagisanchez"],
+      "runtimeArgs": ["run", "dev", "--prefix", "apps/storefront"],
       "port": 3001,
       "autoPort": false
     },

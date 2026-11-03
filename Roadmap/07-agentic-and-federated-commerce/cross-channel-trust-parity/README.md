@@ -85,7 +85,7 @@ copy-completeness gate per LEARNINGS). Clerk untouched.
 *(No component-extraction story — that's Epic C / C.4. No inventory story — done in the scope doc.)*
 
 ## Deploy order
-Frontend-only, single repo (`apps/miyagisanchez`). **Do not start until Epic C Sprint 2 (C.4) is merged
+Frontend-only, single repo (`apps/storefront`). **Do not start until Epic C Sprint 2 (C.4) is merged
 to `main`** (D imports `<TrustSignals>`). Build D.1 → D.2; **announce the `ChannelLayout` change before
 D.2** and open a PR (don't push straight to `main`). One branch `feat/cross-channel-trust-parity`.
 

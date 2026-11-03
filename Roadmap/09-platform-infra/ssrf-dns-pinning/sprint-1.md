@@ -25,7 +25,7 @@ stories:
 
 **Status:** 🟦 In review — [PR #290](https://github.com/danybgoode/miyagisanchezcommerce/pull/290) (LOW)
 
-> **Design fork settled: (A)** — `undici` added as a direct dependency of `apps/miyagisanchez`; `fetch`
+> **Design fork settled: (A)** — `undici` added as a direct dependency of `apps/storefront`; `fetch`
 > AND `Agent` imported from it (not the global fetch + a duck-typed dispatcher), so the dispatcher type
 > matches the fetch consuming it and the Node-22 runtime's own bundled undici version is irrelevant. The
 > `server-only` open question was decided **no** (same reason as `ssrf-guard.ts`: the Playwright `api`

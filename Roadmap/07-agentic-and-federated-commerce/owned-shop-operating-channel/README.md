@@ -155,7 +155,7 @@ Traced through Medusa 2.15.3, `POST /store/carts`:
    `findSalesChannelStep`'s fall-back to `store.default_sales_channel_id` is real code but
    **unreachable** here — `wrapHandler` answers first.
 
-The storefront **never sends `sales_channel_id`** — grep over `apps/miyagisanchez` `lib/**` + `app/**`
+The storefront **never sends `sales_channel_id`** — grep over `apps/storefront` `lib/**` + `app/**`
 returns **zero** call sites. So there is no code path that avoids step 2.
 
 **Locked:** the key carries **exactly one** channel link before and after — it is **unlinked** from the
@@ -204,7 +204,7 @@ inert and safe.
 **The scaffold's "backend-only for Sprints 1–2, frontend untouched until Sprint 3" is false**, and this is
 the finding that most changes the epic's shape.
 
-`apps/miyagisanchez/lib/cart.ts` → `resolveCheckoutLines` admits **every** checkout line through
+`apps/storefront/lib/cart.ts` → `resolveCheckoutLines` admits **every** checkout line through
 `GET /store/listings/:id?market=mx` — the **marketplace** detail endpoint — before a cart exists. An
 operating-channel-only product 404s there and is refused with *"not available in this marketplace"*. No
 amount of backend channel work makes it buyable while that gate stands.

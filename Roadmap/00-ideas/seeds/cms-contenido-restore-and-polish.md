@@ -27,7 +27,7 @@ grooming (see eval below, confirmed by Daniel 2026-07-11); the UX want becomes o
   *"No se pudo guardar el override."* Every edit is accepted by the UI but has nowhere live to land.
 - **Root cause:** `POST /api/admin/content-overrides` (route.ts) returns exactly that string when the
   Supabase upsert to `platform_copy_overrides` errors — and that table **does not exist in prod**:
-  migration `apps/miyagisanchez/supabase/migrations/20260708150000_platform_copy_overrides.sql` was
+  migration `apps/storefront/supabase/migrations/20260708150000_platform_copy_overrides.sql` was
   never applied. Already recorded in the epic's RETROSPECTIVE as *"Owed to Daniel — separately, and
   higher priority."* **Not** caused by the Vercel→Cloud Run migration (2026-07-10) — the feature was
   born inert on 2026-07-09.

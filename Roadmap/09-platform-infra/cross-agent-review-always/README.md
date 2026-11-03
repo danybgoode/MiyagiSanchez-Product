@@ -75,7 +75,7 @@ This is `.github/` + `Roadmap/` + the PR template.
   Inherited free (the CI job passes an explicit `<PR#>` + `--repo`).
 - **`scripts/cross-review.prompt.md`** — the single shared rubric (five AGENTS rules + single-pass); the CI
   run reads the same prompt the human reviewer does.
-- **`apps/miyagisanchez/.github/workflows/ci.yml`** → "Browser smokes vs preview (non-blocking)" — the
+- **`apps/storefront/.github/workflows/ci.yml`** → "Browser smokes vs preview (non-blocking)" — the
   `continue-on-error` **template** for a never-gating advisory job.
 - **`apps/*/.github/workflows/notify-telegram.yml`** — the "skip cleanly when an optional secret is absent,
   never hard-fail" idiom, for the missing-credential path.

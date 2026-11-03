@@ -86,7 +86,7 @@ adding an anti-monolith CI guard against it returning. That's exactly the Sweepe
 instead of the plan discovering it mid-flight (per the spike decision's own worked-example finding). ✅
 
 ## Kickoff prompt (paste into a fresh Claude Code session)
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/00-ideas/2. readyforscope/spike-role-archetypes.md (the WRITTEN DECISION — the source of
 > truth for the cues), Roadmap/00-ideas/2. readyforscope/groom-archetype-lens.md, and
 > Roadmap/09-platform-infra/groom-archetype-lens/README.md + sprint-1.md.

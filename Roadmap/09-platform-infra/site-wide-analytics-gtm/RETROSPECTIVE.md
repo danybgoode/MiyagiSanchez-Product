@@ -2,7 +2,7 @@
 
 _Closed: 2026-06-22_
 
-**Area:** 09-platform-infra · **Risk:** all LOW · **Span:** 1 sprint, 2026-06-22 · **Repo:** `apps/miyagisanchez` (frontend-only)
+**Area:** 09-platform-infra · **Risk:** all LOW · **Span:** 1 sprint, 2026-06-22 · **Repo:** `apps/storefront` (frontend-only)
 **Outcome:** a **single GTM container** (`GTM-MWHVLJ3M`) now loads across every platform surface, gated
 client-side so the just-shipped static `(site)` shell stays a function-free CDN asset. GA4 + Microsoft
 Clarity are managed as tags **inside** GTM — no redeploy to add or change them.

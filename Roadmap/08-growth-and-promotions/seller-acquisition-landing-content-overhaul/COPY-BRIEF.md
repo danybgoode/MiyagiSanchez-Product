@@ -1,7 +1,7 @@
 # COPY-BRIEF — Seller-Acquisition Landing Pages (es-MX content overhaul)
 
 **Sprint 1 deliverable · status: ✅ approved by Daniel 2026-06-25.** This is the locked source of truth for
-Sprint 2. Every string below maps 1:1 to a key in `apps/miyagisanchez/locales/es.json → sellerAcquisition`
+Sprint 2. Every string below maps 1:1 to a key in `apps/storefront/locales/es.json → sellerAcquisition`
 (except the two new blocks — `benchmark` and `aiChannel` — which add keys). All copy is **es-MX, fully
 accented (á é í ó ú · ñ · ¿ ¡)**, written to a persona's job-to-be-done — **not** translated from English.
 
@@ -353,7 +353,7 @@ line):
 ---
 
 ## 10. Implementation map for Sprint 2 (so this is paste-not-author)
-1. Replace every value above in `apps/miyagisanchez/locales/es.json → sellerAcquisition`.
+1. Replace every value above in `apps/storefront/locales/es.json → sellerAcquisition`.
 2. Add the new shared block `shared.selfCheck` and repoint the renderer's `agentTitle`/`agentBody`
    slots to it (or overwrite each page's keys with the shared strings).
 3. Add `shared.copyPrompt` / `copiedPrompt` new labels; set `trustPrompt` to the directive prompt and

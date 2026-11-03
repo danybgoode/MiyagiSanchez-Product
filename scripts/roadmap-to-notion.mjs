@@ -330,7 +330,7 @@ export function lifecycleForPr({ action, draft }) {
 function sprintKickoff({ epicKey, slug, n, risk }) {
   const tier = risk === 'High' ? 'HIGH' : 'LOW';
   let k = [
-    `Read apps/miyagisanchez/AGENTS.md (Start here) + Roadmap/LEARNINGS.md, then`,
+    `Read apps/storefront/AGENTS.md (Start here) + Roadmap/LEARNINGS.md, then`,
     `Roadmap/${epicKey}/README.md + sprint-${n}.md.`,
     `Build Sprint ${n} of "${slug}" per WAYS-OF-WORKING, in your OWN git worktree off latest main on`,
     `feat/${slug}. Plan mode → confirm stories with me → build one story at a time. Commit per story`,

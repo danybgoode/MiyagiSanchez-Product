@@ -44,7 +44,7 @@ Two pains converged:
 | Repo | local | merged-by-ancestry (safe) | unmerged (verify) |
 |---|---|---|---|
 | PM (root) | 2 | 0 | 1 (`feat/cross-agent-planning-panel` — likely squash-merged) |
-| FE (apps/miyagisanchez) | 27 | 20 | 6 (several squash-merged; `feat/pdp-redesign-s4` is live WIP) |
+| FE (apps/storefront) | 27 | 20 | 6 (several squash-merged; `feat/pdp-redesign-s4` is live WIP) |
 | BE (apps/backend) | 19 | 16 | 2 (`feat/custom-domain-paywall`, `feat/flagsmith-stripe-enforcement`) |
 > "Unmerged" overstates it — squash-merges break `--is-ancestor`; verify each via `gh pr` state or empty diff.
 
@@ -72,10 +72,10 @@ Notion sync — change its status-source carefully and re-run `--extract` to con
 
 ## Claude Code kickoff (paste this)
 ```
-Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 Work live (gh + network). PLANNING/REPORT FIRST across all phases — do NOT delete, rewrite status, or
 change tooling until I approve each phase's report. Three repos: PM (monorepo root / Roadmap),
-FE (apps/miyagisanchez), BE (apps/backend).
+FE (apps/storefront), BE (apps/backend).
 
 PHASE 1 — Branch cleanup (all three repos)
   `git fetch --prune origin` each. For every local branch except the checked-out one and `main`, classify:

@@ -60,7 +60,7 @@ Ideally factor the pinned-fetch wrapper into one shared helper (`lib/ssrf-guard.
 
 The gap analysis above proposes `undici.Agent({ connect })`. Research on 2026-07-19 found a wrinkle:
 
-- **`undici` is not a direct dependency** of `apps/miyagisanchez`. It resolves today only
+- **`undici` is not a direct dependency** of `apps/storefront`. It resolves today only
   *transitively* from the workspace root (`node_modules/undici` present; nothing in
   `package.json`). Importing it directly would be relying on a hoisted transitive dep — exactly
   the kind of implicit coupling that breaks on an unrelated `npm` tree change.

@@ -134,7 +134,7 @@ destination was wrong. It survived S4.1's build, both cross-family passes and th
 because **every one of them was reading the backend repo, and the fact that makes the URL wrong lives
 in the storefront repo.** A cross-repo string is invisible to a single-repo reviewer.
 
-The guard has to span both repos, which is awkward because `apps/miyagisanchez` is gitignored here and
+The guard has to span both repos, which is awkward because `apps/storefront` is gitignored here and
 absent from CI entirely. So it reports THREE states: resolve the path against the real `app/` tree when
 the sibling is present, and print **UNAVAILABLE** out loud when it is not — a silent skip would be a
 green gate that checked nothing.

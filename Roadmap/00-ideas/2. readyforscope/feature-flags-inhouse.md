@@ -19,7 +19,7 @@ Grooming decisions (2026-07-01, confirmed by Daniel via question batch):
 
 ## Stage-2.5 bucket — **light enhancement / swap**, not genuinely new
 This is **not** "build a feature-flag system." The system shipped 2026-06-06. The flag **seam already exists and
-is clean**: every consumer calls `isEnabled(flag)` from `apps/miyagisanchez/lib/flags.ts` (FE, 10 flags, ~25 call
+is clean**: every consumer calls `isEnabled(flag)` from `apps/storefront/lib/flags.ts` (FE, 10 flags, ~25 call
 sites) and `apps/backend/src/lib/flags.ts` (BE, 2 flags, 4 call sites). **Only those two files touch Flagsmith.**
 The work is: **swap the internals of two files** (Flagsmith SDK → Supabase-backed in-process cache) behind an
 **identical `isEnabled()` signature**, add a store + an admin toggle page, then delete the Flagsmith dependency.
@@ -34,11 +34,11 @@ stuck OFF (`promoter`, `ml.*`, `shipping.envia`, `subdomain.paywall`, `events.qu
 ## What already exists (reuse, don't rebuild) — verified 2026-07-01
 | Capability | Where | Reuse for |
 |---|---|---|
-| Flag seam (FE + BE), fail-open, in-process cache, 2 s timeout / no retries | `apps/miyagisanchez/lib/flags.ts`, `apps/backend/src/lib/flags.ts` | **Swap internals only.** Keep `isEnabled(flag)` + `DEFAULT_FLAGS` + `FlagKey` exactly |
+| Flag seam (FE + BE), fail-open, in-process cache, 2 s timeout / no retries | `apps/storefront/lib/flags.ts`, `apps/backend/src/lib/flags.ts` | **Swap internals only.** Keep `isEnabled(flag)` + `DEFAULT_FLAGS` + `FlagKey` exactly |
 | Pure, unit-tested application seams | `lib/checkout-killswitch.ts` (FE), `resolveSellerPaymentMethods` opts + `envia-killswitch.ts` (BE) | Untouched — they consume flag *values*, which still come from `isEnabled()` |
 | FE Supabase client (read + write) | `@/lib/supabase` (`db`), lazy singleton + missing-config stub | FE flag reads + admin writes to `platform_flags` |
 | **BE read-only Supabase client** | `apps/backend/src/api/store/_utils/supabase-read.ts` (`supabaseRead`, uses `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` — **already in Cloud Run env**) | BE flag reads from the same `platform_flags` table — single source of truth, zero new infra |
-| Supabase migration convention | `apps/miyagisanchez/supabase/migrations/*.sql` (timestamped) | New `platform_flags` table migration |
+| Supabase migration convention | `apps/storefront/supabase/migrations/*.sql` (timestamped) | New `platform_flags` table migration |
 | Admin page pattern + shell | `app/(shell)/admin/*` + `AdminShell.tsx`; e.g. `admin/coupons`, `admin/referrals` | New `/admin/flags` page follows the same shape |
 | Admin auth guards | `lib/admin/guard.ts` — `requireAdmin()` (pages), `withAdmin(handler)` (API routes) | Gate the flags page + write route; no new auth |
 | Admin audit log (auto-written by `withAdmin`) | `lib/admin/audit.ts` + `admin_audit_log` table | Every flag flip is audited **for free** |

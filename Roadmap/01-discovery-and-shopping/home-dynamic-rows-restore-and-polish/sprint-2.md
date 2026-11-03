@@ -46,7 +46,7 @@ CTA — prerenders into static HTML, hydrates away signed-in). `/` stays static.
 **Acceptance:** anonymous HTML still contains the ribbon (`home-static.spec.ts` green); a signed-in
 browser session does not show it. Browser regression spec.
 **Risk:** low
-**Commit:** `8fa9410` (apps/miyagisanchez) — new `e2e/home-ribbon-auth.browser.spec.ts`, verified
+**Commit:** `8fa9410` (apps/storefront) — new `e2e/home-ribbon-auth.browser.spec.ts`, verified
 red on a deliberate `when="signed-in"` mutation, then green.
 
 ### Story 2.2 — Price-drop badge on rail cards ("↓ Bajó $300") ✅
@@ -64,7 +64,7 @@ truthy).
 spec on the pure derivation seam + endpoint unit spec.
 **Risk:** low (no migration after all — confirmed pre-existing column, not additive-expand as
 originally assumed).
-**Commits:** `fc3de99` (apps/backend), `425d2f3` (apps/miyagisanchez, combined with 2.3 — see
+**Commits:** `fc3de99` (apps/backend), `425d2f3` (apps/storefront, combined with 2.3 — see
 below). Backend: `medusa build` + `tsc --noEmit` + `npm run test:unit` green (39 suites / 422
 tests, 2 new price-drop cases). Frontend derivation verified red on a deliberate `<=` mutation,
 then green.
@@ -82,7 +82,7 @@ architectural pattern).
 **Acceptance:** view a PDP signed-in, return to `/` → its card shows "Visto hoy"; favorited items
 keep "Favorito". Pure-logic spec on the extracted merge/label seam in `lib/`.
 **Risk:** low
-**Commit:** `425d2f3` (apps/miyagisanchez, combined with 2.2 — both stories evolved the same
+**Commit:** `425d2f3` (apps/storefront, combined with 2.2 — both stories evolved the same
 `HomeRetomaOffers.tsx` render block with no clean intermediate git state to split at). New
 `lib/home-recently-viewed.ts`, `lib/home-recently-viewed-merge.ts`,
 `e2e/home-recently-viewed.spec.ts` (11 cases), `RecordRecentView.tsx`. Each new branch

@@ -23,7 +23,7 @@ stories:
   - id: S1.3
     title: "Cloud Build → Artifact Registry → Cloud Run miyagi-web"
     as_a: a platform operator
-    i_want: "a `cloudbuild.yaml` in `apps/miyagisanchez` (cloned from the backend trigger shape) deploying to a Cloud Run service `miyagi-web` in us-east4, with env/secrets provisioned by an idempotent script + a `node:test` drift guard (the `deploy-invariants` pattern)"
+    i_want: "a `cloudbuild.yaml` in `apps/storefront` (cloned from the backend trigger shape) deploying to a Cloud Run service `miyagi-web` in us-east4, with env/secrets provisioned by an idempotent script + a `node:test` drift guard (the `deploy-invariants` pattern)"
     so_that: "every merge to `main` deploys both rails"
     risk: high
     status: done
@@ -100,7 +100,7 @@ announce-before-changing — for a code path nothing in this app calls. Left as 
 not a middleware change.
 
 ### Story 1.3 — Cloud Build → Artifact Registry → Cloud Run `miyagi-web` ✅
-**As a** platform operator, **I want** a `cloudbuild.yaml` in `apps/miyagisanchez` (cloned from the
+**As a** platform operator, **I want** a `cloudbuild.yaml` in `apps/storefront` (cloned from the
 backend trigger shape) deploying to a Cloud Run service `miyagi-web` in us-east4, with env/secrets
 provisioned by an idempotent script + a `node:test` drift guard (the `deploy-invariants` pattern),
 **so that** every merge to `main` deploys both rails.

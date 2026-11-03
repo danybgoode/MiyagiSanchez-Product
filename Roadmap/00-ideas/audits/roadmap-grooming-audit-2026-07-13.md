@@ -31,7 +31,7 @@ As of this audit (2026-07-13, seed `updated: 2026-07-12`): **`status: ready`**, 
 `build_order: null` — i.e. still sitting in the un-scaffolded funnel, one lifecycle stage short of
 being queued for build. `git log` shows no epic scaffolded and no fix committed against it since
 the seed was filed. This repo has no visibility into the separate app repos
-(`apps/miyagisanchez`), so it's possible a fix has landed there since — but nothing in this repo's
+(`apps/storefront`), so it's possible a fix has landed there since — but nothing in this repo's
 docs shows it has. The companion seed
 [`nextpublic-buildtime-inlining-audit.md`](../seeds/nextpublic-buildtime-inlining-audit.md)
 (`status: raw`) is the systemic follow-up and is correctly less urgent.

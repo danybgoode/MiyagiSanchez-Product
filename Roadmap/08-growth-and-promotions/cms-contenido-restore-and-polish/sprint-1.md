@@ -39,7 +39,7 @@ stories:
 ### Story 1.1 — Apply the `platform_copy_overrides` migration to prod
 **As** Daniel (admin), **I want** the overrides table to actually exist in prod, **so that** my
 `/admin/contenido` edits persist instead of erroring.
-**How:** the **build agent applies** `apps/miyagisanchez/supabase/migrations/20260708150000_platform_copy_overrides.sql`
+**How:** the **build agent applies** `apps/storefront/supabase/migrations/20260708150000_platform_copy_overrides.sql`
 to the shared Supabase project (`xljxqymsuyhlnorfrnno` — verify `SUPABASE_URL` first; local IS prod,
 per LEARNINGS). Idempotent (`CREATE TABLE IF NOT EXISTS` + RLS; flag insert is `ON CONFLICT DO
 NOTHING`). **Pre-authorized by Daniel 2026-07-11 — scoped to this one migration**; announce in-chat

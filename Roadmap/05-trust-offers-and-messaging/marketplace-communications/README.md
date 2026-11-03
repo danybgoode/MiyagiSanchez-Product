@@ -37,15 +37,15 @@ is `normalizeMedusaOrder`'s `buyer_clerk_user_id`, already shipped by
 
 ## What already exists (reuse, don't rebuild)
 
-- `apps/miyagisanchez/lib/email.ts` — 62 exported senders over one private `send()` helper and one
+- `apps/storefront/lib/email.ts` — 62 exported senders over one private `send()` helper and one
   `html()` template shell. Two languages (`es` / `en`), per-seller brand override.
-- `apps/miyagisanchez/lib/notifications/dispatch.ts` — the fan-out seam: resolves a seller's
+- `apps/storefront/lib/notifications/dispatch.ts` — the fan-out seam: resolves a seller's
   per-channel preferences and delivers to email / push / telegram. Fire-and-forget, never throws on
   the request path.
-- `apps/miyagisanchez/lib/notifications/preferences.ts` — the event-group × channel grid, with a
+- `apps/storefront/lib/notifications/preferences.ts` — the event-group × channel grid, with a
   second buyer namespace over the same tables and one forced-on cell.
-- `apps/miyagisanchez/lib/{notify,telegram,shop-notify}.ts` — web push (VAPID) and Telegram.
-- `apps/miyagisanchez/lib/admin/{guard,audit,sections}.ts` — the Clerk-gated admin shell the new
+- `apps/storefront/lib/{notify,telegram,shop-notify}.ts` — web push (VAPID) and Telegram.
+- `apps/storefront/lib/admin/{guard,audit,sections}.ts` — the Clerk-gated admin shell the new
   surface registers into.
 
 ## Decisions (locked against live code, 2026-08-14)

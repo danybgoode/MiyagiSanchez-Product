@@ -36,13 +36,13 @@ ask of the same brain-dump — *evaluate Claude Routines* — is a **separate sp
 ## What already exists (reuse, don't rebuild) — verified 2026-06-23
 | Capability | Where | Reuse for |
 |---|---|---|
-| Browser smoke workflow (Chromium `browser` project, nightly `0 9 * * *` + dispatch, against prod) | `apps/miyagisanchez/.github/workflows/browser-smoke.yml` | Ask 1 — the workflow is fine; the fix is in the spec(s) or the prod surface they assert |
-| The `*.browser.spec.ts` specs (assert live copy/headings/testids vs prod) | `apps/miyagisanchez/e2e/*.browser.spec.ts` (`smoke`, `seller-acquisition-servicios`, `discovery-filter`, `cross-channel-trust`, `trust-signals`) | Ask 1 — the likely drift point |
+| Browser smoke workflow (Chromium `browser` project, nightly `0 9 * * *` + dispatch, against prod) | `apps/storefront/.github/workflows/browser-smoke.yml` | Ask 1 — the workflow is fine; the fix is in the spec(s) or the prod surface they assert |
+| The `*.browser.spec.ts` specs (assert live copy/headings/testids vs prod) | `apps/storefront/e2e/*.browser.spec.ts` (`smoke`, `seller-acquisition-servicios`, `discovery-filter`, `cross-channel-trust`, `trust-signals`) | Ask 1 — the likely drift point |
 | R2-escrow backup job + alert plumbing (`set -euo pipefail`, `alert()` → Telegram on non-zero) | `infra/gcp/backups/db-backup.sh` + `provision-db-backup.sh` | Ask 2 — same Telegram channel/format; the Cloud SQL check follows this idiom |
 | Backup runbook incl. the documented Neon-retirement `gcloud` one-liner + Cloud SQL backup list command | `infra/gcp/backups/BACKUPS.md` | Ask 2 — the retirement step is already written; build the check on `gcloud sql backups list --instance=medusa-pg` |
-| Telegram helper + the **already-defined-but-uncalled** `tg.newShop(name, location, slug)` (routes to `TELEGRAM_CHAT_ID`, the ops chat) | `apps/miyagisanchez/lib/telegram.ts` | Ask 3 — call it; no new helper, no new channel |
-| Shop-create route (creates the Medusa seller, mirrors to Supabase, returns slug) | `apps/miyagisanchez/app/api/sell/shop/route.ts` (POST, ~L95–100); also the claim path `app/api/claim/complete/route.ts` | Ask 3 — the insertion point(s) |
-| `tg.newListing` already wired (the live precedent for a create-time ping) | `apps/miyagisanchez/app/api/sell/create/route.ts:333` | Ask 3 — copy the pattern |
+| Telegram helper + the **already-defined-but-uncalled** `tg.newShop(name, location, slug)` (routes to `TELEGRAM_CHAT_ID`, the ops chat) | `apps/storefront/lib/telegram.ts` | Ask 3 — call it; no new helper, no new channel |
+| Shop-create route (creates the Medusa seller, mirrors to Supabase, returns slug) | `apps/storefront/app/api/sell/shop/route.ts` (POST, ~L95–100); also the claim path `app/api/claim/complete/route.ts` | Ask 3 — the insertion point(s) |
+| `tg.newListing` already wired (the live precedent for a create-time ping) | `apps/storefront/app/api/sell/create/route.ts:333` | Ask 3 — copy the pattern |
 | Foreign-CLI driver: version pin, `checkAgyVersion()` (warns), `runAntigravity()` = `agy -p <argv>` → stdout | `scripts/lib/cross-agent-cli.mjs` (`AGY_PINNED='1.0.7'`, L168–176, L301–315) | Ask 4 — the exact code to adapt |
 | The foreign-CLI LEARNING ("`<cli> --help` first, pin, degrade; agy flags shift between releases") | `Roadmap/LEARNINGS.md` (foreign-CLI note ~L175) | Ask 4 — the playbook the fix follows |
 | Unit harness for the CLI driver (`node:test`) | `scripts/lib/cross-agent-cli.test.mjs` | Ask 4 — the regression-test seam |
@@ -57,7 +57,7 @@ one app route/lib line.
 
 ## Stories — in/out scope, acceptance, risk
 
-### Story 1 — Fix the daily browser smoke (Bug · **low**) · repo: `apps/miyagisanchez`
+### Story 1 — Fix the daily browser smoke (Bug · **low**) · repo: `apps/storefront`
 **As** Daniel, **I want** the nightly Browser smoke green again, **so that** a real failure is a signal, not noise.
 - **Reproduce first:** pull the latest failing run — `gh run list --workflow=browser-smoke.yml` then
   `gh run view <id> --log-failed` (or download the `playwright-browser-report` artifact) — to name the exact
@@ -91,7 +91,7 @@ one app route/lib line.
 - **Risk note:** low; the gcloud writes are owed to Daniel (I don't hold GCP creds). The provisioning is an
   idempotent script under `infra/gcp/`; keep `deploy.sh` + `deploy-invariants.test.js` green.
 
-### Story 3 — Restore the new-tenant-signup Telegram ping (Bug · **low**) · repo: `apps/miyagisanchez`
+### Story 3 — Restore the new-tenant-signup Telegram ping (Bug · **low**) · repo: `apps/storefront`
 **As** Daniel, **I want** a Telegram ping when a new shop is created, **so that** I see signups in the same
 ops chat as everything else.
 - **Root cause:** `tg.newShop()` is defined and targets `TELEGRAM_CHAT_ID` but is **never called**; shop
@@ -130,7 +130,7 @@ Split by **repo boundary** (one feature branch + PR per repo, per gitflow):
 
 | Sprint | Stories | Repo | Risk |
 |---|---|---|---|
-| **S1 — app-repo fixes** | Story 1 (smoke) · Story 3 (tenant ping) | `apps/miyagisanchez` | low |
+| **S1 — app-repo fixes** | Story 1 (smoke) · Story 3 (tenant ping) | `apps/storefront` | low |
 | **S2 — infra/tooling fixes** | Story 2 (backup alert) · Story 4 (agy) | monorepo-root | low |
 
 Independent — ship in either order. All four are **low risk** (no money/auth/checkout/migration/shared-surface

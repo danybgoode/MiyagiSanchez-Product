@@ -48,7 +48,7 @@ ambiguous about whether "absent" meant the flag or the buyer id. One claimed blo
 (missing `isEnabled` import) was a false positive — `tsc` was clean before and after. Full detail
 in the PR comment threads.
 
-> Two repos: 1.1 is `apps/backend` (Cloud Run, no preview, ~12 min); 1.2/1.3 are `apps/miyagisanchez`.
+> Two repos: 1.1 is `apps/backend` (Cloud Run, no preview, ~12 min); 1.2/1.3 are `apps/storefront`.
 > Deploy order: backend-first, and the frontend is null-safe regardless (unresolved buyer → today's
 > email fall-through). **All stories HIGH — Daniel merges.**
 

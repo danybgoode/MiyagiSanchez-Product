@@ -72,7 +72,7 @@ domain). **Fast-follow in progress:** MercadoPago email parity (`feat/custom-dom
 - Fast-follow open (outside the epic DoD): MercadoPago email parity.
 
 ## Notes
-- Frontend in `apps/miyagisanchez`; backend in `apps/backend` (S2). The backend deploys via **regional
+- Frontend in `apps/storefront`; backend in `apps/backend` (S2). The backend deploys via **regional
   Cloud Build us-east4** (~12 min); the frontend via Vercel on merge to `main`.
 - Strings in **es-MX**. Work in an **isolated worktree**.
 - Each sprint is independently shippable: S1 already fixes "can't buy" (returns to the platform success

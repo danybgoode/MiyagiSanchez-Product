@@ -30,7 +30,7 @@ never a window with no flag backend.
 
 **As** the platform, **I want** no trace of Flagsmith in the running apps, **so that** we're off the SaaS entirely
 and no one is confused about where flags live.
-- Remove `flagsmith-nodejs` from `apps/miyagisanchez/package.json` and `apps/backend/package.json`; update lockfile.
+- Remove `flagsmith-nodejs` from `apps/storefront/package.json` and `apps/backend/package.json`; update lockfile.
 - Delete Flagsmith env vars: `FLAGSMITH_ENVIRONMENT_KEY`, `NEXT_PUBLIC_FLAGSMITH_ENVIRONMENT_KEY`, `FLAGSMITH_ADMIN_API_TOKEN` from `.env.local` / Vercel / Cloud Run / Secret Manager. Remove the Flagsmith MCP server from local config if still present.
 - Scrub Flagsmith references in code comments + doc headers of `lib/flags.ts` (both), replacing with the in-house store description. Leave **historical Roadmap docs** (the shipped epic, spike, retro) as-is — they're the record.
 - **Acceptance (Daniel):** `grep -ri flagsmith apps/` returns only `.next` build artifacts + historical Roadmap references; both apps `npm run build` green; flag reads still work off `platform_flags`; a flip via `/admin/flags` still takes effect.

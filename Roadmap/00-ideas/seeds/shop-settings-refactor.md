@@ -28,7 +28,7 @@ updated: 2026-06-10
 
 ## The problem (evaluated, not taken on faith)
 
-`apps/miyagisanchez/app/shop/manage/settings/ShopSettings.tsx` is **4,218 lines / 232 KB**. Roughly
+`apps/storefront/app/shop/manage/settings/ShopSettings.tsx` is **4,218 lines / 232 KB**. Roughly
 **3,530 of those lines are a single client component** (`ShopSettingsPanel`, line 689→end) holding
 **127 `useState` hooks** and **~17 settings sections** rendered conditionally on one `activeSection`
 variable. Only one child (`EmbedSnippetSection`, 203 lines) has ever been extracted.

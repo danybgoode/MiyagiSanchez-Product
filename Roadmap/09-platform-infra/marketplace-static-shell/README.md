@@ -108,7 +108,7 @@ Run each in a **fresh session** (one per sprint). Each enters plan mode, confirm
 S1 especially — it touches the shared layout + middleware; treat it as high-blast-radius and lean on the channel suite.
 
 **Sprint 1 — Route-group split:**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
 > read Roadmap/09-platform-infra/marketplace-static-shell/README.md and .../sprint-1.md. You're building Sprint 1
 > (HIGH — restructures app/layout.tsx + middleware.ts, which every channel depends on; Daniel merges). Enter plan
 > mode and design the split with me before any code: a marketplace `(site)` tree with a **header-free, static-able
@@ -116,12 +116,12 @@ S1 especially — it touches the shared layout + middleware; treat it as high-bl
 > rewrites custom-domain / subdomain / embed / seller-mode requests into the channel tree (URL-transparent — no URL
 > changes). Preserve every white-label/embed/seller-mode behavior; the channel suite (own-shop-seo, embed,
 > ChannelLayout, nav-entry-points) is the gate and must stay green. Announce the shared-layout change. Branch off
-> latest main in apps/miyagisanchez. No homepage personalization change yet (that's S2). Add/extend specs proving
+> latest main in apps/storefront. No homepage personalization change yet (that's S2). Add/extend specs proving
 > the marketplace layout no longer reads headers() while channels still render white-label. Write the smoke
 > walkthrough into sprint-1.md before done.
 
 **Sprint 2 — Static homepage:**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
 > read Roadmap/09-platform-infra/marketplace-static-shell/README.md and .../sprint-2.md (and sprint-1.md for the
 > split). You're building Sprint 2 (MED — homepage only, on the now-static-able `(site)` shell). Enter plan mode,
 > confirm with me. Branch off latest main. Make the homepage a static CDN asset: remove `currentUser()` and the
@@ -133,7 +133,7 @@ S1 especially — it touches the shared layout + middleware; treat it as high-bl
 > smoke walkthrough into sprint-2.md before done.
 
 **Sprint 3 — Personalization endpoint on Cloud Run:**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
 > read Roadmap/09-platform-infra/marketplace-static-shell/README.md and .../sprint-3.md. You're building Sprint 3
 > (MED–HIGH — new authed read endpoint on GCP; Daniel merges; backend deploys post-merge to Cloud Run us-east4).
 > Enter plan mode and settle the endpoint-home decision with me (Medusa custom route vs standalone Cloud Run
@@ -144,10 +144,10 @@ S1 especially — it touches the shared layout + middleware; treat it as high-bl
 > spec for the auth gate + the shape. Write the smoke walkthrough into sprint-3.md before done.
 
 **Sprint 4 — Personalization client islands:**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory. Then
 > read Roadmap/09-platform-infra/marketplace-static-shell/README.md and .../sprint-4.md (and sprint-3.md for the
 > endpoint). You're building Sprint 4 (MED — frontend client islands on the static homepage). Enter plan mode,
-> confirm with me. Branch off latest main in apps/miyagisanchez. Re-add the retoma rail, offer alerts, and seller
+> confirm with me. Branch off latest main in apps/storefront. Re-add the retoma rail, offer alerts, and seller
 > snapshot as **client islands** that get a Clerk JWT client-side (useAuth) → call the S3 Cloud Run endpoint →
 > render, as progressive enhancement layered onto the static shell (degrade gracefully — empty/hidden if the
 > endpoint is slow/unreachable; the static page never blocks on them). Reuse the existing module markup from the

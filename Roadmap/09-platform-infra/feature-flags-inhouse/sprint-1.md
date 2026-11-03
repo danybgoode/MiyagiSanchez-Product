@@ -57,7 +57,7 @@ BE #50 also merged `origin/main` first (ML S4 #49 had added `ml.sync_enabled` to
 ### S1.1 — (DB) `platform_flags` table + behavior-preserving seed — **LOW** ✅ `6463a46`
 **As** the platform, **I want** a Supabase table holding the flag values, **so that** there's one owned source of
 truth both apps can read.
-- New migration `apps/miyagisanchez/supabase/migrations/20260701120000_platform_flags.sql`. Table: `key text PK`, `enabled boolean not null`, `polarity text` (`killswitch`|`enablement`), `description text`, `updated_at timestamptz default now()`, `updated_by text`.
+- New migration `apps/storefront/supabase/migrations/20260701120000_platform_flags.sql`. Table: `key text PK`, `enabled boolean not null`, `polarity text` (`killswitch`|`enablement`), `description text`, `updated_at timestamptz default now()`, `updated_by text`.
 - Seed all **11** flags at their current `DEFAULT_FLAGS` values (see epic seed table + the `ml.sync_enabled` correction above).
 - **RLS:** `ENABLE ROW LEVEL SECURITY` with **no policies** (Pattern B) → service-role reads only, anon gets zero rows.
 - **Applied** to shared Supabase (`xljxqymsuyhlnorfrnno`) via MCP: 11 rows, 2 enabled, `rls_enabled=true`, 0 policies.

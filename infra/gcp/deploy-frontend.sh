@@ -73,13 +73,13 @@ else
   # nextpublic-docker-buildargs-hardening: the NEXT_PUBLIC_* build args never reach
   # `next build`, so Clerk throws "Missing publishableKey" at startup and the revision
   # fails its /api/health probe (hit live on the first miyagisanchez-prod deploy,
-  # gcp-account-migration S1). Build through apps/miyagisanchez/cloudbuild.yaml instead
+  # gcp-account-migration S1). Build through apps/storefront/cloudbuild.yaml instead
   # (the CI path, runnable manually with --config + --substitutions=SHORT_SHA=…), or pass
   # SKIP_BUILD=1 IMAGE=<ci-built tag>. This branch is kept only for the first-ever service
   # creation, where any image (even a non-booting one) suffices to attach the full config.
-  echo "▶ Building $IMAGE via Cloud Build (context apps/miyagisanchez)…"
+  echo "▶ Building $IMAGE via Cloud Build (context apps/storefront)…"
   echo "⚠  NOTE: this image will NOT boot (no NEXT_PUBLIC build args) — see comment above."
-  gcloud builds submit apps/miyagisanchez --tag "$IMAGE"
+  gcloud builds submit apps/storefront --tag "$IMAGE"
 fi
 
 echo "▶ Deploying ${SERVICE_WEB}…"

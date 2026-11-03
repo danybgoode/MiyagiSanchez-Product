@@ -27,7 +27,7 @@
 // Credentials — env var first, else `gcloud secrets versions access latest` against project
 // miyagisanchez-prod: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, SUPABASE_URL,
 // SUPABASE_SERVICE_ROLE_KEY, VERCEL_API_TOKEN, VERCEL_PROJECT_ID. Zero npm deps — Node 18+ (global
-// fetch). Deliberately does NOT import apps/miyagisanchez/lib/cloudflare-domains.ts — infra scripts
+// fetch). Deliberately does NOT import apps/storefront/lib/cloudflare-domains.ts — infra scripts
 // in this repo are a separate, dependency-free runtime from the Next.js app (matches every other
 // script in this directory), so the mapping is duplicated here in raw fetch form.
 

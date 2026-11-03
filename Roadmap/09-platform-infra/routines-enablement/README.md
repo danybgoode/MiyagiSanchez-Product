@@ -57,7 +57,7 @@ infra provisioning** — routines run in Daniel's account, not from this repo.
 - **C's mechanics** — `scripts/build-order.mjs` (regenerates `BUILD-ORDER.md`) + `notion-sync.yml` (nightly
   docs→Notion). C's prompt drives the *judgment* (funnel grooming, drift flagging) and calls the script; the
   sync workflow propagates — **no new Notion connector** needed.
-- **B's detector** — `apps/miyagisanchez/.github/workflows/browser-smoke.yml` + the `playwright-browser-report`
+- **B's detector** — `apps/storefront/.github/workflows/browser-smoke.yml` + the `playwright-browser-report`
   artifact B reads on failure.
 - **Operational facts** — the spike's *Answers to the six questions* (GitHub-App install targets, allow-list
   entries for B, the cap budget) seed the runbook.
@@ -98,7 +98,7 @@ provisioning.
 Run in a **fresh** Claude Code session.
 
 **Sprint 1 — Routines enablement (prompts + runbook):**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/00-ideas/2. readyforscope/spike-claude-routines.md (the WRITTEN DECISION) and
 > Roadmap/09-platform-infra/routines-enablement/README.md + .../sprint-1.md. You're building Sprint 1 — all
 > LOW, planning/docs artifacts only, monorepo-root repo. Enter plan mode, confirm with me, then branch

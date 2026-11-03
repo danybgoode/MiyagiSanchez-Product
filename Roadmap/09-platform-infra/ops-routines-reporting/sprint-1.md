@@ -116,7 +116,7 @@ Env: the repo scripts + the Telegram bot (process change; no app deploy / produc
 If any step fails, note the step number + what you saw — that's the bug report.
 
 ## Kickoff prompt (paste into a fresh Claude Code session)
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/00-ideas/2. readyforscope/spike-skills-library-audit.md (the WRITTEN DECISION — the
 > binding skill conventions), Roadmap/00-ideas/2. readyforscope/ops-routines-reporting.md, and
 > Roadmap/09-platform-infra/ops-routines-reporting/README.md + sprint-1.md.

@@ -33,7 +33,7 @@ All four repos now carry a real README instead of scaffold boilerplate:
 
 ## What we learned
 - **`gh pr checks` / `gh pr merge` operate via the GitHub API and don't care what branch is
-  locally checked out.** Mid-session, a concurrent agent switched the shared `apps/miyagisanchez`
+  locally checked out.** Mid-session, a concurrent agent switched the shared `apps/storefront`
   checkout to its own branch (`feat/seller-portal-rails-foundation-s2-5`) with uncommitted work in
   progress. Rather than checking out back to `feat/repo-readmes-branding` (which would have yanked
   that other session's tree), CI status and the merge itself were driven entirely through `gh`

@@ -5,7 +5,7 @@
 // build never received these as Docker build-args, only as Cloud Run
 // *runtime* env vars set after the image already existed).
 //
-// IMPORTANT — this repo boundary matters: `apps/miyagisanchez` (Dockerfile,
+// IMPORTANT — this repo boundary matters: `apps/storefront` (Dockerfile,
 // cloudbuild.yaml) is a SEPARATE, independently-hosted GitHub repo
 // (danybgoode/miyagisanchezcommerce) from this one
 // (danybgoode/miyagi-product-management), with its own CI. Neither repo's
@@ -16,7 +16,7 @@
 // list (kept identical by convention, not by reading across the boundary):
 //   • THIS file (root repo) — asserts deploy-frontend.sh's --set-env-vars
 //     NEXT_PUBLIC_* set matches the list below.
-//   • apps/miyagisanchez/e2e/frontend-build-args.spec.ts (app repo) —
+//   • apps/storefront/e2e/frontend-build-args.spec.ts (app repo) —
 //     asserts the Dockerfile builder-stage ARG/ENV set AND cloudbuild.yaml's
 //     --build-arg set both match the SAME list.
 // If a var is ever added/removed, both lists must be updated together — a
@@ -38,7 +38,7 @@ const deploySrc = fs.readFileSync(path.join(GCP_DIR, 'deploy-frontend.sh'), 'utf
 const eq = (a, b) => assert.deepEqual([...a].sort(), [...b].sort())
 
 // The authoritative list — MUST stay identical to the NEXT_PUBLIC_VARS array
-// in apps/miyagisanchez/e2e/frontend-build-args.spec.ts.
+// in apps/storefront/e2e/frontend-build-args.spec.ts.
 const NEXT_PUBLIC_VARS = [
   'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
   'NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY',
@@ -89,7 +89,7 @@ test('deploy-frontend.sh sets exactly the expected NEXT_PUBLIC_* set (parity wit
 // NEXT_PUBLIC_MEDUSA_STORE_URL is one level of indirection
 // (`${NEXT_PUBLIC_MEDUSA_STORE_URL:-$MEDUSA_STORE_URL}`) — resolve through
 // MEDUSA_STORE_URL's own default. These literals must match
-// apps/miyagisanchez/cloudbuild.yaml's `substitutions:` block exactly (that
+// apps/storefront/cloudbuild.yaml's `substitutions:` block exactly (that
 // parity is asserted from the app-repo side, in frontend-build-args.spec.ts,
 // since only that repo can read cloudbuild.yaml).
 

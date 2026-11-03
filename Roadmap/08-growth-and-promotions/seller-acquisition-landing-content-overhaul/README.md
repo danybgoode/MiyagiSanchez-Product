@@ -51,7 +51,7 @@ channel communicated honestly, and a clean mobile build.
 satisfied trivially (public pages, es-MX, no commerce, Clerk untouched).
 
 ## What already exists (reuse, don't rebuild) — verified 2026-06-25
-- **All landing copy, single source** — `apps/miyagisanchez/locales/es.json → sellerAcquisition`
+- **All landing copy, single source** — `apps/storefront/locales/es.json → sellerAcquisition`
   (`shared`, `anchor`, `creadores`, `negocios`, `servicios`, `mundial`). The copy + accent sweep is edits here.
 - **Shared section renderer** — `app/(shell)/vende/_components/SellerAcquisitionSections.tsx` (hero ·
   proof · persona router · steps · social · FAQ · closing). Mobile fixes land once → all config pages benefit.

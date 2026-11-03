@@ -34,7 +34,7 @@ recommends** (SaaS vs self-host on GCP).
 
 ## Current state (audit findings so far)
 - **No integration anywhere.** `grep` across `apps/` + `infra/` finds no `flagsmith` dependency,
-  import, env var, or config. Neither the Next app (`apps/miyagisanchez`) nor the Medusa backend
+  import, env var, or config. Neither the Next app (`apps/storefront`) nor the Medusa backend
   (`apps/backend`) evaluates a flag.
 - **What stands in for flags today:** ad-hoc *presence checks* (e.g. the personalized buy box only
   mounts when a listing has `custom_fields`) and the homegrown **seasonal-theme toggle**. A real flag
@@ -107,7 +107,7 @@ the *linked* project's env, so I could not enumerate theirs from here (not block
   project's local config — usable for dashboard ops once the session reloads it.
 - **Credentials staged** (2026-06-06, for the recommended first slice — **not yet wired into code**):
   `FLAGSMITH_ENVIRONMENT_KEY` (server-side), `NEXT_PUBLIC_FLAGSMITH_ENVIRONMENT_KEY` (Development
-  client-side), and `FLAGSMITH_ADMIN_API_TOKEN` (REST/tooling) in `apps/miyagisanchez/.env.local`
+  client-side), and `FLAGSMITH_ADMIN_API_TOKEN` (REST/tooling) in `apps/storefront/.env.local`
   (gitignored — literal keys are kept out of this tracked doc by convention). ⚠️ The staged env keys are
   the **Development** environment; **Production needs its own server-side key generated before go-live**
   (Production client-side key is `YWCRELpbn2VJn32ijkan27`).
@@ -121,7 +121,7 @@ homegrown **platform-theme toggle** (`lib/platform-theme.ts`, `core | designer-n
 theme toggle in v1 — out of scope).
 
 **Minimal wiring to connect (the pattern, not the build):**
-- **Next server (`apps/miyagisanchez`):** add `flagsmith-nodejs`; a `lib/flags.ts` helper (mirrors
+- **Next server (`apps/storefront`):** add `flagsmith-nodejs`; a `lib/flags.ts` helper (mirrors
   `lib/channel.ts`) inits **once** with a **server-side environment key** and **local evaluation**
   (SDK polls the environment document on an interval and evaluates in-process). Call it from
   `middleware.ts`, server components, and route handlers. **Must ship with a hardcoded `DEFAULT_FLAGS`

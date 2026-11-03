@@ -56,7 +56,7 @@ Env: the repo docs (this is a process change, not an app deploy — no productio
 If any step fails, note the step number + what you saw — that's the bug report.
 
 ## Kickoff prompt (paste into a fresh Claude Code session)
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/00-ideas/2. readyforscope/model-split-sonnet5-execution.md and
 > Roadmap/09-platform-infra/model-split-sonnet5-execution/README.md + sprint-1.md.
 >

@@ -53,7 +53,7 @@ the bilingual allow-list (rule #5). The new read helpers must read the same norm
   `conditionLabel`, `getShop(slug)` + `getShopListings` (both `unstable_cache`'d, `/store/sellers/*`). Add
   only `getCuratedListings(n)`, `getFeaturedListing()`, `getCategoryCounts()`.
 - **Supabase** — `marketplace_favorites` (already joined on the current `app/page.tsx`), `marketplace_offers`
-  (`lib/offer-state.ts`, `lib/active-deal.ts`). Migrations live in `apps/miyagisanchez/supabase/*.sql`.
+  (`lib/offer-state.ts`, `lib/active-deal.ts`). Migrations live in `apps/storefront/supabase/*.sql`.
 - **Neighborhood pulse (LIVE on `main`)** — `isNeighborhoodPulseSocialItem` + `NEIGHBORHOOD_PULSE_COPY`
   (`lib/neighborhood-pulse.ts`), same approved/web-visible source as `/vecindario`. Keep
   `data-testid="vecindario-feed-entry"`.

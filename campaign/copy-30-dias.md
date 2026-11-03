@@ -1,7 +1,7 @@
 # Miyagi Sánchez — copy del board de 30 días
 
 Generado desde `miyagisanchez30dayorganicacquisitionboardv0.1.md`.
-Datos de producto verificados contra `apps/miyagisanchez/locales/{es,en}.json` (copy real de las landings).
+Datos de producto verificados contra `apps/storefront/locales/{es,en}.json` (copy real de las landings).
 
 - **LISTO** — se puede publicar tal cual. Ya está programado o listo para programarse.
 - **FALTA EVIDENCIA** — el objeto depende de material real (comercio, foto, trabajo de campo, observación de activación) que el board prohíbe inventar. Va a Buffer como borrador con huecos entre corchetes; no se autopublica.

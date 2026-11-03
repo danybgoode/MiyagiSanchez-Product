@@ -154,10 +154,10 @@ status ladder that says "Deployed" when it means "merged" would quietly contradi
 
 - `groom/scaffold-epic.mjs` + `templates/{epic-README,sprint-N,RETROSPECTIVE}.md` — generators with
   CI tests that render a throwaway epic on every run.
-- `medusa-bonsai/scripts/doc-format.mjs` — already validates epic docs against those templates.
+- `miyagisanchez-product/scripts/doc-format.mjs` — already validates epic docs against those templates.
 - `template/scripts/build-order.mjs` — already parses epic frontmatter across the corpus; the
   frontmatter reader exists.
-- `medusa-bonsai/scripts/session-note.mjs` / `session-resume.mjs` — the intent journal.
+- `miyagisanchez-product/scripts/session-note.mjs` / `session-resume.mjs` — the intent journal.
 - `template/scripts/lib/gh-rest.mjs` — REST-only `gh` reads, already used by the reporting rail.
 - The `status:` SSOT rule — **already established doctrine**. This epic widens the schema; it does
   not invent the concept.

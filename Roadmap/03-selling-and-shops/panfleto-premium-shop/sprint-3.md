@@ -25,7 +25,7 @@ stories:
 
 **Status:** 🟡 in progress, live pieces landed. Copy approved by Daniel. Branched fresh:
 `feat/panfleto-premium-shop-s3` off `origin/main` (`c6bb437`), in an isolated worktree
-(`apps/miyagisanchez` was mid-flight on a sibling agent's branch — not touched); merged latest
+(`apps/storefront` was mid-flight on a sibling agent's branch — not touched); merged latest
 `origin/main` in on 2026-07-12 to pick up `mcp-parity-core` S1 (see below).
 
 **Production incident found + fixed mid-sprint (2026-07-12):** Daniel hit "Algo salió mal" clicking

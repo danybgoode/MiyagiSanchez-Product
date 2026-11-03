@@ -57,7 +57,7 @@ regions. Those assumptions must be replaced before a US pilot can be safe.
   modules.
 - Seller module + metadata (`apps/backend/src/modules/seller/models/seller.ts`).
 - Product↔Sales Channel links already created by seller product workflows.
-- Existing platform/white-label channel resolver (`apps/miyagisanchez/lib/channel.ts`) and
+- Existing platform/white-label channel resolver (`apps/storefront/lib/channel.ts`) and
   middleware that protects custom-domain/subdomain/embed behavior.
 - Static ISR Mexico homepage at `app/(site)/page.tsx`.
 - Existing canonical/robots/sitemap and locale dictionary infrastructure.
@@ -123,7 +123,7 @@ filter ships. A zero count makes this a no-op cutover; a non-zero count is a bac
 Written by the architect and placed in both worktrees before dispatch, precisely because a
 *paraphrased* contract drifts permissive (`LEARNINGS.md`, bit five times):
 
-- `apps/miyagisanchez/lib/markets.ts`
+- `apps/storefront/lib/markets.ts`
 - `apps/backend/src/lib/markets.ts`
 
 Zero imports. It owns `code · country_code · currency_code · default_locale · timezone ·
@@ -303,7 +303,7 @@ Backend is one repo, frontend is another; they do not share a branch.
 
 - `apps/backend` → `feat/market-architecture-foundation` → **one PR** (Sprint 1). Merges and deploys
   **first** (~12 min Cloud Build, no preview).
-- `apps/miyagisanchez` → `feat/market-architecture-foundation` (S1) → `-s2` → `-s3`, **stacked**,
+- `apps/storefront` → `feat/market-architecture-foundation` (S1) → `-s2` → `-s3`, **stacked**,
   one PR each, merged in order. Stacked because all three touch `lib/markets.ts` consumers, the
   middleware and the route tree — siblings off one base would pay a per-merge conflict tax.
 - The frontend must **degrade closed** while the backend market filter is absent: an unavailable or

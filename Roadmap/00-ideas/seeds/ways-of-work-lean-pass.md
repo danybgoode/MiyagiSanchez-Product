@@ -36,7 +36,7 @@ times**, three of them prefaced "one SSOT, don't fork a second copy here."
 
 Meanwhile the Step-2→3 unlocks the ladder actually names are the parts built least:
 
-- **Auto mode / pre-approved permissions:** `medusa-bonsai/.claude/settings.local.json` is **187
+- **Auto mode / pre-approved permissions:** `miyagisanchez-product/.claude/settings.local.json` is **187
   lines** of one-off allows, accreted one interruption at a time — including approvals to `sed -n
   '1,60p'` a file and to `echo "tsc exit=$?"`. Each line is a session that stopped and waited for a
   human. **There is no `deny` list at all**; AGENTS rule #4 ("never run `vercel deploy`") is enforced
@@ -142,10 +142,10 @@ migrations that prove they work.
 
 - `dobby-foundation/template/.claude/settings.json` — exists but carries *only* marketplace +
   plugin config. The permissions blocks are a pure addition to a file already in place.
-- `medusa-bonsai/.claude/settings.json` — already proves the hooks block works (`PostToolUse` →
+- `miyagisanchez-product/.claude/settings.json` — already proves the hooks block works (`PostToolUse` →
   `doc-format.mjs`).
-- `medusa-bonsai/.claude/agents/pr-reviewer.md` — port, don't write.
-- `medusa-bonsai/scripts/cross-review.prompt.md` + `cross-review.security.prompt.md` — the *content*
+- `miyagisanchez-product/.claude/agents/pr-reviewer.md` — port, don't write.
+- `miyagisanchez-product/scripts/cross-review.prompt.md` + `cross-review.security.prompt.md` — the *content*
   of the new `REVIEW.md` files.
 - `dobby-foundation/scripts/check-plugin-leaks.mjs` — its `ALLOW`-with-a-written-reason discipline is
   exactly the pattern `epic-dod.mjs` should copy.

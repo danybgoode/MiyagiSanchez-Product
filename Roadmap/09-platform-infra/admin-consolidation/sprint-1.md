@@ -30,7 +30,7 @@ stories:
 ---
 # Sprint 1 — Admin shell + Clerk-gated hub (the chassis)
 
-**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/miyagisanchez`
+**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/storefront`
 **Goal:** one in-repo admin shell with a real `/admin` hub and a section registry, gated by **Clerk admin
 identity** — shipped **thin**: route guards stay **dual-accepted** (Clerk *or* `ADMIN_SECRET`) so consolidation
 isn't blocked on migrating all ~25 routes. The external redirect dies; the orphaned scrape client is deleted.

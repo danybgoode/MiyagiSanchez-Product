@@ -24,7 +24,7 @@ stories:
 > not bilingual; benchmark already date-stamped + re-verify-at-publish). Live smoke + S2 layout
 > owed in the next session.
 
-> All string changes for the launch polish. Edits to `apps/miyagisanchez/locales/es.json →
+> All string changes for the launch polish. Edits to `apps/storefront/locales/es.json →
 > sellerAcquisition` (+ `en.json` mirror for type-parity) and the bespoke `mundial/page.tsx` strings.
 > Final copy is verbatim in `COPY-BRIEF.md` (this folder). No layout work — that's Sprint 2.
 

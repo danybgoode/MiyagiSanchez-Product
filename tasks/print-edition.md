@@ -26,12 +26,12 @@ AGENTS rule #2 (like `marketplace_offers`). All actual money flows through Medus
   logic from `sellers/me/products`). Flags metadata `is_print_placement:true`. Guarded by `x-internal-secret`.
 - `api/store/listings/route.ts` — excludes `is_print_placement` products from general browse/search.
 
-### Supabase (`apps/miyagisanchez/supabase/migrations/20260601000000_print_edition.sql`)
+### Supabase (`apps/storefront/supabase/migrations/20260601000000_print_edition.sql`)
 - `print_providers` (suppliers; **miyagiprints** seeded as `is_default` with default file_spec),
   `print_editions` (issues; `tiers[]` each map to a Medusa product), `print_ad_submissions`
   (ad ingredients + workflow state, linked to Medusa via `cart_id` / `medusa_order_id`).
 
-### Frontend (`apps/miyagisanchez`)
+### Frontend (`apps/storefront`)
 - `lib/print.ts` (types/constants), `lib/print-server.ts` (helpers: seller resolve, capacity,
   `createPlacementProduct`, `ensureTierProducts`, `handlePrintAdPaid`, admin-secret guard).
 - Seller API: `GET /api/print/editions`, `GET|POST /api/print/submissions`,

@@ -210,13 +210,13 @@ finds a backend change necessary. Observe each new spec red once.
   arranged-only and pickup rules.
 - `apps/backend/src/api/store/envia/rates/route.ts` — authoritative Envía + Correos quote and ordering;
   already inherits platform flags, seller settings and Envía grants.
-- `apps/miyagisanchez/app/api/checkout/shipping-rates/route.ts` — thin frontend proxy to the backend
+- `apps/storefront/app/api/checkout/shipping-rates/route.ts` — thin frontend proxy to the backend
   quote seam.
-- `apps/miyagisanchez/app/api/ucp/checkout-session/route.ts` — existing single-listing agent checkout
+- `apps/storefront/app/api/ucp/checkout-session/route.ts` — existing single-listing agent checkout
   adapter; `fetchBackendPaymentMethods` is the narrow seam to widen into a typed checkout-options read.
-- `apps/miyagisanchez/app/api/ucp/mcp/route.ts` — existing `get_checkout_options` discovery and
+- `apps/storefront/app/api/ucp/mcp/route.ts` — existing `get_checkout_options` discovery and
   `create_checkout` selection/payment tools.
-- `apps/miyagisanchez/lib/cart.ts startCheckout()` — the cart-backed checkout rail accepting
+- `apps/storefront/lib/cart.ts startCheckout()` — the cart-backed checkout rail accepting
   `fulfillmentMethod`, `shippingAddress`, `shippingQuote`, `pickupSpotId` and `pickupAppointment`.
 - `apps/backend/src/api/store/carts/[id]/start-checkout/route.ts` — attaches the seeded Medusa shipping
   option, adds shipping to the provider/payment-collection amount, and snapshots fulfillment metadata.

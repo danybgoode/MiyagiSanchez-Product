@@ -189,7 +189,7 @@ believe it is wrong, say so in the PR — do not silently edit one copy.
    published products with **no** MX channel link. Aborts on an unknown-market population rather than
    guessing. `POST` applies, idempotently. The builder **never runs the POST**.
 
-**Frontend PR — `apps/miyagisanchez`, branch `feat/market-architecture-foundation` (HIGH):**
+**Frontend PR — `apps/storefront`, branch `feat/market-architecture-foundation` (HIGH):**
 
 7. `lib/market-medusa.ts` mirroring (1), and `lib/listings.ts` read helpers take/derive a `market`.
 8. **Degrade closed** (**D14**): if the backend market filter is absent or the market is unknown or

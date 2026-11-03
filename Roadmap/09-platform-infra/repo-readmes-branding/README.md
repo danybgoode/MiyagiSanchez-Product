@@ -35,7 +35,7 @@ WAYS-OF-WORKING, never re-invented.
   review/panel (`scripts/cross-review.mjs` / `cross-panel.mjs`), risk tiers, deterministic gate +
   smoke walkthroughs, model split, Routines.
 - **`Roadmap/LEARNINGS.md`** — proof the practice is real; link as-is.
-- **`apps/miyagisanchez/AGENTS.md`** — the five rules; the frontend README's practice anchor.
+- **`apps/storefront/AGENTS.md`** — the five rules; the frontend README's practice anchor.
 - **Deploy-topology facts** (WAYS-OF-WORKING + LEARNINGS): root repo versions product/orchestration
   docs; app repos independent + git-ignored here; frontend → Vercel (previews); backend → Cloud Build
   us-east4 → Cloud Run `medusa-web` (~12 min, no preview); `apps/zine` local-only, no remote/CI/deploy.

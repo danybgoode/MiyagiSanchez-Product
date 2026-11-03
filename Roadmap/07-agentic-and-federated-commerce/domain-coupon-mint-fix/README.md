@@ -39,18 +39,18 @@ objects** — the coupon + promo code are already designed. AGENTS rule #1 is sa
 re-implements commerce Medusa owns.
 
 ## What already exists (reuse, don't rebuild)
-- `apps/miyagisanchez/lib/domain-coupon.ts` — pure seam: `couponRedeemable` / `couponRefusalReason` /
+- `apps/storefront/lib/domain-coupon.ts` — pure seam: `couponRedeemable` / `couponRefusalReason` /
   `formatRedemptionCount`, the cap-of-100 boundary. **Reuse for regression specs** (no Stripe, no network).
-- `apps/miyagisanchez/lib/domain-coupon-server.ts` — `ensureCampaignCoupon` (idempotent find-or-create),
+- `apps/storefront/lib/domain-coupon-server.ts` — `ensureCampaignCoupon` (idempotent find-or-create),
   `getCampaignCouponStatus`, `resolveCampaignPromotionCode`. **Fix the masking here; don't rewrite the mint.**
   `findCoupon()` is the swallow-everything seam to fix.
-- `apps/miyagisanchez/app/api/admin/domain-coupon/route.ts` — GET status / POST mint, Clerk admin-gated.
+- `apps/storefront/app/api/admin/domain-coupon/route.ts` — GET status / POST mint, Clerk admin-gated.
   Surface the real (sanitized) Stripe error.
-- `apps/miyagisanchez/app/(shell)/admin/coupons/AdminCouponsClient.tsx` + `page.tsx` — the card + two
+- `apps/storefront/app/(shell)/admin/coupons/AdminCouponsClient.tsx` + `page.tsx` — the card + two
   buttons. Add *Actualizar* feedback; render a definite state always.
-- `apps/miyagisanchez/lib/domain-subscription-checkout.ts` + `app/api/sell/shop/domain/subscribe/route.ts`
+- `apps/storefront/lib/domain-subscription-checkout.ts` + `app/api/sell/shop/domain/subscribe/route.ts`
   — the redemption path the test-card smoke drives (`{coupon}` → promo code).
-- `apps/miyagisanchez/lib/stripe.ts` — lazy Stripe client (throws if `STRIPE_SECRET_KEY` missing).
+- `apps/storefront/lib/stripe.ts` — lazy Stripe client (throws if `STRIPE_SECRET_KEY` missing).
 - Coupon design is already correct: `percent_off:100`, `duration:'once'` (year-1 free on the annual plan,
   then standard $499 MXN/yr), `max_redemptions:100` (Stripe enforces the cap; the 101st refused),
   deterministic ids so a repeated press can't duplicate.

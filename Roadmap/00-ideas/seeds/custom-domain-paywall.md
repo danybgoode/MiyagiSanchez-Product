@@ -67,7 +67,7 @@ subscriber**.
 | Need | Reuse (concrete) |
 |---|---|
 | Recurring plan + subscriber record | `apps/backend/src/modules/subscriptions/` — `SubscriptionPlan` + `Subscription` models + service. Already supports platform-side Stripe + MP fields (`stripe_price_id`, `mp_plan_id`, `mp_preapproval_id`) and statuses incl. `trialing`/`past_due`/`canceled`. Add a **platform-owned** plan (no `product_id`); subscriber = the seller. |
-| Stripe recurring checkout | `apps/miyagisanchez/lib/stripe-subscriptions.ts` — `createSubscriptionPrice` + `createSubscriptionCheckout` (platform-side subscription mode) — used **as-is** (drop the 97% seller transfer, since the platform is the payee here). |
+| Stripe recurring checkout | `apps/storefront/lib/stripe-subscriptions.ts` — `createSubscriptionPrice` + `createSubscriptionCheckout` (platform-side subscription mode) — used **as-is** (drop the 97% seller transfer, since the platform is the payee here). |
 | Domain provisioning (unchanged) | `lib/vercel-domains.ts` (`addDomainToProject`/`getDomainStatus`/`removeDomainFromProject`) + `lib/domain-utils.ts` + the Cloudflare OAuth flow. **No provisioning change** — we only **gate** it. |
 | The route to gate | `app/api/sell/shop/domain/route.ts` — POST (connect) + DELETE + the Cloudflare sub-routes. **Gate every mutation that connects a domain, not just POST** (LEARNINGS: "a server gate must cover every mutation"). |
 | Coupon surface | `app/admin/coupons/*` + `app/api/checkout/validate-coupon` + `lib/referrals.ts` (platform-coupon minting pattern). Extend to a **domain-subscription coupon** (100%-off first year, capped at first N). Stripe-native coupon on the subscription is the cleanest mechanism. |

@@ -45,7 +45,7 @@ From `LEARNINGS.md`, already learned the hard way:
 |---|---|---|
 | Family-agnostic CLI plumbing: presence/version checks, `runCodex` (stdin), `runAntigravity` (argv + size cap), soft/degrade mode, codex→agy fallback | `scripts/lib/cross-agent-cli.mjs` | Any delegation tool drives the CLIs through this rail — don't fork it |
 | Precedent single-purpose cross-agent scripts that *share the rail, don't fork it* | `scripts/cross-review.mjs`, `scripts/cross-panel.mjs` | The architectural pattern a `delegate` tool would follow |
-| The deterministic gate (`tsc` + `next build` + Playwright `api`) | `apps/miyagisanchez` CI + local | **The natural verifier** of any delegated code — Claude/CI checks the agent's output against it |
+| The deterministic gate (`tsc` + `next build` + Playwright `api`) | `apps/storefront` CI + local | **The natural verifier** of any delegated code — Claude/CI checks the agent's output against it |
 | Cross-agent review on every PR | `cross-agent-review-always.md` (sibling) + `scripts/cross-review.mjs` | Load-bearing safety net: code an executor agent writes still passes a different-family review before merge |
 | Risk-tier merge rule + AGENTS five rules | `WAYS-OF-WORKING.md`, `AGENTS.md` | The boundary for what a non-Claude agent may touch (never money/auth/checkout/DB/migrations autonomously) |
 | Model-tier + planning-vs-building convention | `WAYS-OF-WORKING.md` Conventions | The spike extends this from models to agents |

@@ -111,7 +111,7 @@ this repo's `lib/ucp/capabilities.ts` is the single source of truth for agent-fa
 **Deterministic (agent-run, ✅ done pre-merge):**
 1. Backend: `cd apps/backend && npx medusa build && npx tsc --noEmit && npm run test:unit` → build
    succeeds, `tsc` clean, the new `order-status-transition.unit.spec.ts` passes 6/6.
-2. Frontend: `cd apps/miyagisanchez && npx tsc --noEmit && npx next build` → clean typecheck, build
+2. Frontend: `cd apps/storefront && npx tsc --noEmit && npx next build` → clean typecheck, build
    succeeds.
 3. Frontend, against a local `medusa develop` (:9000) + local `next dev` (:3001) round-trip —
    `PLAYWRIGHT_BASE_URL=http://localhost:3001 npx playwright test --project=api` → the three new specs

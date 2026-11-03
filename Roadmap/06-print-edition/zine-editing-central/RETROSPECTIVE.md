@@ -26,14 +26,14 @@ once a real placement was proven end-to-end in prod.
   merge, a real place→verify→un-place round trip ran against **production** for all three sources
   (paid ad, catalog listing, social submission) with zero residual state — the gate this epic set for
   itself before touching the old builder.
-- **S3 — consolidation** (this sprint, local commits + `apps/miyagisanchez` PR). Retired the
+- **S3 — consolidation** (this sprint, local commits + `apps/storefront` PR). Retired the
   interactive Maqueta builder (`/admin/print/:id/builder` → redirects to `/admin/print` with a
   one-time "la maqueta ahora vive en el estudio zine" notice, replacing the old "✎ Maquetar" link
   with a plain pointer); the print/export pipeline and `print_layouts` table for existing editions
   are untouched — they still serve saved layouts, just never gain new ones through a builder UI.
   Added merchant-ad guardrails in zine: a placed paid submission's headline/body/price lock behind a
   "🔒 diseño del anunciante" note, exposing only fit-only style overrides (background/border/text
-  size/hidden fields — the `PrintBlockStyle` vocabulary ported from `apps/miyagisanchez`) via a pure
+  size/hidden fields — the `PrintBlockStyle` vocabulary ported from `apps/storefront`) via a pure
   `setAdSlotStyle` setter that a vitest proves never touches content. House-ads and editorial slots
   are unaffected — no lock, no style panel, matching the acceptance exactly.
 
@@ -42,7 +42,7 @@ once a real placement was proven end-to-end in prod.
   a real placement was smoke-tested — S2's close confirmed that live in prod (all three sources,
   place→verify→un-place, zero residual state) before S3 touched a single line of the builder.
 - **"Duplicated by necessity" stayed disciplined.** Zine has no cross-repo import path to
-  `apps/miyagisanchez`'s types, so the `PrintBlockStyle` vocabulary was ported (not re-derived) with
+  `apps/storefront`'s types, so the `PrintBlockStyle` vocabulary was ported (not re-derived) with
   the same field names/semantics — the S3.2 lock UI is new-to-zine but not a new design.
 - **Cross-review earned its keep again.** Seven rounds on S2.3's PR caught races and validation gaps
   a single-pass review would likely have missed; none were cosmetic.

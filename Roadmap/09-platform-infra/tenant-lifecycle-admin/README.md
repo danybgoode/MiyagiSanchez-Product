@@ -46,11 +46,11 @@ unpausing relinks, and no read path needs a new filter to obey it.
   owned-shop epic. Already proves per-object *"owned by a seller operating in this market"*, so
   "…and that seller is not paused" is a one-fact extension in a boundary that already exists.
 - `apps/backend/src/api/internal/sellers/*` — internal seller read/claim/grant routes, `MEDUSA_INTERNAL_SECRET`-gated.
-- `apps/miyagisanchez/lib/admin/tenant-directory{,-server}.ts` + `/admin/tenants` — the directory and
+- `apps/storefront/lib/admin/tenant-directory{,-server}.ts` + `/admin/tenants` — the directory and
   its pure `shapeTenantRow` shaper.
-- `apps/miyagisanchez/lib/email.ts` → `getSellerEmail(clerkUserId)` — already resolves a registration
+- `apps/storefront/lib/email.ts` → `getSellerEmail(clerkUserId)` — already resolves a registration
   email through the Clerk Management API. The directory carries `clerk_user_id` already.
-- `apps/miyagisanchez/lib/admin/audit.ts` + `admin_audit_log` — the ops record every mutation writes.
+- `apps/storefront/lib/admin/audit.ts` + `admin_audit_log` — the ops record every mutation writes.
 
 ## Decisions (locked against live code + the live database, 2026-08-14)
 

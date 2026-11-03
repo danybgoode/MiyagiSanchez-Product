@@ -79,7 +79,7 @@ featured-filter failure cannot break the admin page.
 
 ### Sprint 1 build contract (locked before implementation)
 
-Frontend-only code change in `apps/miyagisanchez`, based on current `origin/main`, in an isolated
+Frontend-only code change in `apps/storefront`, based on current `origin/main`, in an isolated
 worktree. Add one pure/admin-read regression seam and spec; observe it red by temporarily removing the
 featured union, then restore. Run focused specs, typecheck, build, and live smoke. Catalog writes and
 pin cleanup use only existing authenticated production routes. No backend, schema, migration,

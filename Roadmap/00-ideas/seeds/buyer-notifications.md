@@ -236,7 +236,7 @@ remaining buyer email call-sites beyond the in-scope set.
   grid). Buyer money events are already-firing emails, so no #3b gate — but **align `payment_confirmed`
   with #3b's state vocabulary if #3b has landed** by build time (soft).
 - **Two repos, async deploy.** Like #5, dispatch + routing + settings are **frontend**
-  (`apps/miyagisanchez`); any schema delta ships via the Supabase CLI. Confirm whether any in-scope
+  (`apps/storefront`); any schema delta ships via the Supabase CLI. Confirm whether any in-scope
   buyer event fires from the **backend** (Cloud Run) — if so, merge backend-first / degrade gracefully
   (LEARNINGS). Default-on + guest fall-through keep the 99% path byte-for-byte unchanged in a deploy-lag
   window. Rebase latest `main`; **announce** the shared changes (the `notifications/` seam, the grid

@@ -108,7 +108,7 @@ user-facing surface (#5). The only app-visible change is the `DATABASE_URL` secr
 Run each in a **fresh session** (one per sprint). Each enters plan mode, confirms stories with Daniel, then builds.
 
 **Sprint 1 — Provision Cloud SQL + rehearse on staging:**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/09-platform-infra/postgres-neon-to-cloudsql/README.md and .../sprint-1.md. You're building
 > Sprint 1 (MED — additive infra, nothing prod cut over; Daniel runs the gcloud writes, which bill on Cloud SQL
 > creation). Enter plan mode, confirm stories with me, branch off latest main in the monorepo-root repo
@@ -122,7 +122,7 @@ Run each in a **fresh session** (one per sprint). Each enters plan mode, confirm
 > No prod cutover. Write the smoke walkthrough into sprint-1.md before done.
 
 **Sprint 2 — Production cutover (HIGH):**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/09-platform-infra/postgres-neon-to-cloudsql/README.md and .../sprint-2.md (and sprint-1.md
 > for what S1 proved). You're building Sprint 2 (HIGH — production commerce DB cutover, money data; Daniel
 > executes the cutover + merges, no autonomous anything). Enter plan mode, confirm the runbook with me. Branch
@@ -135,7 +135,7 @@ Run each in a **fresh session** (one per sprint). Each enters plan mode, confirm
 > runbook + smoke walkthrough into sprint-2.md before done. This is HIGH — I run the live cutover with you.
 
 **Sprint 3 — Decommission + reconcile (LOW–MED):**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/09-platform-infra/postgres-neon-to-cloudsql/README.md and .../sprint-3.md. You're building
 > Sprint 3 (LOW–MED — reconcile + decommission; runs after the S2 cutover has held). Enter plan mode, confirm
 > with me. Branch off latest main. Now that commerce runs on Cloud SQL: (1) close the superseded neon-egress PRs

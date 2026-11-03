@@ -196,7 +196,7 @@ consumes #3b state, separate from channel fan-out). **Hard dependency:** Sprint 
 - **Telegram inbound webhook is new surface.** A `/start` webhook accepts external POSTs — validate the
   bot secret / token, scope the binding to a single-use linking token, rate-limit. Treat as security-
   sensitive (HIGH).
-- **Two repos, async deploy.** Dispatch + routing are largely **frontend** (`apps/miyagisanchez` —
+- **Two repos, async deploy.** Dispatch + routing are largely **frontend** (`apps/storefront` —
   email/push/telegram libs + routes live there); the Supabase migration ships via the Supabase CLI.
   Confirm whether any in-scope event fires from the **backend** (Cloud Run) — if so, merge
   backend-first / degrade gracefully (LEARNINGS).

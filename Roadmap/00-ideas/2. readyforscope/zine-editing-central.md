@@ -68,7 +68,7 @@ layout tool so there's one builder.
 
 | Piece | Where | Reuse as |
 |---|---|---|
-| Print domain types + status enums | `apps/miyagisanchez/lib/print.ts` | the wire contract (submissions, social, tiers) |
+| Print domain types + status enums | `apps/storefront/lib/print.ts` | the wire contract (submissions, social, tiers) |
 | Admin read routes: submissions / social / catalog | `app/api/admin/print/{submissions,social,catalog}` | thin token-gated wrappers or a guard variant — no new queries |
 | Submission status PATCH | `app/api/admin/print/submissions/[id]` | the `placed` write-back |
 | Ad-block render + style vocabulary | `lib/print-layout.ts` + builder/print components | shared merchant-ad renderer in zine |

@@ -183,7 +183,7 @@ on this VM (CI-built arm64 image → registry → `update.sh` pull, Caddy in fro
   size verification, Telegram alert) and `BACKUPS.md`. Add a `medusa` target; the image is `postgres:17-alpine`
   + rclone, both multi-arch. **Today's job still runs `BACKUP_TARGETS=supabase,neon` — the live Medusa DB has
   no offsite copy at all.** Fix that first, in S1.
-- **Build config:** `apps/miyagisanchez/cloudbuild.yaml` and `apps/backend/cloudbuild.yaml` (the build args and
+- **Build config:** `apps/storefront/cloudbuild.yaml` and `apps/backend/cloudbuild.yaml` (the build args and
   the deploy shape to mirror); the frontend `Dockerfile` (standalone + sharp).
 - **Cloudflare tooling:** `infra/gcp/cloudflare-origin-cert.mjs`, `cloudflare-cutover-flip.mjs`
   (`--domain`, `--extra-hosts`), `cloudflare-saas-fallback-provision.mjs`, `cloudflare-cache-provision.mjs`.

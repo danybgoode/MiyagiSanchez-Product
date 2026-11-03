@@ -24,7 +24,7 @@ stories:
 # Platform migrations — Sprint 1: Shopify connector → staging + parity score
 
 **Status:** ✅ both stories built (PR pending). Commits: `b088b58` (Story 1.1), `65396d4` (Story 1.2)
-on `feat/platform-migrations` (apps/miyagisanchez).
+on `feat/platform-migrations` (apps/storefront).
 **Risk:** MED. Behind `migrations.connector_enabled` (enablement, default `false`, created DISABLED
 in every env — the flag creation is part of Story 1.1, not an afterthought).
 

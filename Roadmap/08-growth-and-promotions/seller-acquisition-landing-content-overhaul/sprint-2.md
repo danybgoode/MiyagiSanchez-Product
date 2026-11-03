@@ -16,7 +16,7 @@ stories:
 ---
 # Sprint 2 — Copy + es-MX implementation  ·  status: ✅ shipped 2026-06-25 (PR #125 squash `af690ad`)
 
-> Land the approved S1 copy. Almost entirely edits to **one file**: `apps/miyagisanchez/locales/es.json
+> Land the approved S1 copy. Almost entirely edits to **one file**: `apps/storefront/locales/es.json
 > → sellerAcquisition`. Plus the `mundial` page's inline strings (it's bespoke, not on the shared system).
 > Depends on Sprint 1 sign-off.
 

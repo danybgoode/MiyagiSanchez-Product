@@ -49,7 +49,7 @@ Owed: Daniel's money-path smoke below (steps 3-6, can't be self-run — real Str
 purchases + Telegram delivery). This was the epic's **last scoped sprint** — epic close-out (poster,
 retro, LEARNINGS) is a separate follow-up once the smoke confirms the money path live.
 
-> Frontend-only (`apps/miyagisanchez`); follows Sprint 1. 2.1/2.2 edit the **live payment webhooks** —
+> Frontend-only (`apps/storefront`); follows Sprint 1. 2.1/2.2 edit the **live payment webhooks** —
 > HIGH, Daniel merges. **Compras email behavior stays byte-for-byte** (it already always fires; this
 > sprint only *adds* Push + Telegram behind the buyer's toggles and the Sprint-1 kill-switch).
 

@@ -32,7 +32,7 @@ stories:
 
 Cite `README.md` D1 and D2.
 
-- **Measured baseline, 2026-07-26: `npm run lint` in `apps/miyagisanchez` exits 1 — 481 problems
+- **Measured baseline, 2026-07-26: `npm run lint` in `apps/storefront` exits 1 — 481 problems
   (243 errors, 238 warnings) across exactly 6 files.** `app/`, `lib/`, `components/` are already clean.
   Re-run it yourself first and confirm the number before changing anything; if it has drifted, report
   that rather than silently building against a stale premise.

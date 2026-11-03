@@ -59,7 +59,7 @@ deposit holds) was explicitly deferred at decision #1; research it if/when that 
 
 ## What already exists (reuse, don't rebuild)
 
-- **`apps/miyagisanchez/lib/rental-pricing.ts`** — the pure, spec-proven pricing seam
+- **`apps/storefront/lib/rental-pricing.ts`** — the pure, spec-proven pricing seam
   (`nightsBetween`, `rentalUnits`, `computeRentalTotal`, es-MX labels). Single source of truth for
   the math; next-free, portable to the backend.
 - **`RentalBooking.tsx`** (PDP, S4.2) — date-range picker with the exact estimate breakdown;

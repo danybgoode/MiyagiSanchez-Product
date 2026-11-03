@@ -9,7 +9,7 @@ stories:
   - id: S1.1
     title: Backend pure pricing seam + unit specs
     as_a: a developer (and every later story)
-    i_want: "the rental math to exist in the backend as one pure, unit-tested module — ported from `apps/miyagisanchez/lib/rental-pricing.ts`, including the pesos→cents normalization for `metadata.attrs.deposit` —"
+    i_want: "the rental math to exist in the backend as one pure, unit-tested module — ported from `apps/storefront/lib/rental-pricing.ts`, including the pesos→cents normalization for `metadata.attrs.deposit` —"
     so_that: the charged total is computed from a single spec-proven source, never re-derived inline
     risk: low
     status: done
@@ -47,7 +47,7 @@ flip are owed (Daniel flips the flag; walkthrough below).
   `rental-checkout` incl. tamper (10), `rental-booking` (6).
 - **Story 1.3 is the backend half only** (confirmed with Daniel). The order normalizer now exposes
   `rental_booking` + `rental_booking_state`; the **frontend rendering** of the 5 order surfaces moved
-  to Sprint 2 (they live in `apps/miyagisanchez` — a backend-only sprint can't ship them). Handoff
+  to Sprint 2 (they live in `apps/storefront` — a backend-only sprint can't ship them). Handoff
   note added to `sprint-2.md`.
 - **Rate source:** the per-period rate is the cart line item's `unit_price` (already integer cents) —
   no product-price fetch needed. Only the **deposit** (`metadata.attrs.deposit`, in **pesos**) is
@@ -66,7 +66,7 @@ flip are owed (Daniel flips the flag; walkthrough below).
 
 ### Story 1.1 — Backend pure pricing seam + unit specs — ✅ `4a797a1`
 **As a** developer (and every later story), **I want** the rental math to exist in the backend as
-one pure, unit-tested module — ported from `apps/miyagisanchez/lib/rental-pricing.ts`, including
+one pure, unit-tested module — ported from `apps/storefront/lib/rental-pricing.ts`, including
 the **pesos→cents** normalization for `metadata.attrs.deposit` — **so that** the charged total is
 computed from a single spec-proven source, never re-derived inline.
 **Acceptance:** a next-free `src/lib/rental-pricing.ts` (or equivalent seam) with `nightsBetween`,

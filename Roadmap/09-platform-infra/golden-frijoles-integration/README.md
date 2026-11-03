@@ -37,13 +37,13 @@ existing rows and adds no new entitlement store.
 
 ## What already exists (reuse, don't rebuild)
 
-- `apps/miyagisanchez/lib/flag-catalog.ts` — 41 typed flags; `FlagKey` derived from the object keys.
-- `apps/miyagisanchez/lib/golden-flag-definition-catalog.ts` — the immutable definition seeds. **39 of
+- `apps/storefront/lib/flag-catalog.ts` — 41 typed flags; `FlagKey` derived from the object keys.
+- `apps/storefront/lib/golden-flag-definition-catalog.ts` — the immutable definition seeds. **39 of
   41 already declare `defaultVariantKey: 'on'`**; only `shipping.envia_enabled` and
   `partners.recruiting_v3_enabled` declare `off`. Every definition ships `rules: []`.
-- `apps/miyagisanchez/scripts/sync-flag-catalog.ts` (`npm run flags:sync`) — the definition-registration
+- `apps/storefront/scripts/sync-flag-catalog.ts` (`npm run flags:sync`) — the definition-registration
   path, needs `GOLDEN_BEANS_FLAG_SYNC_KEY`.
-- `apps/miyagisanchez/lib/golden-flag-admin.ts` + `app/api/admin/flags/route.ts` + `/admin/flags` — the
+- `apps/storefront/lib/golden-flag-admin.ts` + `app/api/admin/flags/route.ts` + `/admin/flags` — the
   Clerk-admin-gated read/activate path onto Golden's control plane.
 - `apps/backend/src/lib/flag-catalog.ts` — the 13 backend mirrors, a strict subset of the frontend's 41.
 - `golden-beans/packages/sdk` — already at 0.4.0 in source, additive over 0.3.0.

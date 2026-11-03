@@ -53,9 +53,9 @@ as it is**.
 - `apps/backend/src/api/store/_utils/seller-product-create.ts` — the already-shipped atomic create.
   **Read it first**, so the sweep's definition of "orphan" matches the invariant the create path now
   enforces.
-- `apps/miyagisanchez/lib/ucp/schema.ts:359-386` — the shop payload + the documented fallback. Do not
+- `apps/storefront/lib/ucp/schema.ts:359-386` — the shop payload + the documented fallback. Do not
   edit the fallback; do not reintroduce a placeholder slug (tried and reverted — the comment says so).
-- `apps/miyagisanchez/e2e/embed-shop.spec.ts` — extend it. Do not fork a second embed spec.
+- `apps/storefront/e2e/embed-shop.spec.ts` — extend it. Do not fork a second embed spec.
 - The enforced-sweep-list static-guard pattern (LEARNINGS — raw-color guard,
   seller-portal-rails-foundation S2) for Story 1.3's invariant.
 - Backend unit-test rail (`medusa build` → `tsc --noEmit` → `npm run test:unit`) — the deterministic

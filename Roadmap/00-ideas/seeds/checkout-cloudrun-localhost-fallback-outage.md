@@ -24,7 +24,7 @@ Discovered as a side-finding while shipping `home-dynamic-rows-restore-and-polis
 #243, miyagisanchezcommerce). That sprint root-caused a different-but-identical bug: the homepage
 personalization fetch was pointing at `localhost:9000` because `NEXT_PUBLIC_MEDUSA_STORE_URL` /
 `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` are never passed as Docker **build-args** in the Cloud Run
-frontend pipeline (`apps/miyagisanchez/Dockerfile` + `cloudbuild.yaml`) — only as Cloud Run
+frontend pipeline (`apps/storefront/Dockerfile` + `cloudbuild.yaml`) — only as Cloud Run
 **runtime** env vars (`infra/gcp/deploy-frontend.sh`, applied after the image is already built).
 Next.js inlines `NEXT_PUBLIC_*` at `next build` time, so any client-side code reading it directly
 gets `undefined` baked in permanently for that build.

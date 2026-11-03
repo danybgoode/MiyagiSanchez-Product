@@ -32,7 +32,7 @@ destination, and standardizes on one breadcrumb — all reusing the existing nav
 | | |
 |---|---|
 | **What it is** | Frontend IA: the nav descriptor, the dashboard header, and per-section breadcrumbs |
-| **Repos touched** | `apps/miyagisanchez` only. No backend, no DB, no Medusa/Supabase, no route-slug changes |
+| **Repos touched** | `apps/storefront` only. No backend, no DB, no Medusa/Supabase, no route-slug changes |
 | **Output** | One rail with every destination + one canonical label each; one shared "Resumen / \<Section\>" breadcrumb |
 | **SSOT** | `lib/seller-nav.ts` — both the rail and the new breadcrumb derive from it |
 

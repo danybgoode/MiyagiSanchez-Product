@@ -49,7 +49,7 @@ N/A — frontend `lib/` seam only. No model, route, table, or flag. Not a commer
 
 ## The design fork — settle it in plan mode before writing code
 
-`undici` is **not a direct dependency** of `apps/miyagisanchez`; it resolves only *transitively*
+`undici` is **not a direct dependency** of `apps/storefront`; it resolves only *transitively*
 from the workspace root. Node is v22.22.3, so global `fetch` is undici-backed but accepts a
 `dispatcher` only via the `undici` package's own types. Two shapes:
 
@@ -71,7 +71,7 @@ that's the coupling that breaks on an unrelated `npm` tree change.
 
 ## Deploy order
 
-Frontend-only (`apps/miyagisanchez`), one PR, LOW tier — reviewer may merge on a green gate.
+Frontend-only (`apps/storefront`), one PR, LOW tier — reviewer may merge on a green gate.
 **Shared-surface caveat:** `lib/ssrf-guard.ts` is imported by sibling work, so **announce the change**
 so parallel branches rebase (groom chore-path rule). No kill-switch — Stage 6b carve-out: defensive
 hardening of existing reads, no new runtime seam, fail-safe by construction; rollback is `git revert`.

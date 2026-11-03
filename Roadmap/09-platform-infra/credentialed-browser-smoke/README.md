@@ -45,7 +45,7 @@ test users and repo secrets. What it *can* own, and what makes it worth building
 ## Medusa-first note
 
 **N/A — test infrastructure only.** No app code, no migration, no flag. Touch surface:
-`apps/miyagisanchez/.github/workflows/browser-smoke.yml`, `e2e/_helpers/auth.ts` (reporting only),
+`apps/storefront/.github/workflows/browser-smoke.yml`, `e2e/_helpers/auth.ts` (reporting only),
 `e2e/README.md`.
 
 ## Architect's locked decisions (D1–D4)

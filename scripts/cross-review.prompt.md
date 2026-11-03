@@ -60,7 +60,7 @@ fixed or answered.
 
 ## Project rules — every reviewer applies this
 
-**The five rules that cannot be violated** (from `apps/miyagisanchez/AGENTS.md`)
+**The five rules that cannot be violated** (from `apps/storefront/AGENTS.md`)
 1. **Medusa owns all commerce.** Products, orders, payments, fulfillment, returns, inventory, regions →
    Medusa module/Store API in `apps/backend`. Never new Supabase tables or custom Next routes for these.
 2. **Supabase is non-commerce only** — conversations, offers, favorites, supply/scrape staging, UCP

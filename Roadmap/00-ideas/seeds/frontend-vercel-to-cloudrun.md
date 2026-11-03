@@ -19,7 +19,7 @@ re-validated during grooming (see below) because the PRD's original egress ratio
 
 ## Overview — what and why
 
-Migrate `apps/miyagisanchez` (Next.js 16 App Router) from Vercel to **Cloud Run (us-east4)**, the
+Migrate `apps/storefront` (Next.js 16 App Router) from Vercel to **Cloud Run (us-east4)**, the
 same rail `apps/backend` already ships on, behind a **Cloudflare edge that fronts everything**
 (apex, `*.miyagisanchez.com` wildcard, tenant custom domains via Cloudflare for SaaS, CDN, bot
 protection). Vercel is retained **only** as the per-PR preview + CI target.

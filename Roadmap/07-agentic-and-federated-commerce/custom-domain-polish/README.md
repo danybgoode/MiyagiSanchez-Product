@@ -53,7 +53,7 @@ A single delivery, story by story — see [sprint-1.md](./sprint-1.md):
 
 ## Notes
 
-- **Frontend only** (`apps/miyagisanchez`). Runs in parallel with `feat/sweepstakes` — don't touch its
+- **Frontend only** (`apps/storefront`). Runs in parallel with `feat/sweepstakes` — don't touch its
   files (`app/g/[slug]`, `app/shop/manage/sweepstakes`, the Stripe/MP webhooks).
 - **We don't touch `middleware.ts`** (shared risk) — the domain rewrite already works.
 - Strings in **es-MX** to match the section's convention (the section is 100% Spanish, no i18n keys).

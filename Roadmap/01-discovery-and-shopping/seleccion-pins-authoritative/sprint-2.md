@@ -30,7 +30,7 @@ stories:
 ---
 # Sprint 2 — Pins render regardless of freshness
 
-**Epic:** [Selección — make admin pins authoritative](README.md) · **Risk:** MED (backend read-filter) · **Repos:** `apps/backend` + `apps/miyagisanchez`.
+**Epic:** [Selección — make admin pins authoritative](README.md) · **Risk:** MED (backend read-filter) · **Repos:** `apps/backend` + `apps/storefront`.
 **Branch:** continue `feat/seleccion-pins-authoritative`. **Deploy order: merge backend (S2.1) first**, verify, then the frontend union (S2.2).
 
 Fixes the "nothing renders underneath" case (2026-06-25): pins older than the freshest-24 pool can't reach the

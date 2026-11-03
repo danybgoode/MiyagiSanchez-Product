@@ -53,7 +53,7 @@ if [ "$MODE" = "provision" ] && [ -z "$CRON_SECRET_VALUE" ]; then
   exit 1
 fi
 
-# job name : cron schedule (verbatim from apps/miyagisanchez/vercel.json) : header shape
+# job name : cron schedule (verbatim from apps/storefront/vercel.json) : header shape
 # Header shapes match each route's actual, individually-verified auth check:
 #   order-autoconfirm    → x-cron-secret only (no Bearer fallback in that route)
 #   print-pending        → x-cron-secret (also accepts Bearer, either works)
@@ -122,7 +122,7 @@ case "$MODE" in
     ;;
   enable)
     echo "  All 4 jobs RESUMED. This must land in the same PR/deploy window as removing"
-    echo "  apps/miyagisanchez/vercel.json's crons block — never days apart."
+    echo "  apps/storefront/vercel.json's crons block — never days apart."
     ;;
   disable)
     echo "  All 4 jobs PAUSED (rollback). Re-add vercel.json's crons block if reverting fully."

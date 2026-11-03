@@ -28,7 +28,7 @@ surfaces it where a repo visitor actually looks. No architecture fork → no pla
 | Repo | GitHub remote | README today |
 |---|---|---|
 | monorepo root | `danybgoode/miyagi-product-management` | Stock **Medusa DTC Starter** scaffold (159 lines) — wrong clone URL (`medusajs/dtc-starter`), `pnpm` quickstart the repo doesn't use (`packageManager: npm@11`), Medusa's own badges/Discord/Twitter |
-| frontend `apps/miyagisanchez` | `danybgoode/miyagisanchezcommerce` | Stock **create-next-app** boilerplate (36 lines) — zero Miyagi content |
+| frontend `apps/storefront` | `danybgoode/miyagisanchezcommerce` | Stock **create-next-app** boilerplate (36 lines) — zero Miyagi content |
 | backend `apps/backend` | `danybgoode/medusa-bonsai-backend` | Stock **Medusa starter** README (62 lines) — Medusa's marketing, not ours |
 | `apps/zine` | **no remote** (local-only repo, no CI/no deploy — LEARNINGS 2026-07-03) | **No README at all** |
 
@@ -54,7 +54,7 @@ writes itself from what already exists — it just isn't surfaced anywhere a vis
   `cross-panel.mjs`), risk tiers + who-merges rule, deterministic CI gate + sprint smoke walkthroughs,
   model split (Opus plans / Sonnet builds), Claude Routines. Link, don't paraphrase at length.
 - **`Roadmap/LEARNINGS.md`** — the proof the practice is real; linkable as-is.
-- **`apps/miyagisanchez/AGENTS.md`** — the five rules; the frontend README's practice anchor.
+- **`apps/storefront/AGENTS.md`** — the five rules; the frontend README's practice anchor.
 - **Deploy-topology facts** (WAYS-OF-WORKING + LEARNINGS): root repo versions product/orchestration
   docs (`Roadmap/`, `tasks/`, `skills/`, `scripts/`, `infra/`); the two app repos are independent and
   git-ignored here; frontend → Vercel (per-branch previews); backend → Cloud Build us-east4 → Cloud

@@ -18,7 +18,7 @@ stories_total: 1
 Daniel got a GitHub email: 90% of the account's included Actions minutes used, resetting in 17
 days. Investigation (real `gh api` data, not guesswork) found only 2 of ~40 repos on the account
 actively cost anything — private repos' Actions minutes are metered; public repos are unlimited/free,
-so `apps/miyagisanchez` and `apps/backend` (both public) were never the problem. The dominant cost was
+so `apps/storefront` and `apps/backend` (both public) were never the problem. The dominant cost was
 this root repo's `notion-sync.yml`, which fired on nearly every push touching `Roadmap/**` (~5-6
 billed minutes each, full-history clone) — this repo gets pushed to very frequently. The 5 tiny guard
 workflows (build-order/doc-format/scripts/infra/yaml) are cheap per-run but each GH job still bills a

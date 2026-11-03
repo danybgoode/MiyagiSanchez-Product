@@ -89,10 +89,10 @@ The owner can open the desktop Cuenta menu over Favoritos and see it beside the 
 
 ## What already exists (reuse, don't rebuild)
 
-- `apps/miyagisanchez/app/components/CuentaMenu.tsx` and `app/globals.css` — native account popover and anchor rules.
-- `apps/miyagisanchez/app/not-found.tsx`, `lib/contact.ts`, `lib/shortlink.ts` — 404, human contact, and canonical platform origin.
-- `apps/miyagisanchez/lib/email.ts` — both welcome sends; `app/api/webhooks/clerk/route.ts` and `app/api/claim/complete/route.ts` trigger them; `lib/notifications/fixtures.ts` supports sample sends.
-- `apps/miyagisanchez/campaigns/claim-shop-2026-10/README.md` — links the unpublished Resend review drafts.
+- `apps/storefront/app/components/CuentaMenu.tsx` and `app/globals.css` — native account popover and anchor rules.
+- `apps/storefront/app/not-found.tsx`, `lib/contact.ts`, `lib/shortlink.ts` — 404, human contact, and canonical platform origin.
+- `apps/storefront/lib/email.ts` — both welcome sends; `app/api/webhooks/clerk/route.ts` and `app/api/claim/complete/route.ts` trigger them; `lib/notifications/fixtures.ts` supports sample sends.
+- `apps/storefront/campaigns/claim-shop-2026-10/README.md` — links the unpublished Resend review drafts.
 
 ## Visuals
 

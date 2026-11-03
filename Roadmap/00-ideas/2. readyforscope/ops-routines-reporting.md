@@ -58,7 +58,7 @@ few live runs). Everything else (report composition, build-order docs PR) is low
 
 ## What already exists (reuse, don't rebuild)
 - `Roadmap/09-platform-infra/routines-enablement` + `scripts/routines/` — the routine rail + prompt format.
-- `apps/miyagisanchez/lib/telegram.ts` (`tg`), `TELEGRAM_BOT_TOKEN`/`CHAT_ID`, the backend Cloud Build
+- `apps/storefront/lib/telegram.ts` (`tg`), `TELEGRAM_BOT_TOKEN`/`CHAT_ID`, the backend Cloud Build
   notifier + frontend `notify-telegram.yml` — the delivery channel is solved.
 - `scripts/vercel-prune-previews.mjs` (dry-run default, `--apply`, `--age`, `--keep-branch`).
 - `scripts/build-order.mjs` + `build-order-guard.yml` (regen + CI guard).

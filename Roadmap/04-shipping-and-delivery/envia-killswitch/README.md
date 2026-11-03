@@ -48,7 +48,7 @@ untouched. New copy es-MX. Flag reads are fail-open, so the ~12-min Cloud Run wi
 ## What already exists (reuse, don't rebuild) — verified 2026-06-25
 | Capability | Where | Reuse for |
 |---|---|---|
-| Flag layer (FE + BE), fail-open, local eval | `apps/miyagisanchez/lib/flags.ts`, `apps/backend/src/lib/flags.ts` | Add `FlagKey` + default; `isEnabled('shipping.envia_enabled')` |
+| Flag layer (FE + BE), fail-open, local eval | `apps/storefront/lib/flags.ts`, `apps/backend/src/lib/flags.ts` | Add `FlagKey` + default; `isEnabled('shipping.envia_enabled')` |
 | Enablement default-OFF precedent | `domain.paywall_enabled` in `lib/flags.ts` | Copy polarity + fail-open semantics |
 | Pure, unit-tested kill-switch *application* | `lib/checkout-killswitch.ts` (`applyPaymentKillSwitches`) | Mirror as a pure `enviaKillGate` seam for free coverage |
 | Quote seam (already degrades gracefully) | backend `POST /store/envia/rates` (returns *"coordina la entrega directamente…"* on failure) | Short-circuit **before** the Envía call when off |

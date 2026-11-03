@@ -28,7 +28,7 @@ from the current branch.
 ## What already exists (reuse, don't rebuild) — verified against the repo 2026-06-13
 | Capability | Where | Reuse for |
 |---|---|---|
-| Frontend deterministic gate: `tsc --noEmit` + `next build` on `pull_request` | `apps/miyagisanchez/.github/workflows/ci.yml` (`typecheck-build` job) | **The template for the backend gate** — copy the job shape, swap the steps |
+| Frontend deterministic gate: `tsc --noEmit` + `next build` on `pull_request` | `apps/storefront/.github/workflows/ci.yml` (`typecheck-build` job) | **The template for the backend gate** — copy the job shape, swap the steps |
 | Backend test + build scripts already present | `apps/backend/package.json`: `build` (`medusa build`), `test:unit`, `test:integration:http`, `test:integration:modules` | S1 wires these; no new test infra to author |
 | Existing backend unit specs (DB-free) | `src/api/store/_utils/__tests__/*.unit.spec.ts` (support-seller-resolution, payment-methods-killswitch) | S1's `test:unit` already has real specs to run; future specs slot in |
 | Backend workflow folder + secret-skip idiom | `apps/backend/.github/workflows/notify-telegram.yml` (skips cleanly when secrets absent) | S1's `ci.yml` lands beside it; reuse the "never hard-fail on missing optional secret" idiom |

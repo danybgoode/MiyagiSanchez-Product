@@ -3,7 +3,7 @@
 
   Single source of truth for `scripts/cross-panel.mjs` (the cross-agent second-opinion-on-a-plan command)
   and for a human reading the panel's rubric. It factors the five AGENTS rules
-  (apps/miyagisanchez/AGENTS.md) + the WAYS-OF-WORKING single-pass discipline into a shared preamble, then
+  (apps/storefront/AGENTS.md) + the WAYS-OF-WORKING single-pass discipline into a shared preamble, then
   adds one section per architecture lens. It is NOT a new rubric — if the criteria change, change them HERE.
 
   STRUCTURE the script depends on (don't reorganise without updating the loader):
@@ -35,7 +35,7 @@ do not assume the author's framing is correct. The marketplace is Medusa v2 (com
 One read, then write your findings. Do **not** iterate toward consensus or run a back-and-forth loop — that
 loop is this codebase's single largest token cost and is deliberately out of scope. One careful read.
 
-## The five rules that cannot be violated (from apps/miyagisanchez/AGENTS.md)
+## The five rules that cannot be violated (from apps/storefront/AGENTS.md)
 1. **Medusa owns all commerce.** Products, orders, payments, fulfillment, returns, inventory, regions →
    a Medusa module / Store API in `apps/backend`. Never new Supabase tables or custom Next routes for these.
 2. **Supabase is non-commerce only** — conversations, offers, favorites, supply/scrape staging, UCP buyer

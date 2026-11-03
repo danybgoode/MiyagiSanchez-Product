@@ -63,7 +63,7 @@ buyer the amount they saw, **so that** no real buyer is ever over/undercharged w
 **Files/anchors:**
 - `@medusajs/core-flows` — payment-session / payment-collection steps; the `getSmallestUnit`
   conversion.
-- `apps/miyagisanchez/lib/cart.ts` `startCheckout` (`region_id: MXN_REGION_ID`, `:254`) — confirm
+- `apps/storefront/lib/cart.ts` `startCheckout` (`region_id: MXN_REGION_ID`, `:254`) — confirm
   this app sets no independent amount anywhere in the flow.
 - `apps/backend/src/api/store/_utils/seller-product-create.ts` / `seller-product-update.ts` — the
   write side (`amount: body.price_cents`).

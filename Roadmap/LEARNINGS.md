@@ -66,7 +66,7 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
 *Several agents work in parallel on their own branches, against two repos that deploy independently.*
 
 - **Two repos, one production platform, different preview shapes.** Both frontend
-  (`apps/miyagisanchez` → `miyagi-web`) and backend (`apps/backend` → `medusa-web`) deploy on merge
+  (`apps/storefront` → `miyagi-web`) and backend (`apps/backend` → `medusa-web`) deploy on merge
   through regional Cloud Build in `us-east4` to Cloud Run; Vercel remains only the frontend's
   per-branch **preview**, never its production deploy. When a frontend feature reads data a backend change produces,
   **merge backend first (or together)** and make the frontend **degrade gracefully** (`?? []`,
@@ -111,7 +111,7 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   **Corollary — checking CI status and merging a PR need no local checkout at all.** `gh pr checks
   <N>` and `gh pr merge <N>` operate against the pushed remote branch via the GitHub API; they
   don't care what's checked out locally. Mid-session, a concurrent agent switched the shared
-  `apps/miyagisanchez` checkout to its own branch with in-progress uncommitted work; rather than
+  `apps/storefront` checkout to its own branch with in-progress uncommitted work; rather than
   checking back out to reclaim it (which would have yanked that session's tree), CI status and the
   merge itself were driven entirely through `gh` from wherever the shell happened to be — the
   sibling session's branch and uncommitted changes were never touched. *(2026-07-10,
@@ -191,7 +191,7 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   + `gh api repos/<o>/<r>/contents/<path>?ref=main`, or `git fetch` then `git grep <x> origin/main` — an
   `ls`/working-tree read is not evidence about `main`. *(2026-07-01, feature-flags-inhouse S3.)*
   **Corollary — a stale local checkout can also hide an entire prior sprint's UI SHAPE during planning,
-  not just its merge status.** Promoter Funnel v2 Sprint 5's planning session found `apps/miyagisanchez`
+  not just its merge status.** Promoter Funnel v2 Sprint 5's planning session found `apps/storefront`
   one commit behind `origin/main`, missing the immediately-prior Sprint 4 merge — the local
   `PromoterCloseClient.tsx` still showed the pre-S4 shape, silently missing an entire prop + UI sub-flow
   S4 had added. Caught by reading `git show origin/main:<path>` for the specific files a plan will touch,
@@ -503,7 +503,7 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   request 404ed, then the next 36 succeeded. Key last-known-good storage by provider scope + environment;
   never compare snapshot numbers across catalogs, and never leave a scoped authority without an outage
   fallback. *(2026-08-17, miyagi-partners-recruiting-v3 cold-start repair.)* **⚠️ Superseded 2026-09-22
-  (flag-provider-mandate):** (b) is stale — `apps/miyagisanchez/scripts/sync-flag-catalog.ts` and
+  (flag-provider-mandate):** (b) is stale — `apps/storefront/scripts/sync-flag-catalog.ts` and
   `apps/backend/src/lib/flag-definition-sync.ts` now push definitions — and (a)/(c) no longer apply:
   `/admin/flags` is a read-only mirror, and the cutover env var, `local`/`shadow` and `platform_flags`
   are deleted. Every flag lives in ONE Golden project, `miyagisanchez`; change flags in its console or
@@ -886,7 +886,7 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   is untracked; don't commit it (this note is scoped to a WORKTREE'S incidental lockfile — a reused package
   name breaks npm workspace resolution at the monorepo root, so the file that comes out can be malformed;
   it does not apply to a deliberately-generated, CI-validated per-app lockfile — see the `deploy-pipeline-tuning`
-  epic, which committed real `package-lock.json`s to both `apps/backend` and `apps/miyagisanchez` on purpose).
+  epic, which committed real `package-lock.json`s to both `apps/backend` and `apps/storefront` on purpose).
   *(2026-06-09, trust-messaging-polish S2.)*
 - **`gh pr merge --delete-branch` fails when a worktree holds `main`.** The merge still succeeds on
   GitHub; only the local branch-delete errors. Verify with `gh pr view <n> --json state`. Don't
@@ -1185,7 +1185,7 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   verification is a visual eyeball, not a programmatic assert). *(2026-06-23, notion-board-hygiene S2 —
   `roadmap-to-notion.mjs` + the `Marketplace Roadmap` DB.)*
 - **A heuristic path-existence check in this monorepo needs every known app root, not just the repo
-  root.** `apps/miyagisanchez` and `apps/backend` are separate, gitignored repos here, so a doc bullet's
+  root.** `apps/storefront` and `apps/backend` are separate, gitignored repos here, so a doc bullet's
   `lib/x.ts` reference is relative to one of *them*, not the monorepo root — checking only the root
   produced ~50 false "dead path" positives before the fix; checking all known app roots dropped it to a
   handful of genuine edge cases. *(2026-07-02, doc-hygiene-learnings-sweep S1.2 — `scripts/doc-hygiene.mjs`.)*
@@ -3476,7 +3476,7 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   `CLERK_*` repo secrets set on `miyagisanchezcommerce`.
 - **The admin fixture: `agentsm@miyagisanchez.com` (provisioned 2026-07-12).** `--flow=admin` needs a dev
   test user that is *actually* an admin — neither `MS_TEST_BUYER_EMAIL` nor `MS_TEST_SELLER_EMAIL` is one
-  by default. `apps/miyagisanchez/lib/admin/identity.ts` is the SSOT: a Clerk user is admin if
+  by default. `apps/storefront/lib/admin/identity.ts` is the SSOT: a Clerk user is admin if
   `publicMetadata.role === 'admin'` **or** its email is in the `MIYAGI_ADMIN_EMAILS` env comma-list.
   `agentsm@miyagisanchez.com` exists in the correct dev instance (`honest-eel-39` — the **"Despacho
   Bonsai"** Clerk app, NOT the "Miyagi Sanchez"-named one) with `publicMetadata.role: "admin"`; verified

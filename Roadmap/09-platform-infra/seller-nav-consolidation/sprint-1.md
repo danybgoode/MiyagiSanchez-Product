@@ -30,7 +30,7 @@ stories:
 ---
 # Sprint 1 — One nav, one name per destination
 
-**Epic:** [Seller nav consolidation](README.md) · **Risk:** all LOW · **Repo:** `apps/miyagisanchez`
+**Epic:** [Seller nav consolidation](README.md) · **Risk:** all LOW · **Repo:** `apps/storefront`
 **Goal:** the left rail is the single nav source — every destination present, one canonical label each — and
 the duplicate horizontal row is gone without losing the pending-count signal.
 

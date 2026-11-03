@@ -41,7 +41,7 @@ tokens, announce it — those break sibling PRs. The work is overwhelmingly cont
 Mostly **light enhancement**, partly **genuinely new**:
 
 - **Copy overhaul → light.** All landing copy already lives in **one place**:
-  `apps/miyagisanchez/locales/es.json → sellerAcquisition` (`shared`, `anchor`, `creadores`,
+  `apps/storefront/locales/es.json → sellerAcquisition` (`shared`, `anchor`, `creadores`,
   `negocios`, `servicios`, `mundial`). Rewriting copy = editing that one JSON block. No new layout.
 - **es-MX accent/ñ/¿¡ sweep → light.** Same JSON edit; it's a correctness pass, not a build.
 - **Kill "No pedimos fe" → light.** It's `sellerAcquisition.*.agentTitle` ("No pedimos fe") +
@@ -160,7 +160,7 @@ trivially (public pages, es-MX, no commerce, Clerk untouched). Verified against 
 
 | Capability | Where | Reuse for |
 |---|---|---|
-| **All landing copy, single source** | `apps/miyagisanchez/locales/es.json → sellerAcquisition` | The entire copy overhaul + es-MX sweep is edits here |
+| **All landing copy, single source** | `apps/storefront/locales/es.json → sellerAcquisition` | The entire copy overhaul + es-MX sweep is edits here |
 | **Shared section renderer** | `app/(shell)/vende/_components/SellerAcquisitionSections.tsx` (hero · proof · persona router · steps · social · FAQ · closing) | Mobile fixes land here once → all config-driven pages benefit |
 | **Per-page config builder** | `_components/page-config.ts` (`buildAnchorPageConfig`, `buildCreatorPageConfig`, …) | Where a new "benchmark" / "AI-channel" block gets wired into the anchor config |
 | **Copy-paste CTA component** | `_components/TrustPromptCopy.tsx` (clipboard wiring already works) | Just feed it the new prompt string + label |

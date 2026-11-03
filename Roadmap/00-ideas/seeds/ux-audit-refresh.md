@@ -126,7 +126,7 @@ sprints (each gets its own groom run, fed by this); re-auditing domains 06 (Prin
 
 ## Investigation kickoff prompt (spike — paste into a fresh Claude Code session; no branch, no build)
 ```
-Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 Then read Roadmap/00-ideas/seeds/ux-audit-refresh.md (this spike's scope) and the 5 baseline
 audits in Roadmap/00-ideas/audits/_legacy/results-v1/01–05.
 

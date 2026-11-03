@@ -1,5 +1,5 @@
 ---
-status: shipped  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Sprint 1 shipped (PR #161 merged 5583bf9). Sprint 2 shipped — 2.1/2.2/2.3 committed in apps/zine; 2.3's backend PR #164 merged (squash 55bdce9) after 7 rounds of cross-review fixes. Sprint 3 shipped — S3.2 committed to apps/zine's local main (f43967e); S3.1 merged via apps/miyagisanchez PR #169 (squash ede0d70) 2026-07-03, branch deleted.
+status: shipped  # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Sprint 1 shipped (PR #161 merged 5583bf9). Sprint 2 shipped — 2.1/2.2/2.3 committed in apps/zine; 2.3's backend PR #164 merged (squash 55bdce9) after 7 rounds of cross-review fixes. Sprint 3 shipped — S3.2 committed to apps/zine's local main (f43967e); S3.1 merged via apps/storefront PR #169 (squash ede0d70) 2026-07-03, branch deleted.
 slug: zine-editing-central
 title: "Zine = the editing central — integrate the zine studio with the marketplace print pipeline"
 area: 06-print-edition
@@ -16,7 +16,7 @@ stories_total: 9
 > Scoped 2026-07-02 from [`00-ideas/2. readyforscope/zine-editing-central.md`](../../00-ideas/2.%20readyforscope/zine-editing-central.md) (approved by Daniel 2026-07-02).
 > **Status:** ✅ SHIPPED 2026-07-03 · S1 [#161](https://github.com/danybgoode/miyagisanchezcommerce/pull/161) ·
 > S2 [#164](https://github.com/danybgoode/miyagisanchezcommerce/pull/164) · S3 apps/zine commit `f43967e`
-> (merchant-ad style guardrails) + apps/miyagisanchez PR [#169](https://github.com/danybgoode/miyagisanchezcommerce/pull/169)
+> (merchant-ad style guardrails) + apps/storefront PR [#169](https://github.com/danybgoode/miyagisanchezcommerce/pull/169)
 > (squash `ede0d70`, Maqueta retired, branch deleted). **Owed:** physical PDF fold-check at a
 > non-12pp size + the admin-surface click-through smoke of the retired builder route.
 
@@ -48,7 +48,7 @@ mirrors the documented `withSupplyAdmin` machine path). Internal tool: es-MX, no
 allow-list (rule #5).
 
 ## What already exists (reuse, don't rebuild)
-- **Print domain types + status enums** — `apps/miyagisanchez/lib/print.ts` (the wire contract).
+- **Print domain types + status enums** — `apps/storefront/lib/print.ts` (the wire contract).
 - **Admin read routes** — `app/api/admin/print/{submissions,social,catalog}` (catalog is Medusa
   `searchListings`); the write-back is the existing submissions `[id]` PATCH transition.
 - **Machine-auth precedent** — `lib/admin/guard.ts` `withSupplyAdmin` (Clerk admin OR shared secret)
@@ -72,7 +72,7 @@ allow-list (rule #5).
 | 3 | 3.3 Epic close: poster, retro, LEARNINGS, `build-order.mjs` regen | LOW |
 
 ## Deploy order
-Frontend-only repo work (`apps/miyagisanchez` routes + `apps/zine` local app). S1.2's routes merge
+Frontend-only repo work (`apps/storefront` routes + `apps/zine` local app). S1.2's routes merge
 first (dark — nothing calls them until zine's drawer exists); `PRINT_STUDIO_TOKEN` must be set in
 Vercel prod env **before** S1.3 is usable, and in zine's local `.env`. No backend (Cloud Run)
 changes. Maqueta deprecation (S3.1) merges last, only after Daniel has produced a real placement
@@ -81,7 +81,7 @@ via zine (don't remove the old tool before the new one is proven).
 ## Definition of Done (epic)
 - [x] All sprints merged to `main` + smoke-tested (gaps stated) — S1/S2 merged + prod round-trip
       confirmed live 2026-07-02. S3.2 (apps/zine) committed to its local `main`. S3.1
-      (apps/miyagisanchez) merged via PR #169 (squash `ede0d70`) after CI green (tsc/build/Playwright
+      (apps/storefront) merged via PR #169 (squash `ede0d70`) after CI green (tsc/build/Playwright
       vs preview) and Daniel's explicit confirmation to merge. Admin-surface click-through +
       physical PDF fold-check remain owed to Daniel (live/manual checks only he can run).
 - [x] Each `sprint-N.md` has its smoke walkthrough (real URLs) — `sprint-3.md` rewritten with actual

@@ -32,7 +32,7 @@ expansion.
 > without waiting on a deploy — and if Flagsmith itself is down, Stripe stays on (fail-open).
 
 **What it ships**
-- `flagsmith-nodejs` dependency in `apps/miyagisanchez`.
+- `flagsmith-nodejs` dependency in `apps/storefront`.
 - `lib/flags.ts` — a server-only Flagsmith client: initialise once with `FLAGSMITH_ENVIRONMENT_KEY`,
   **local evaluation**, a short cache, and a **`DEFAULT_FLAGS` fail-open map** (`checkout.stripe_enabled:
   true`). A single `isEnabled(flag)` helper that **never throws** and returns the default on any error.

@@ -75,7 +75,7 @@ one). To reconcile, *not part of this epic*:
   build on the existing `countListings` + the `unstable_cache` revalidate pattern for the ~5-min cache.
 - **Non-commerce reads stay on Supabase** (AGENTS rule #2): `marketplace_favorites` (already joined on the
   current `app/page.tsx`), `marketplace_offers` (`lib/offer-state.ts`, `lib/active-deal.ts`), and the
-  neighborhood-pulse source. Migrations live in `apps/miyagisanchez/supabase/*.sql` — the new
+  neighborhood-pulse source. Migrations live in `apps/storefront/supabase/*.sql` — the new
   `price_cents_at_save` column is an **additive, non-commerce** migration there.
 - **Vecindario strip:** reuse `isNeighborhoodPulseSocialItem` + `NEIGHBORHOOD_PULSE_COPY`
   (`lib/neighborhood-pulse.ts`), same approved/web-visible source as `/vecindario`. Keep `vecindario-feed-entry`.

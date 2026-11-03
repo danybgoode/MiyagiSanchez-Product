@@ -139,7 +139,7 @@ Env: the repo scripts + Telegram + `claude.ai/code/routines` (process change; no
 If any step fails, note the step number + what you saw — that's the bug report.
 
 ## Kickoff prompt (paste into a fresh Claude Code session)
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/00-ideas/2. readyforscope/spike-skills-library-audit.md (binding conventions) and
 > Roadmap/09-platform-infra/ops-routines-reporting/README.md + sprint-3.md (S1+S2 merged first).
 >

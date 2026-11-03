@@ -37,7 +37,7 @@ stories:
 ---
 # Sprint 2 — Admin curation (pin/unpin + reorder)
 
-**Epic:** [Homepage Selección: bug sweep + admin curation + dynamic rotation](README.md) · **Repo:** `apps/miyagisanchez` (+ possible tiny `apps/backend`)
+**Epic:** [Homepage Selección: bug sweep + admin curation + dynamic rotation](README.md) · **Repo:** `apps/storefront` (+ possible tiny `apps/backend`)
 **Goal:** give an admin a screen to control the "Selección de la semana" — pin/unpin products and order them —
 built **Medusa-first** on the existing `metadata.featured` pin (+ a new `metadata.featured_rank`), behind the
 existing admin shell + Clerk guard. No new tables, no Supabase pin.

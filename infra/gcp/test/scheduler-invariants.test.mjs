@@ -12,7 +12,7 @@ import { dirname, join } from 'node:path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const src = readFileSync(join(__dirname, '..', 'provision-scheduler-frontend.sh'), 'utf8')
 
-// The swap is done (Story 3.1 shipped 2026-07-10) — apps/miyagisanchez/vercel.json's `crons`
+// The swap is done (Story 3.1 shipped 2026-07-10) — apps/storefront/vercel.json's `crons`
 // block has been removed entirely, so these schedules are hardcoded here as the sole source of
 // truth going forward (they were cross-checked against vercel.json's verbatim values before the
 // swap; that comparison is now moot since there's nothing left in vercel.json to compare against).

@@ -38,7 +38,7 @@ gated to platform surfaces and kept **static-safe** so it doesn't undo the just-
 | | |
 |---|---|
 | **What it is** | One client-side GTM container loader + a pure eligibility gate + an api/unit spec |
-| **Repos touched** | `apps/miyagisanchez` only. No backend, no DB, no Medusa/Supabase, no commerce surface |
+| **Repos touched** | `apps/storefront` only. No backend, no DB, no Medusa/Supabase, no commerce surface |
 | **Loader id** | `NEXT_PUBLIC_GTM_ID` (env; no hardcoded id). GA4 + Clarity are tags **inside GTM**, not code |
 | **Constraint** | Gating is **client-side** (hostname + path) so the static `(site)` subtree keeps no `headers()` |
 

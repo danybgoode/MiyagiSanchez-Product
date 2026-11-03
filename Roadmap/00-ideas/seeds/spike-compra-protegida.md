@@ -39,7 +39,7 @@ read-only + test-mode; the *subject* is the money path, hence `risk: high` stays
 Real escrow machinery is live in code; this is NOT greenfield:
 
 - **Seller setting:** `escrow_mode: off | optional | required` — UI in
-  `apps/miyagisanchez/app/(shell)/shop/manage/settings/_sections/Pagos.tsx` (+ mirrored in
+  `apps/storefront/app/(shell)/shop/manage/settings/_sections/Pagos.tsx` (+ mirrored in
   `Diseno.tsx` presets and `lib/shop-settings/helpers.ts` shop-type presets); persisted on the
   `checkout` settings slice.
 - **Money path (backend, `apps/backend/src/api/store/`):** deferred Stripe capture —

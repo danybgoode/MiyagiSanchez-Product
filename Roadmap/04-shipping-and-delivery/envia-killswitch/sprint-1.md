@@ -53,7 +53,7 @@ Epic: [Envía — platform Flagsmith kill-switch](README.md) · Scope:
   re-quotes (GET), bypassing the backend gate — so it's gated too. Confirmed in scope with Daniel.
 
 > **Before any gating — trace importers (LEARNINGS ~L737).** Find every importer of the Envía client
-> (`apps/backend/src/modules/fulfillment-envia/envia-client.ts` and `apps/miyagisanchez/lib/envia.ts`) and the
+> (`apps/backend/src/modules/fulfillment-envia/envia-client.ts` and `apps/storefront/lib/envia.ts`) and the
 > route the buyer/seller actually awaits, so the gate lands on the real seam and not a no-op file.
 
 ---
@@ -63,7 +63,7 @@ Epic: [Envía — platform Flagsmith kill-switch](README.md) · Scope:
 falls back to arranged delivery without hitting an unfunded carrier.
 
 - Add `FlagKey 'shipping.envia_enabled'` + `DEFAULT_FLAGS['shipping.envia_enabled'] = false` to **both**
-  `apps/miyagisanchez/lib/flags.ts` and `apps/backend/src/lib/flags.ts`. **Enablement polarity, default OFF** —
+  `apps/storefront/lib/flags.ts` and `apps/backend/src/lib/flags.ts`. **Enablement polarity, default OFF** —
   document inline like `domain.paywall_enabled`.
 - Gate `POST /store/envia/rates`: when off, short-circuit **before** the Envía call to the existing graceful
   response (`{ rates: [], message: 'Las paqueterías… coordina la entrega directamente con el vendedor.' }`).

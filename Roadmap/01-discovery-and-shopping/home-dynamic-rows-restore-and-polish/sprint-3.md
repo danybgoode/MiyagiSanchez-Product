@@ -57,7 +57,7 @@ it).
 **Acceptance:** incognito `/` shows hero + 3 badges in the prerendered HTML; signed-in shows
 neither hero nor ribbon. Static marker for `/` preserved.
 **Risk:** low
-**Commit:** `6ca63c4` (apps/miyagisanchez) — replaced `home-ribbon-auth.browser.spec.ts` with
+**Commit:** `6ca63c4` (apps/storefront) — replaced `home-ribbon-auth.browser.spec.ts` with
 `home-hero-auth.browser.spec.ts` (verified red on a deliberate testid mutation, then green); updated
 the 3 other specs that asserted the real `home.ribbon` dictionary shape (`home-static`, `home-chrome`,
 `home-announcement`, `copy-overrides-merge`).
@@ -75,7 +75,7 @@ acceptance calls for same-day "Nuevo hoy," not a 48h window. "Ver todo →" link
 **Acceptance:** row renders in anonymous static HTML with newest listings; a listing published
 today carries "Nuevo hoy"; no overlap with Selección. Pure-logic spec on the dedupe/badge seam.
 **Risk:** low
-**Commit:** `29827b8` (apps/miyagisanchez) — `excludeIds`/`isNewToday` added to
+**Commit:** `29827b8` (apps/storefront) — `excludeIds`/`isNewToday` added to
 `e2e/home-curation.spec.ts` (each verified red on a deliberate mutation, then green); integration
 assertion added to `home-static.spec.ts`.
 
@@ -96,7 +96,7 @@ generically for at least one Iconoir category glyph).
 **Acceptance:** chips show label + count matching the Categorías section's numbers; tap →
 `/l?category=<key>`. Existing chips elsewhere unchanged.
 **Risk:** low
-**Commits:** `594b13e` (apps/miyagisanchez) — new `home-static.spec.ts` assertion (verified red on a
+**Commits:** `594b13e` (apps/storefront) — new `home-static.spec.ts` assertion (verified red on a
 deliberate mutation, then green); `de692ab` — the graceful-degradation fix + `home-icons.spec.ts`
 update, found by the full deterministic gate run before merge (not by Daniel or a reviewer).
 
@@ -113,7 +113,7 @@ functional impact, just naming the right spec).
 **Acceptance:** incognito bottom-of-page matches mockup structure; signed-in still gets
 `HomeSellerModule` instead; existing specs green.
 **Risk:** low
-**Commit:** `adcf1af` (apps/miyagisanchez) — new `home-static.spec.ts` assertion, self-gated on the
+**Commit:** `adcf1af` (apps/storefront) — new `home-static.spec.ts` assertion, self-gated on the
 block's own testid since it only renders when Selección is non-empty (verified red on a deliberate
 href mutation, then green).
 

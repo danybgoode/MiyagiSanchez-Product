@@ -11,9 +11,9 @@ structurally fail-closed invitation surface.
 | Sprint | Repo | PR | Landed |
 |---|---|---|---|
 | 1 — market contract, seller market, channel boundary, Region resolver | `apps/backend` | [#124](https://github.com/danybgoode/medusa-bonsai-backend/pull/124) | 2026-07-30 |
-| 1 — market-aware read layer, degrade-closed | `apps/miyagisanchez` | [#324](https://github.com/danybgoode/miyagisanchezcommerce/pull/324) | 2026-07-30 |
-| 2 — `/` selector, `/mx` cutover, middleware 308s, canonical/hreflang, sitemap, MCP market | `apps/miyagisanchez` | [#327](https://github.com/danybgoode/miyagisanchezcommerce/pull/327) | 2026-07-30 |
-| 3 — `/us` invitation, fail-closed boundary, admin/partner/MCP market projection, lifecycle tag | `apps/miyagisanchez` | [#328](https://github.com/danybgoode/miyagisanchezcommerce/pull/328) | 2026-07-31 |
+| 1 — market-aware read layer, degrade-closed | `apps/storefront` | [#324](https://github.com/danybgoode/miyagisanchezcommerce/pull/324) | 2026-07-30 |
+| 2 — `/` selector, `/mx` cutover, middleware 308s, canonical/hreflang, sitemap, MCP market | `apps/storefront` | [#327](https://github.com/danybgoode/miyagisanchezcommerce/pull/327) | 2026-07-30 |
+| 3 — `/us` invitation, fail-closed boundary, admin/partner/MCP market projection, lifecycle tag | `apps/storefront` | [#328](https://github.com/danybgoode/miyagisanchezcommerce/pull/328) | 2026-07-31 |
 
 No database migration (D12) and no runtime flag (approved pre-launch kill-switch decision). The only
 production mutation authorized was one idempotent MX backfill — which measurement showed was

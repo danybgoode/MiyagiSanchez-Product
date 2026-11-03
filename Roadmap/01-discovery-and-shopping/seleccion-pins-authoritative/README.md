@@ -36,7 +36,7 @@ Daniel is configuring it correctly. These are half-built promises in `lib/home-c
 | | |
 |---|---|
 | **What it is** | Pins become authoritative: shown regardless of price (S1.1) and regardless of freshness (S2), and the grid grows to show all of them (S1.2). |
-| **Repos touched** | `apps/miyagisanchez` (S1 + S2.2). `apps/backend` for the S2.1 `/store/listings?featured=true` read-filter. |
+| **Repos touched** | `apps/storefront` (S1 + S2.2). `apps/backend` for the S2.1 `/store/listings?featured=true` read-filter. |
 | **Output** | Lowest-rank pin is always the Destacado · every pin renders under it in rank order · auto-curation fills only leftover slots. |
 | **SSOT** | `lib/home-curation.ts` (`isQualifying`, `curateGrid`, `pickFeatured`) · `lib/listings.ts` (`getCuratedPool`) · `apps/backend/src/api/store/listings/route.ts` (the new `featured` filter). |
 

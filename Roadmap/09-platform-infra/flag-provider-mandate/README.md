@@ -32,7 +32,7 @@ anything."* Reading the code, the two lists are **the same data in two windows, 
   Golden is unreachable the page shows nothing rather than falling back to a local value.
 - **Production already serves from Golden.** `LEARNINGS.md` records
   `GOLDEN_BEANS_FLAG_CUTOVER = *=golden` (2026-07-31, `owned-shop-operating-channel`).
-- **Definitions already sync.** `apps/miyagisanchez/scripts/sync-flag-catalog.ts` and
+- **Definitions already sync.** `apps/storefront/scripts/sync-flag-catalog.ts` and
   `apps/backend/src/lib/flag-definition-sync.ts` exist.
 
 **So what is actually broken is one thing: the flags were never *activated* in Golden.** Golden's own
@@ -62,11 +62,11 @@ half that is no longer wanted.** The largest risk is ordering, not construction.
 
 ## What already exists (reuse, don't rebuild)
 
-- `apps/miyagisanchez/lib/golden-flag-{provider,mirror,mirror-store,admin,read-key-routing}.ts`
-- `apps/miyagisanchez/lib/flag-provider-evaluator.ts` — the three-mode orchestration
-- `apps/miyagisanchez/lib/{flag-cutover,flag-provider-mode}.ts` — **the things to delete at the end**
-- `apps/miyagisanchez/scripts/sync-flag-catalog.ts` + `apps/backend/src/lib/flag-definition-sync.ts`
-- `apps/miyagisanchez/app/(shell)/admin/flags/` + `app/api/admin/flags/route.ts`
+- `apps/storefront/lib/golden-flag-{provider,mirror,mirror-store,admin,read-key-routing}.ts`
+- `apps/storefront/lib/flag-provider-evaluator.ts` — the three-mode orchestration
+- `apps/storefront/lib/{flag-cutover,flag-provider-mode}.ts` — **the things to delete at the end**
+- `apps/storefront/scripts/sync-flag-catalog.ts` + `apps/backend/src/lib/flag-definition-sync.ts`
+- `apps/storefront/app/(shell)/admin/flags/` + `app/api/admin/flags/route.ts`
 - `apps/*/lib/flag-catalog.ts` — the typed inventory both repos share
 - `golden-beans` `/app/flags/<project>` — the surface that becomes the single place to manage
 

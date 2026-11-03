@@ -24,7 +24,7 @@ _Closed: 2026-07-16_
   predate the `seeds/` convention and have nothing real to link. Both fixed with regression tests
   before the sweep trusted them.
 - The incremental-adoption `ENFORCED_SWEPT_PATHS` allow-list (same shape as the raw-color and emoji
-  guards in `apps/miyagisanchez`) meant the guard could go REQUIRED immediately once one section was
+  guards in `apps/storefront`) meant the guard could go REQUIRED immediately once one section was
   clean, without waiting on — or ever requiring — a fully-swept tree.
 - Delegating the bulk hand-fix grind (41 epics' worth of header/Class/Risk reconstruction) to a
   background fork kept it out of the main conversation's context while still producing reviewable,

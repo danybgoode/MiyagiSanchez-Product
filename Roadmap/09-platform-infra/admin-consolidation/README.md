@@ -33,7 +33,7 @@ auth + audit) and a **tenant directory + entitlement action** built on the backe
 | | |
 |---|---|
 | **What it is** | One in-repo admin shell + section registry; Clerk admin identity + audit; tenant directory + entitlement grant |
-| **Repos touched** | `apps/miyagisanchez` (all of it). Possibly a tiny `apps/backend` read for the entitlement pre-flight (S4). The external scraper app stays its own repo/deploy. |
+| **Repos touched** | `apps/storefront` (all of it). Possibly a tiny `apps/backend` read for the entitlement pre-flight (S4). The external scraper app stays its own repo/deploy. |
 | **Output** | `/admin` hub + left-nav; every section Clerk-gated + audited; secret-in-URL killed for humans; `/admin/tenants` directory; entitlement grant/revoke |
 | **SSOT** | `lib/admin/sections.ts` (nav registry) · `lib/admin/identity.ts` (`isAdminUser`) · `lib/domain-entitlement.ts` (entitlement, reused) |
 
@@ -101,7 +101,7 @@ auth + audit) and a **tenant directory + entitlement action** built on the backe
 
 ## Deploy order & dependencies
 
-- **Frontend-led**, single repo (`apps/miyagisanchez`). Branch `feat/admin-consolidation` off latest `main`.
+- **Frontend-led**, single repo (`apps/storefront`). Branch `feat/admin-consolidation` off latest `main`.
 - **S1 first** (the shell + auth chassis everything else registers into).
 - **S2 ‖ S3 after S1** — S3 (read-only directory) depends only on S1's shell+auth and can run in **parallel**
   with S2 (a second agent); single **scribe** for `lib/admin/sections.ts` to avoid registry collisions.

@@ -69,7 +69,7 @@
 - `LEARNINGS.md` line 3126: `lib/setup-spec.ts`
 - `LEARNINGS.md` line 3144: `lib/subdomain-switch.ts`
 - `LEARNINGS.md` line 3160: `lib/conversations.ts`
-- `LEARNINGS.md` line 3308: `apps/miyagisanchez/lib/admin/identity.ts`
+- `LEARNINGS.md` line 3308: `apps/storefront/lib/admin/identity.ts`
 
 ## README.md (poster) — flagged candidates
 

@@ -10,7 +10,7 @@ Status: ✅ MERGED TO MAIN (2026-05-30, commit 64f2102). All phases shipped. Pen
 > **Verify after toggles:** open any `/messages/<id>` on prod, DevTools Console → look for `[realtime] connected <id>`.
 Owner: Daniel
 Created: 2026-05-29
-Branch: `feat/messaging-realtime` (in `apps/miyagisanchez` — cut at implementation start; keep `main` clean for the Session-B chat)
+Branch: `feat/messaging-realtime` (in `apps/storefront` — cut at implementation start; keep `main` clean for the Session-B chat)
 
 North star: Vinted/WhatsApp-grade buyer–seller messaging — instant delivery, out-of-app notifications, hardened, cheap to run, and **not locked to any vendor**. Derived from the 2026-05-29 research + dependency/lock-in evaluation.
 

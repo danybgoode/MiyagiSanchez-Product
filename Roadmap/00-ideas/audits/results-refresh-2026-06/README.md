@@ -5,12 +5,12 @@ re-scope the highest-value product work (#3b/#5/#6/#3c). This is the **spike del
 BUILD-ORDER #3a — written findings + a re-scope delta, **no code, no slicing**.
 
 ## Pinned to (so deltas are reproducible)
-- **Frontend** `apps/miyagisanchez` → **`origin/main` @ `ed447bd`**
+- **Frontend** `apps/storefront` → **`origin/main` @ `ed447bd`**
 - **Backend** `apps/backend` → **`origin/main` @ `0980253`**
 - Date: **2026-06-06**
 
 > ⚠️ **Audit-environment note (worth recording).** When this spike ran, the local working tree
-> was on stale feature branches — `apps/miyagisanchez` on `chore/clerk-testing-authed-smokes`
+> was on stale feature branches — `apps/storefront` on `chore/clerk-testing-authed-smokes`
 > (**48 commits behind `main`**), `apps/backend` on `feat/sweepstakes-draw-job`. The post-audit
 > surfaces (support widget, subdomains, short-links, custom-domain checkout) were **not present
 > on the checked-out branch**, only on `origin/main`. All findings below were therefore re-read

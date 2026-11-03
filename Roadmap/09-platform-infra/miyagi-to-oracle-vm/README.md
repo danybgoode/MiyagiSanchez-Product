@@ -84,7 +84,7 @@ move and should be re-asked after S2). The VM pattern is not new either — panf
 - `../fluxonline/deploy/` — compose (Caddy-only ports, state on `/data`), `update.sh` (pull by sha),
   `backup.sh` + systemd timer (instance-principal upload, no keys on host), `allow-my-ip.sh`.
 - `infra/gcp/backups/db-backup.sh` + `BACKUPS.md` — the R2 escrow rail; S1.1 adds a target.
-- `apps/miyagisanchez/cloudbuild.yaml`, `apps/backend/cloudbuild.yaml` — the build args and deploy shape to mirror.
+- `apps/storefront/cloudbuild.yaml`, `apps/backend/cloudbuild.yaml` — the build args and deploy shape to mirror.
 - `infra/gcp/cloudflare-origin-cert.mjs`, `cloudflare-cutover-flip.mjs` (`--domain`, `--extra-hosts`),
   `cloudflare-saas-fallback-provision.mjs`, `cloudflare-cache-provision.mjs`.
 - The 5 `/api/cron/*` routes the `frontend-*` schedulers call today.

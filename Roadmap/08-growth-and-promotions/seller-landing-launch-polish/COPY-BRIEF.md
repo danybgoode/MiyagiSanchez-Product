@@ -1,7 +1,7 @@
 # COPY-BRIEF — Seller landing launch polish (verbatim strings)
 
 **Status: ✅ approved by Daniel 2026-06-26.** Source of truth for Sprint 1 (copy) and the copy that
-Sprint 2 lays out. All keys under `apps/miyagisanchez/locales/es.json → sellerAcquisition` unless noted.
+Sprint 2 lays out. All keys under `apps/storefront/locales/es.json → sellerAcquisition` unless noted.
 Voice rules from the v2 brief still apply (tú · full accents · "0% comisión de plataforma" · no
 distrust · no internal jargon · brand names intact). Mirror new keys into `en.json` for type-parity.
 

@@ -162,9 +162,9 @@ and the `medusa-bonsai` cutover.
 - `@golden-frijoles/sdk` — `createFlagProvider`, `createFlagDefinitionSyncClient`, `parseFlagSnapshot`,
   `explainFlagEvaluation`, the `MAX_FLAG_*` limits.
 - `golden-beans/apps/web/lib/credential-inventory.ts` — the three-key model, already tested.
-- `medusa-bonsai/apps/*/src/lib/flag-provider-mode.ts` + `parseFlagCutoverManifest` — **a cutover
+- `miyagisanchez-product/apps/*/src/lib/flag-provider-mode.ts` + `parseFlagCutoverManifest` — **a cutover
   primitive that already exists**, written for exactly this kind of migration.
-- `medusa-bonsai/apps/*/lib/flags-cache.ts` — the fail-open + 60s in-process cache doctrine; the
+- `miyagisanchez-product/apps/*/lib/flags-cache.ts` — the fail-open + 60s in-process cache doctrine; the
   Golden Frijoles provider does the same thing, so the behaviour contract is already understood here.
 - `dobby-foundation/scripts/check-plugin-leaks.mjs` — the guard to extend.
 - `golden-beans/app/install/page.tsx` — the onboarding copy to stay consistent with.

@@ -31,7 +31,7 @@ No commerce concern (rule #1 n/a). Runtime copy is non-commerce → the existing
 untouched (rule #4). Editor microcopy es-MX (rule #5). No agent surface (admin tool).
 
 ## What already exists (reuse, don't rebuild)
-- `apps/miyagisanchez/supabase/migrations/20260708150000_platform_copy_overrides.sql` — the fix IS
+- `apps/storefront/supabase/migrations/20260708150000_platform_copy_overrides.sql` — the fix IS
   this file; written + reviewed in admin-content S1, never applied to prod.
 - `app/api/admin/content-overrides/*` — save/restore/export/import routes (Clerk-gated, audited,
   `revalidateTag('copy-overrides')`). Unchanged for the fix; 1.2 adds error differentiation only.

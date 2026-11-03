@@ -29,7 +29,7 @@ stories:
 
 Cite `README.md` D1, D2, D4.
 
-- **Measured baseline: 323 spec files** in `apps/miyagisanchez/e2e/` (38 of them `*.browser.spec.ts`,
+- **Measured baseline: 323 spec files** in `apps/storefront/e2e/` (38 of them `*.browser.spec.ts`,
   which are the non-blocking project, not the gate). Confirm the count yourself first.
 - `playwright.config.ts` already sets `fullyParallel: true` and defines three projects
   (`api`, `browser`, `staging`). **Only the `api` project is the gate** — do not shard `browser`

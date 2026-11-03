@@ -88,7 +88,7 @@ Env: the repo docs + the new skill (process change, no app deploy — no product
 If any step fails, note the step number + what you saw — that's the bug report.
 
 ## Kickoff prompt (paste into a fresh Claude Code session)
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/00-ideas/2. readyforscope/doc-hygiene-learnings-sweep.md and
 > Roadmap/09-platform-infra/doc-hygiene-learnings-sweep/README.md + sprint-1.md.
 >

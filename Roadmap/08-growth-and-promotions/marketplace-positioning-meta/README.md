@@ -31,12 +31,12 @@ rule #1 not engaged. AGENTS rule #5 (bilingual): these surfaces are **es-MX and 
 allow-list** — they stay es-MX only; no `en` strings added.
 
 ## What already exists (reuse, don't rebuild)
-- `apps/miyagisanchez/app/layout.tsx` — `export const metadata` (~L38–73): `title.default` +
+- `apps/storefront/app/layout.tsx` — `export const metadata` (~L38–73): `title.default` +
   `template`, `description`, `keywords`, `openGraph`, `twitter`. **Edit in place** — structure stays,
   only the strings change.
-- `apps/miyagisanchez/app/opengraph-image.tsx` — the `next/og` share card: `alt` (L3), the tagline
+- `apps/storefront/app/opengraph-image.tsx` — the `next/og` share card: `alt` (L3), the tagline
   line (L97), the pill-badge array (L102). **Edit the three strings**, leave the layout/styling.
-- `apps/miyagisanchez/app/api/ucp/manifest/route.ts` — agent-facing `description` (L31) **already**
+- `apps/storefront/app/api/ucp/manifest/route.ts` — agent-facing `description` (L31) **already**
   reads *"A P2P marketplace for Mexico…"* → **no change needed** (audited, already aligned).
 - **Leave alone:** `app/shop/manage/settings/ShopSettings.tsx` L3256 ("…infraestructura nuestra") —
   unrelated custom-domain settings copy, not the brand tagline.
@@ -49,7 +49,7 @@ allow-list** — they stay es-MX only; no `en` strings added.
 | 1 | Add `api` meta spec + grep/update any stale suite assertion | low |
 
 ## Deploy order
-Frontend-only (`apps/miyagisanchez` → Vercel). No backend/Cloud Run, no migration, no deploy-lag
+Frontend-only (`apps/storefront` → Vercel). No backend/Cloud Run, no migration, no deploy-lag
 window. One PR; reviewer may auto-merge on a green gate (low-risk tier). Preview validates via the
 branch's Vercel preview; nothing is owed to Daniel (no money/auth path).
 

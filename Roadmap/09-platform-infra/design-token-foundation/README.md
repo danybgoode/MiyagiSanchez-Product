@@ -29,8 +29,8 @@ commerce code.
 
 | | |
 |---|---|
-| **Token home** | `apps/miyagisanchez/app/globals.css` (~1,134 lines) — already integrated (Design System v2, May 2026) |
-| **Theme engine** | `apps/miyagisanchez/lib/platform-theme.ts` + components — shipped on `feat/seasonal-theme-engine` (June 2026) |
+| **Token home** | `apps/storefront/app/globals.css` (~1,134 lines) — already integrated (Design System v2, May 2026) |
+| **Theme engine** | `apps/storefront/lib/platform-theme.ts` + components — shipped on `feat/seasonal-theme-engine` (June 2026) |
 | **Canonical spec** | `references/miyagi-s-nchez-design-system/project/colors_and_type.css` + `themes/README.md` (*inspiration, not signed-off scope*) |
 | **Repos touched** | `danybgoode/miyagisanchezcommerce` (frontend) only — no backend, no DB |
 

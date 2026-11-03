@@ -31,7 +31,7 @@ builds succeeded — backend build `dc3059c1` (commit `d8131fa`, repo `medusa-bo
 commits. Sprint fully closed.
 
 The prerequisite for everything else in this epic: neither `apps/backend` nor
-`apps/miyagisanchez` has a committed lockfile, so every Docker build re-resolves dependency
+`apps/storefront` has a committed lockfile, so every Docker build re-resolves dependency
 versions from scratch against caret-pinned ranges. This is both a build-determinism gap on its
 own (a rebuild of the identical commit could pull a different transitive dependency version) and
 the reason no caching scheme (Sprint 2) can have a stable cache key.
@@ -71,7 +71,7 @@ PRs become common (they're expected to, now that Sprint 1 establishes the conven
 > that** a rebuild of the same commit always installs the exact same dependency tree, and any
 > future caching scheme has a stable key to hang on.
 
-- Generate `apps/backend/package-lock.json` and `apps/miyagisanchez/package-lock.json`, each run
+- Generate `apps/backend/package-lock.json` and `apps/storefront/package-lock.json`, each run
   from *inside* its own repo (not the monorepo root — the root's own `"workspaces": ["apps/**",
   ...]` + its own `package-lock.json` stay untouched; each Docker build's context is only the
   single app repo, so this is fully decoupled from the monorepo-level workspace resolution).
@@ -104,7 +104,7 @@ PRs become common (they're expected to, now that Sprint 1 establishes the conven
 ## Sprint 1 — Smoke walkthrough (do these in order)
 1. ✅ **Ran.** `cd apps/backend && npm install --package-lock-only` → `package-lock.json` created,
    `name` confirmed `@dtc/backend` matching `package.json`.
-2. ✅ **Ran.** Repeated for `apps/miyagisanchez` → `name` confirmed `miyagisanchez`.
+2. ✅ **Ran.** Repeated for `apps/storefront` → `name` confirmed `miyagisanchez`.
 3. ✅ **Ran.** Edited both Dockerfiles per S1.1. Local `docker build .` for each app completed
    successfully, confirmed `npm ci` in the build log (not `npm install`'s resolution chatter).
    Backend's runner-stage `npm ci --omit=dev` against `.medusa/server/package.json` also verified

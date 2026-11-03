@@ -84,7 +84,7 @@ These decisions were made against frontend `origin/main` at `0eb9985`, the deplo
 Cloudflare configuration, a production HTTP probe, and read-only live Supabase/Medusa queries. They
 replace any conflicting scaffold language below or in a sprint file.
 
-1. **D1 — This is a two-repository delivery.** Product code lives in `apps/miyagisanchez`; Cloud Run,
+1. **D1 — This is a two-repository delivery.** Product code lives in `apps/storefront`; Cloud Run,
    Cloudflare, the probe and roadmap docs live in the root repo. Each repo uses the same stack
    (`feat/hyper-performant-runtime` → `-s2` → `-s3`) where that sprint has a diff. A sprint that spans
    both repos necessarily has one PR per repo; the infra/root PR merges first only when the frontend

@@ -102,7 +102,7 @@ If any step fails, note the step number + preview version — that's the bug rep
 `xljxqymsuyhlnorfrnno`, and applies a single migration file through the Management API:
 
 ```bash
-cd apps/miyagisanchez
+cd apps/storefront
 supabase db query --linked --file supabase/migrations/20260721150000_consent_previews_s2.sql
 supabase migration repair --status applied 20260721150000 --linked   # record it in history
 ```

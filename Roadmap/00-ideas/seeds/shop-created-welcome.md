@@ -77,10 +77,10 @@ A new MX shop owner receives Spanish copy; a new US shop owner receives English 
 
 ## What already exists (reuse, don't rebuild)
 
-- `apps/miyagisanchez/lib/email.ts` — transport, HTML design, and idempotency option.
-- `apps/miyagisanchez/lib/ensure-shop.ts` and `app/api/sell/create/route.ts` — the two owner-created seller paths.
+- `apps/storefront/lib/email.ts` — transport, HTML design, and idempotency option.
+- `apps/storefront/lib/ensure-shop.ts` and `app/api/sell/create/route.ts` — the two owner-created seller paths.
 - `apps/backend/src/api/store/sellers/me/route.ts` — stamps the persisted market on creation and returns it.
-- `apps/miyagisanchez/lib/notifications/{catalog,fixtures}.ts` — admin sample entry points.
+- `apps/storefront/lib/notifications/{catalog,fixtures}.ts` — admin sample entry points.
 
 ## Visuals
 

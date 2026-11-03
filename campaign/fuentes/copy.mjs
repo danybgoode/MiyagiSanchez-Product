@@ -1,6 +1,6 @@
 // Miyagi Sánchez — 30-Day Organic Acquisition Board v0.1
 // Final copy for X / Threads / Instagram. Source: miyagisanchez30dayorganicacquisitionboardv0.1.md
-// Facts verified against apps/miyagisanchez/locales/{es,en}.json (live landing copy).
+// Facts verified against apps/storefront/locales/{es,en}.json (live landing copy).
 //
 // evidence: "ready"  -> fully writable from the board + verified product facts. Schedules live.
 // evidence: "needs"  -> object depends on real merchant/field material the board forbids faking.

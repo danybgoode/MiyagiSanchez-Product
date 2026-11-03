@@ -61,7 +61,7 @@ reports `autoscaling.knative.dev/minScale: '1'`.
 - A request to `https://miyagisanchez.com/mx/s/piezas-unicas` after ≥1 h of no traffic returns in the
   same TTFB band as a warm one (compare with Story 1.3's probe, before vs after).
 - `deploy-frontend.sh` remains the only place scaling is set — **no scaling flags leak into
-  `apps/miyagisanchez/cloudbuild.yaml`** (LEARNINGS → *Cloud Run deploy is image-only*; CI deploys
+  `apps/storefront/cloudbuild.yaml`** (LEARNINGS → *Cloud Run deploy is image-only*; CI deploys
   must keep preserving config).
 
 **Risk:** **high** — live production service config + real recurring spend. The product owner

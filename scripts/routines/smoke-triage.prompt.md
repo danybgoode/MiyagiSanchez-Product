@@ -18,7 +18,7 @@
   TRIGGER (`RemoteTrigger` update), or you have changed documentation and nothing else.
 
   Reuse, don't rebuild:
-    - Detector: apps/miyagisanchez/.github/workflows/browser-smoke.yml (Playwright vs prod, Chromium,
+    - Detector: apps/storefront/.github/workflows/browser-smoke.yml (Playwright vs prod, Chromium,
       *.browser.spec.ts). Failure uploads the `playwright-browser-report` artifact (playwright-report/).
     - Scope gate: scripts/smoke-triage-scope.mjs (root repo) — pure, node:test-covered.
     - Authed/epic smokes read MS_TEST_* secrets and skip gracefully when unset.

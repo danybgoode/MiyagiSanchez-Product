@@ -35,7 +35,7 @@ without manual discipline.
 | The cross-agent review command itself — runs on **any** PR, `--agent codex\|antigravity`, posts a labeled "advisory only, not a gate" comment | `scripts/cross-review.mjs` | The CI job just *invokes* this; no new review logic |
 | Codex→Antigravity auto-fallback, PR-resolve-from-branch, stale-HEAD guard, agy size-cap/version-pin | `scripts/lib/cross-agent-cli.mjs` | Inherited free; the CI job passes an explicit `<PR#>` + `--repo` so branch-resolve isn't even needed |
 | Single shared reviewer rubric (five AGENTS rules + single-pass discipline) | `scripts/cross-review.prompt.md` | Unchanged — the CI run reads the same prompt the human does |
-| Non-blocking CI job pattern (`continue-on-error`, runs but never gates) | `apps/miyagisanchez/.github/workflows/ci.yml` → "Browser smokes vs preview (non-blocking)" | **The template** for a never-gating advisory job |
+| Non-blocking CI job pattern (`continue-on-error`, runs but never gates) | `apps/storefront/.github/workflows/ci.yml` → "Browser smokes vs preview (non-blocking)" | **The template** for a never-gating advisory job |
 | "Skip cleanly when an optional secret is absent, never hard-fail" idiom | `apps/*/.github/workflows/notify-telegram.yml` | If the codex/agy credential is missing, the job no-ops instead of failing the PR |
 | `gh` in Actions via `GITHUB_TOKEN` + `pull-requests: write` | GitHub-hosted runners (gh preinstalled) | `gh pr diff` / `gh pr comment` need only a scoped token, no PAT |
 | PR template's "Cross-agent review (optional)" section | `.github/PULL_REQUEST_TEMPLATE.md` | Reword to "runs automatically; advisory" |

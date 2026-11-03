@@ -16,7 +16,7 @@ stories:
 ---
 # Sprint 3 — Dynamic rotation (shuffle per ISR window)
 
-**Epic:** [Homepage Selección: bug sweep + admin curation + dynamic rotation](README.md) · **Repo:** `apps/miyagisanchez`
+**Epic:** [Homepage Selección: bug sweep + admin curation + dynamic rotation](README.md) · **Repo:** `apps/storefront`
 **Goal:** make the Selección visibly rotate over time without un-static-ing the homepage and without any GCP job —
 a **deterministic per-ISR-window shuffle of the unpinned remainder**. Pinned / admin-ordered items (Sprint 2)
 stay fixed; only the auto-filled slots rotate. `next build` must keep `/` at `○`.

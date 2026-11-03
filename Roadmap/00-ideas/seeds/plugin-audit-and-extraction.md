@@ -152,7 +152,7 @@ been outstanding for six weeks.
 - `scripts/port-reviewer-roster.mjs` — a porting precedent (and a candidate for deletion once the
   roster is gone).
 - Every skill already has a `config.example.json` convention — the seam has a shape to follow.
-- `medusa-bonsai/scripts/README.md` — documents the existing script inventory.
+- `miyagisanchez-product/scripts/README.md` — documents the existing script inventory.
 
 ## UX heuristics & rails check
 - **CI guards covering this surface:** `check-skill-scripts.mjs` (the gate this epic is *about*),

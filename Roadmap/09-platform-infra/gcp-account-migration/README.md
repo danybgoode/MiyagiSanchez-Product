@@ -36,7 +36,7 @@ where a value must point at the new origin (webhooks, callback URLs).
 ## Medusa-first note
 
 N/A — pure infrastructure. **No application code should change in this epic.** If a sprint proposes
-editing `apps/backend` or `apps/miyagisanchez` source, that is a signal something has been misread:
+editing `apps/backend` or `apps/storefront` source, that is a signal something has been misread:
 the app is portable already, and the migration is configuration + data + DNS.
 
 ## What already exists (reuse, don't rebuild)

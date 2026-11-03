@@ -2,7 +2,7 @@
 
 _Closed: 2026-06-23_
 
-**Macro-section:** 09 · Platform & Infra · **Status:** ✅ shipped 2026-06-23 · **Sprints:** 4 · **Repo:** `apps/miyagisanchez` (one backend *read* in S4.0).
+**Macro-section:** 09 · Platform & Infra · **Status:** ✅ shipped 2026-06-23 · **Sprints:** 4 · **Repo:** `apps/storefront` (one backend *read* in S4.0).
 
 ## What shipped
 The platform went from a scattered, secret-in-URL admin to **one coherent in-repo, Clerk-gated admin** with an audit trail and tenant management:

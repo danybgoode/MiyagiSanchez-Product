@@ -48,9 +48,9 @@ flow, the magazine builder, or the auth layer.
   listing `df12a345-6323-4c6f-87af-909f7b6ab28c`. Remove or repurpose them as part of this work.
 
 ## Orient first (source of truth — read before planning)
-- `apps/miyagisanchez/AGENTS.md` — esp. Rule #1 (Medusa owns commerce; shops/sellers live in
+- `apps/storefront/AGENTS.md` — esp. Rule #1 (Medusa owns commerce; shops/sellers live in
   the marketplace plugin) and the gitflow / Definition-of-Done.
-- `apps/miyagisanchez/SUPPLY_IMPORT_SCHEMA.md` — the documented (possibly stale) import shape.
+- `apps/storefront/SUPPLY_IMPORT_SCHEMA.md` — the documented (possibly stale) import shape.
 - `Roadmap/00-ideas/seeds/agent-native-gtm/ask-claude-campaign-brief.md` — §7 is the
   gem → claimable-shop loop this fix exists to serve.
 - The real code: `app/api/supply/*`, `app/supply/*`, `lib/listings.ts`, `lib/supply.ts`,

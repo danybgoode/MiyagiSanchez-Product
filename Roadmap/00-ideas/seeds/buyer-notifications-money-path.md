@@ -16,7 +16,7 @@ updated: 2026-07-06
 **Status:** ready for scope. **Macro-section:** 05 · Trust, Offers & Messaging.
 
 > **Validated still-open 2026-07-06** (grooming close-out, re-checked against `origin/main` of
-> `apps/miyagisanchez`): the Stripe webhook still imports only `dispatchToSeller` (no buyer dispatch);
+> `apps/storefront`): the Stripe webhook still imports only `dispatchToSeller` (no buyer dispatch);
 > the buyer grid's Compras × Push/Telegram cells are still hardcoded locked-"pronto"
 > (`BuyerNotificationPreferences.tsx` `lockedS2`); `lib/order-mirror.ts` still doesn't persist the buyer's
 > Clerk id. Both gaps below remain exactly as scoped — **not** implemented in another form (the plumbing

@@ -53,7 +53,7 @@ calls `http://localhost:9000/store/home/personalization` — which fails outrigh
 in a visitor's browser) — before the request ever reaches the real backend, CORS, or Clerk-JWT layers.
 
 **Root cause — NOT CORS** (superseding the S4-era code comment and this doc's own original framing):
-`apps/miyagisanchez/Dockerfile` (builder stage) and `cloudbuild.yaml` never pass
+`apps/storefront/Dockerfile` (builder stage) and `cloudbuild.yaml` never pass
 `NEXT_PUBLIC_MEDUSA_STORE_URL` / `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` as Docker **build-args** — only
 `infra/gcp/deploy-frontend.sh` sets them, and only as Cloud Run **runtime** env vars (`--set-env-vars`,
 applied after the image is already built). Next.js inlines `NEXT_PUBLIC_*` at `next build` time; since
@@ -92,12 +92,12 @@ Dockerfile/cloudbuild/infra edit; no new env vars.
 **Acceptance:** prod, signed-in, ≥1 favorite → `data-testid="home-retoma-rail"` renders; with an
 actionable offer → `data-testid="home-offer-alert"` renders. Anonymous prod HTML unchanged
 (`home-static.spec.ts` green).
-**Risk:** low — no shared-infra/CORS/Cloud Run/Docker file touched, purely `apps/miyagisanchez` app
+**Risk:** low — no shared-infra/CORS/Cloud Run/Docker file touched, purely `apps/storefront` app
 code reusing an existing, already-correct env var. This **supersedes** the original "Daniel merges"
 framing above (which assumed a CORS/infra fix) — by the WAYS-OF-WORKING risk-tier rule this qualifies
 as reviewer-mergeable-on-green, not Daniel-only. Still called out explicitly in the PR since it's the
 epic's headline fix.
-**Commit:** `3b12053` (apps/miyagisanchez)
+**Commit:** `3b12053` (apps/storefront)
 
 ### Story 1.3 — Make island failure observable (breadcrumb) ✅
 **As a** maintainer, **I want** a visible breadcrumb when the personalization fetch fails,
@@ -114,7 +114,7 @@ warns exactly once with the right reason on failure, and is never called on succ
 helper, confirmed the new test failed (`expect(calls).toHaveLength(1)` → received `0`), then restored
 and confirmed green.
 **Risk:** low
-**Commit:** `5541d5b` (apps/miyagisanchez)
+**Commit:** `5541d5b` (apps/storefront)
 
 ## Sprint QA
 - **api spec(s):** extended `e2e/home-personalization.spec.ts` with a pure-logic test for the new

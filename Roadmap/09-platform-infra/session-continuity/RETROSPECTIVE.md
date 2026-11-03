@@ -63,7 +63,7 @@ a visible stall to demonstrate.
   only in an **uncommitted local rename** in the frontend working tree, alongside other in-flight work
   that is not mine. The tool reported the working tree accurately; my *interpretation* overstated it
   into a committed defect. Nothing to fix in the repo — the local tree is whoever owns that work.
-- **`apps/backend` is still on `feat/order-payment-capture-state`** and `apps/miyagisanchez` on
+- **`apps/backend` is still on `feat/order-payment-capture-state`** and `apps/storefront` on
   `docs/lifecycle-flag-state-correction`. The tool now surfaces them; nobody has decided their fate.
 - **Root PR #97** is conflicted with red CI — a build-order regeneration PR, likely stale and safe to
   close, but that is Daniel's call.

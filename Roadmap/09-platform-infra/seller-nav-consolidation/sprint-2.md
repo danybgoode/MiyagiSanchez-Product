@@ -30,7 +30,7 @@ stories:
 ---
 # Sprint 2 — One breadcrumb everywhere
 
-**Epic:** [Seller nav consolidation](README.md) · **Risk:** all LOW · **Repo:** `apps/miyagisanchez`
+**Epic:** [Seller nav consolidation](README.md) · **Risk:** all LOW · **Repo:** `apps/storefront`
 **Goal:** every `/shop/manage/*` section renders the same **"Resumen / \<Section\>"** breadcrumb, derived from
 the nav SSOT so it can't drift — replacing the six+ bespoke variants.
 

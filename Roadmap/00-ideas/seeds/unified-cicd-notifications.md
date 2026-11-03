@@ -28,7 +28,7 @@ This is **infra wiring, not a product feature.** It reuses the marketplace's exi
 
 **Bucket 3 (genuinely new wiring), with heavy reuse.** The bot, token, chat plumbing, and message conventions already exist; what does **not** exist is any hook from the *delivery pipelines* into Telegram. The key reframe:
 
-> **`apps/miyagisanchez/lib/telegram.ts` runs inside the Next.js app process.** It can observe *business* runtime events (a sale, a new shop, an offer) because those happen in a request handler. It **cannot** observe a git push, a Vercel deploy, or a Cloud Build run — those occur entirely outside the app. So "reuse the existing Telegram send primitive" means **reuse the bot + token + message style (HTML mode, emoji hierarchy, escaping)** — not call `tgNotify()` from CI. Each pipeline emits its own `sendMessage` call from its own execution context (GitHub Actions, Cloud Build/Pub-Sub, a Vercel webhook receiver), with the bot token re-provisioned into that platform's own secret store.
+> **`apps/storefront/lib/telegram.ts` runs inside the Next.js app process.** It can observe *business* runtime events (a sale, a new shop, an offer) because those happen in a request handler. It **cannot** observe a git push, a Vercel deploy, or a Cloud Build run — those occur entirely outside the app. So "reuse the existing Telegram send primitive" means **reuse the bot + token + message style (HTML mode, emoji hierarchy, escaping)** — not call `tgNotify()` from CI. Each pipeline emits its own `sendMessage` call from its own execution context (GitHub Actions, Cloud Build/Pub-Sub, a Vercel webhook receiver), with the bot token re-provisioned into that platform's own secret store.
 
 ## 3. Decisions locked at grooming (Daniel, 2026-06-06)
 
@@ -42,10 +42,10 @@ This is **infra wiring, not a product feature.** It reuses the marketplace's exi
 
 ## 4. What already exists (reuse, don't rebuild)
 
-- **`apps/miyagisanchez/lib/telegram.ts`** — `tgNotify(text)`: HTML `parse_mode`, fire-and-forget, 5 s `AbortSignal.timeout`, `esc()` for `& < >`, typed emoji-prefixed event helpers (🏪 📦 💳 ✅ ⚠️ 🧹). **The message-format house style to mirror** in every pipeline. The function itself is reusable *only* by the Vercel webhook receiver (slice 3), which runs in-app.
+- **`apps/storefront/lib/telegram.ts`** — `tgNotify(text)`: HTML `parse_mode`, fire-and-forget, 5 s `AbortSignal.timeout`, `esc()` for `& < >`, typed emoji-prefixed event helpers (🏪 📦 💳 ✅ ⚠️ 🧹). **The message-format house style to mirror** in every pipeline. The function itself is reusable *only* by the Vercel webhook receiver (slice 3), which runs in-app.
 - **`TELEGRAM_BOT_TOKEN`** — the existing @BotFather bot (sends to `@Don_Dany`). **Same bot, new chat target.** Re-provision the token into GitHub Secrets (both repos), GCP Secret Manager, and (for the receiver) the frontend env.
 - **Backend `apps/backend/cloudbuild.yaml`** — `build → push → deploy` to Cloud Run `medusa-web` (us-east4) on push to main. Substitutions `$SHORT_SHA`, `$PROJECT_ID`, `$_REGION`, `$_SERVICE` are available; Cloud Build publishes status to the **`cloud-builds` Pub/Sub topic** (the clean success-*and*-failure hook).
-- **Frontend `apps/miyagisanchez/.github/workflows/ci.yml` + `browser-smoke.yml`** — GitHub Actions already wired; the push-notify workflow is a sibling addition. `ci.yml` already demonstrates resolving a Vercel deployment for a commit via the Vercel API (reusable pattern/token).
+- **Frontend `apps/storefront/.github/workflows/ci.yml` + `browser-smoke.yml`** — GitHub Actions already wired; the push-notify workflow is a sibling addition. `ci.yml` already demonstrates resolving a Vercel deployment for a commit via the Vercel API (reusable pattern/token).
 - **`apps/backend/infra/gcp/cicd-setup.sh` / `deploy.sh`** — where the Cloud Build trigger + Cloud Run env/secrets were provisioned; the GCP secret + Pub/Sub notifier wiring belongs in the same infra-as-script spirit.
 - **Repos:** `danybgoode/miyagisanchezcommerce` (frontend) · `danybgoode/medusa-bonsai-backend` (backend).
 

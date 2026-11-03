@@ -49,7 +49,7 @@ rule 2 compliant. Recently-viewed is device-local (`localStorage`) in v1 — no 
 | 3 | Signed-out first-visit iteration — hero, Recién llegado, Pasillos, seller block | ✅ low — merged `f77dda0` (PR #255) |
 
 ## Deploy order
-S1 turned out to be a pure `apps/miyagisanchez` app-code fix, **not** the CORS/Cloud-Run-env change
+S1 turned out to be a pure `apps/storefront` app-code fix, **not** the CORS/Cloud-Run-env change
 originally assumed — see `sprint-1.md` Story 1.1 for the corrected root cause (a Docker-build-arg
 gap, fixed by threading the store URL/key as Server Component props instead of reading
 `NEXT_PUBLIC_*` client-side). No backend/infra deploy was needed for S1.

@@ -36,7 +36,7 @@ independent LOW-risk slice.
 | | |
 |---|---|
 | **What it is** | A backend GitHub Actions workflow + two enhancements to existing repo-local Node scripts |
-| **Repos touched** | **backend** repo (`apps/backend/.github/`) for S1 · monorepo-root (`scripts/`, `Roadmap/`) for S2–S3. No `apps/miyagisanchez`, no DB, no commerce |
+| **Repos touched** | **backend** repo (`apps/backend/.github/`) for S1 · monorepo-root (`scripts/`, `Roadmap/`) for S2–S3. No `apps/storefront`, no DB, no commerce |
 | **Reuse spine** | frontend `ci.yml` `typecheck-build` job · backend `package.json` test/build scripts · `scripts/lib/cross-agent-cli.mjs` shared CLI rail |
 | **Output** | A red/green backend PR check; a cross-review command that survives a dead Codex token and always reviews the right diff |
 
@@ -55,7 +55,7 @@ untouched; rule 5 (bilingual) N/A — strings are developer-facing CI/CLI/PR-com
 
 ## What already exists (reuse, don't rebuild)
 
-- **`apps/miyagisanchez/.github/workflows/ci.yml`** — the `typecheck-build` job (checkout → setup-node 20 →
+- **`apps/storefront/.github/workflows/ci.yml`** — the `typecheck-build` job (checkout → setup-node 20 →
   `npm install` → `tsc --noEmit` → `npm run build`) is the **template** for the backend gate. Copy the shape.
 - **`apps/backend/package.json`** — `build` (`medusa build`), `test:unit`, `test:integration:http/modules`
   already exist; S1 just wires `build` + `test:unit` into CI. No test infra to author.

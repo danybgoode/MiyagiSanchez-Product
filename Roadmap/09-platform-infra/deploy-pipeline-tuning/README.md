@@ -36,7 +36,7 @@ committed lockfile, which is both a build-determinism gap and the actual prerequ
 Docker layer-caching scheme to have a stable key.
 
 ## Context
-Both apps (`apps/backend` Medusa v2, `apps/miyagisanchez` Next.js 16) deploy via Cloud Build →
+Both apps (`apps/backend` Medusa v2, `apps/storefront` Next.js 16) deploy via Cloud Build →
 Artifact Registry → Cloud Run in `us-east4`. The frontend sits behind a Cloudflare proxy → GCP
 external HTTPS Load Balancer → Cloud Run (Cloud CDN explicitly disabled at the ALB,
 `--no-enable-cdn` — Cloudflare is the only edge-cache tier available). No Terraform anywhere —
@@ -63,7 +63,7 @@ no user-facing copy (rule 5).
 - `infra/gcp/test/deploy-invariants.test.js` (+ frontend equivalent) — the drift-guard pattern:
   assert a provisioning script's flags/config match live `gcloud ... describe` output. Every
   DO item in this epic gets an equivalent guard, not a one-off manual check.
-- `apps/backend/cloudbuild.yaml` / `apps/miyagisanchez/cloudbuild.yaml` — current build→push→deploy
+- `apps/backend/cloudbuild.yaml` / `apps/storefront/cloudbuild.yaml` — current build→push→deploy
   shape to extend with caching (Sprint 2), not replace.
 - `app/(site)/page.tsx` (frontend) — already deliberately architected to stay static (no
   `headers()`/`cookies()`, auth gated client-side via `AuthShow`) — the `marketplace-static-shell`

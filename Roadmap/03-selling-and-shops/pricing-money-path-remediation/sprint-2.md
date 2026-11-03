@@ -52,7 +52,7 @@ path only ever reads `MXN_REGION_ID`), so this is pure hygiene.
 anything — confirm nothing keys off it. Then delete the stray region via Medusa Admin (or a
 one-off script) with explicit sign-off (it's a prod-DB mutation, however low-risk).
 
-**Files/anchors:** search `apps/backend` and `apps/miyagisanchez` for hardcoded region ids / `eur`
+**Files/anchors:** search `apps/backend` and `apps/storefront` for hardcoded region ids / `eur`
 / `europe`; `lib/cart.ts` `MXN_REGION_ID` env resolution (the only region the money path uses).
 
 **Risk tier:** LOW. **Verification:** grep returns no code dependency on the Europe region id;

@@ -19,7 +19,7 @@ not build or deploy anything itself.
 |---|---|---|
 | **`MiyagiSanchez-Product`** (this repo) | Product roadmap (`Roadmap/`), engineering delivery log (`tasks/`), vendored Stripe skills + planning/ops skills consumed from the `golden-frijoles` plugin (`skills/`), infra scripts (`infra/`) | No deploy — docs display on GitHub on merge |
 | [`MiyagiSanchez-Backend`](https://github.com/danybgoode/MiyagiSanchez-Backend) (`apps/backend`) | Medusa v2 — the commerce engine: products, orders, payments, fulfillment, sellers, subscriptions | A merge builds `ghcr.io/danybgoode/miyagisanchez-backend:main`; `infra/oci/update.sh` deploys it to the Oracle VM |
-| [`MiyagiSanchez-Storefront`](https://github.com/danybgoode/MiyagiSanchez-Storefront) (`apps/miyagisanchez`) | Next.js 16 — the UI layer, UCP/MCP agent-commerce endpoints, non-commerce APIs | A merge builds `ghcr.io/danybgoode/miyagisanchez-storefront:main`; `infra/oci/update.sh` deploys it to the Oracle VM behind Cloudflare; each PR gets a Vercel preview for review |
+| [`MiyagiSanchez-Storefront`](https://github.com/danybgoode/MiyagiSanchez-Storefront) (`apps/storefront`) | Next.js 16 — the UI layer, UCP/MCP agent-commerce endpoints, non-commerce APIs | A merge builds `ghcr.io/danybgoode/miyagisanchez-storefront:main`; `infra/oci/update.sh` deploys it to the Oracle VM behind Cloudflare; each PR gets a Vercel preview for review |
 | `miyagi-trifold-studio` (`apps/zine`) | The print/zine design studio for the ad-funded local magazine | **Local-only** — no remote, no CI, no deploy |
 
 The three `apps/*` directories are each their own independent git repository (git-ignored from
@@ -64,8 +64,8 @@ cd apps/backend
 npm install
 npx medusa develop          # :9000
 
-# Frontend (Next.js 16) — apps/miyagisanchez, own repo
-cd apps/miyagisanchez
+# Frontend (Next.js 16) — apps/storefront, own repo
+cd apps/storefront
 npm install
 npm run dev                 # :3001, Turbopack
 ```

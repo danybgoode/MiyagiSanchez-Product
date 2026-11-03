@@ -58,7 +58,7 @@ N/A — frontend-only render/CSS change. No model, route, table, or flag. Commer
 
 ## Deploy order
 
-Frontend-only (`apps/miyagisanchez`), single LOW-tier PR
+Frontend-only (`apps/storefront`), single LOW-tier PR
 [#285](https://github.com/danybgoode/miyagisanchezcommerce/pull/285), squash `ca702d3`.
 Per-branch Vercel preview available, so the deterministic gate covers this fully pre-merge. No
 kill-switch — Stage 6b carve-out: no runtime seam, no commerce path, rollback is `git revert`.

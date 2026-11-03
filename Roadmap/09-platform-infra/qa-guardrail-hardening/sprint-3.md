@@ -32,7 +32,7 @@ stories:
 
 Cite `README.md` D5.
 
-- **Measured 2026-07-26: 76 occurrences across 71 files** in `apps/miyagisanchez/e2e/`. The audit
+- **Measured 2026-07-26: 76 occurrences across 71 files** in `apps/storefront/e2e/`. The audit
   said 80/75 on 2026-07-24. **That drift in two days is the entire argument for this story** — put it
   in the PR body.
 - **Follow the `build-order.mjs` pattern**, which is proven twice here: a generator + a `--check` mode

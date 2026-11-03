@@ -47,7 +47,7 @@ Miyagi-specific and becomes a *per-project slot* in the template's AGENTS skelet
   `00-ideas` funnel + `BUILD-ORDER.md` guard, `SESSION-KICKOFFS.md`, `LEARNINGS.md` (structure + the
   transferable subset, e.g. *Working efficiently*; Miyagi-specific gotchas stay here).
 - CI to template: `.github/workflows/*` (tsc + build + Playwright api gate; `build-order-guard.yml`),
-  `apps/miyagisanchez/e2e/` harness shape.
+  `apps/storefront/e2e/` harness shape.
 - Marketplace mechanics (verified 2026-07-03): `.claude-plugin/marketplace.json` + per-plugin
   `plugin.json`; consumers `/plugin marketplace add <org>/<repo>` → `/plugin install
   <plugin>@<marketplace>` — [code.claude.com/docs/en/plugin-marketplaces](https://code.claude.com/docs/en/plugin-marketplaces).

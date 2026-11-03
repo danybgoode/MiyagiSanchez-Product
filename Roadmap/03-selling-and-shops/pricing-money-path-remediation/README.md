@@ -45,7 +45,7 @@ not by inventing a new one. Finding F deletes a stray Region via Medusa's own Ad
     `price_cents` from this app's own Supabase `marketplace_listings` mirror and passes
     `unit_amount: priceCents` straight to Stripe. Self-consistent, bypasses Medusa's `amount`
     entirely. **CONFIRMED SAFE — not touched by this epic.**
-  - *Medusa-cart path* (`apps/miyagisanchez/lib/cart.ts` `startCheckout`, `MXN_REGION_ID` cart at
+  - *Medusa-cart path* (`apps/storefront/lib/cart.ts` `startCheckout`, `MXN_REGION_ID` cart at
     `:254`) — used by every multi-variant / CPP-configurator / quantity-tier product, the MCP
     `create_checkout` tool, and print/promoter checkouts. Hands the charge amount to Medusa's own
     cart-total → payment-session pipeline. **This is the path Finding A questions.**

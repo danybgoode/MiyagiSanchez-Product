@@ -2,7 +2,7 @@
 
 _Closed: 2026-06-23_
 
-**Shipped:** 2026-06-23 · **Sprints:** 2 · **Risk:** LOW throughout (frontend-only IA) · **Repo:** `apps/miyagisanchez`
+**Shipped:** 2026-06-23 · **Sprints:** 2 · **Risk:** LOW throughout (frontend-only IA) · **Repo:** `apps/storefront`
 **PRs:** S1 [#105](https://github.com/danybgoode/miyagisanchezcommerce/pull/105) `2ca1605` · S2 [#107](https://github.com/danybgoode/miyagisanchezcommerce/pull/107) `2debdf7`
 
 ## What it was

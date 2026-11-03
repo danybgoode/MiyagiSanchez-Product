@@ -17,7 +17,7 @@ capability), **reusing the shipped Flagsmith flag layer from [09 · feature-flag
 
 ## Stage-2.5 bucket — **light enhancement**, not genuinely new
 The flag *infrastructure already exists and shipped.* `lib/flags.ts` lives in **both** apps
-(`apps/miyagisanchez/lib/flags.ts` + `apps/backend/src/lib/flags.ts`), backed by Flagsmith SaaS
+(`apps/storefront/lib/flags.ts` + `apps/backend/src/lib/flags.ts`), backed by Flagsmith SaaS
 (project `miyagisanchezmarketplace`), fail-open, local in-process evaluation (~0 ms/request, 60 s refresh),
 2 s timeout / no retries on the checkout path. Adding an Envía kill-switch is **one new `FlagKey` + default,
 then gating the existing seams** — not a new feature.
@@ -35,11 +35,11 @@ It was anticipated; it was simply never wired. This epic wires it.
 ## What already exists (reuse, don't rebuild) — verified 2026-06-25
 | Capability | Where | Reuse for |
 |---|---|---|
-| Flag layer (FE + BE), fail-open, local eval | `apps/miyagisanchez/lib/flags.ts`, `apps/backend/src/lib/flags.ts` | Add one `FlagKey` + default; call `isEnabled('shipping.envia_enabled')` |
+| Flag layer (FE + BE), fail-open, local eval | `apps/storefront/lib/flags.ts`, `apps/backend/src/lib/flags.ts` | Add one `FlagKey` + default; call `isEnabled('shipping.envia_enabled')` |
 | Enablement-polarity precedent (default OFF) | `domain.paywall_enabled` in `lib/flags.ts` | Copy the polarity + fail-open semantics |
 | Kill-switch *application* pattern (pure, unit-tested) | `lib/checkout-killswitch.ts` (`applyPaymentKillSwitches`) | Mirror with a pure `enviaKillGate` decision seam for free coverage |
 | Quote seam (already degrades gracefully) | backend `POST /store/envia/rates` → returns *"coordina la entrega directamente con el vendedor"* on any failure | Short-circuit **before** the Envía call when flag off |
-| FE quote proxy (thin) | `apps/miyagisanchez/app/api/checkout/shipping-rates/route.ts` | No change — it proxies the gated backend route |
+| FE quote proxy (thin) | `apps/storefront/app/api/checkout/shipping-rates/route.ts` | No change — it proxies the gated backend route |
 | Label seam + manual fallback | backend ship route + `apps/backend/src/modules/fulfillment-envia/` (provider) + existing **manual-carrier** path & "can't ship before payment" 422 gate | Block the Envía label path when off; steer to manual carrier (already built) |
 | Per-seller Envía toggle | `settings.shipping.envia_enabled` (`Envios.tsx`) | The new flag is a **platform master switch that overrides** this (global off wins) |
 | Seller settings UI | `app/(shell)/shop/manage/settings/_sections/Envios.tsx` | Add a platform-off banner; server-evaluate the flag and pass down |

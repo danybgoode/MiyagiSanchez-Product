@@ -46,7 +46,7 @@ smoke (buy one real placement, confirm the resulting order/product attributes to
 ### Story 1.2 — Old constant unreachable, history intact
 **As a** developer, **I want** `getMiyagiprintsSellerId()` gone and every call site on the new
 config-addressable resolver, **so that** two placement-owner paths can never coexist.
-**Acceptance:** `grep -ri miyagiprints apps/miyagisanchez/lib apps/miyagisanchez/app --include='*.ts*'`
+**Acceptance:** `grep -ri miyagiprints apps/storefront/lib apps/storefront/app --include='*.ts*'`
 returns only content/copy references (no seller-resolution logic); existing placement orders, referral
 print-ad credits, and prior editions render unchanged; a regression spec pins the new resolver.
 **Risk:** high

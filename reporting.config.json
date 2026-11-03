@@ -45,7 +45,7 @@
   },
   "checkouts": {
     "danybgoode/MiyagiSanchez-Product": ".",
-    "danybgoode/MiyagiSanchez-Storefront": "apps/miyagisanchez",
+    "danybgoode/MiyagiSanchez-Storefront": "apps/storefront",
     "danybgoode/MiyagiSanchez-Backend": "apps/backend"
   },
   "owed": {
@@ -54,7 +54,7 @@
       "the product owner"
     ],
     "specDirs": [
-      "apps/miyagisanchez/e2e"
+      "apps/storefront/e2e"
     ]
   }
 }

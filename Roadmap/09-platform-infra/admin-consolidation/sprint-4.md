@@ -23,7 +23,7 @@ stories:
 ---
 # Sprint 4 — Tenant action: entitlement grant/revoke
 
-**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/miyagisanchez` (+ a backend
+**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/storefront` (+ a backend
 read in S4.0) · **Goal:** turn the read-only tenant inspector (S3) into one that can **grant/revoke the
 custom-domain comp entitlement** — wrapping the existing `lib/domain-entitlement` logic, audited, HIGH-risk.
 Depends on **S3**. **S4.0 pre-flight gates S4.1.**

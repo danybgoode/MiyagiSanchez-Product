@@ -180,7 +180,7 @@ re-creates all three DISABLED (staging trigger included).
 ### Secrets — 60, not ~40
 - 46 bound across Cloud Run services + 7 more on jobs (51 unique live-bound).
 - 11 unbound-but-real, all traced: 7 `NEXT_PUBLIC_*` = **frontend Cloud Build build-args**
-  (`apps/miyagisanchez/cloudbuild.yaml` `availableSecrets`) — must copy; `CLOUDFLARE_ACCOUNT_ID`
+  (`apps/storefront/cloudbuild.yaml` `availableSecrets`) — must copy; `CLOUDFLARE_ACCOUNT_ID`
   (cloudflare `.mjs` scripts) — copy; `R2_BACKUP_BUCKET` (backup scripts) — copy;
   `SERPAPI_KEY` — in `deploy-frontend.sh`'s list but **not bound on live `miyagi-web`**
   (script-vs-live drift; copy the value, let `deploy-invariants.test.js` adjudicate);

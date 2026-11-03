@@ -35,7 +35,7 @@ there is **no runtime switch** anymore. This epic restores flip-without-deploy c
 
 | | |
 |---|---|
-| **Seam** | `isEnabled(flag)` — `apps/miyagisanchez/lib/flags.ts` (FE, 10 flags, ~25 call sites) + `apps/backend/src/lib/flags.ts` (BE, 2 flags, 4 call sites). Only these two files touch Flagsmith. |
+| **Seam** | `isEnabled(flag)` — `apps/storefront/lib/flags.ts` (FE, 10 flags, ~25 call sites) + `apps/backend/src/lib/flags.ts` (BE, 2 flags, 4 call sites). Only these two files touch Flagsmith. |
 | **Store** | New Supabase `platform_flags` table (per AGENTS Rule 2). Both apps read it — FE via `@/lib/supabase`, BE via the existing read-only `supabaseRead` (`SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`, already in Cloud Run env). |
 | **Read path** | In-process cache, **60 s TTL** (no Flagsmith quota pressure → faster flip than the 300 s we were forced into), ≤2 s bounded refresh, **fail-open** to `DEFAULT_FLAGS`. No per-request DB hit. |
 | **Admin** | `/admin/flags` toggle page in the existing `AdminShell`, `requireAdmin`-gated; `POST /api/admin/flags` (`withAdmin` → `admin_audit_log`). |
@@ -57,7 +57,7 @@ N/A — only new copy is the admin-only `/admin/flags` UI (es-MX, not on the bil
 | Pure, unit-tested application seams | `lib/checkout-killswitch.ts`, `resolveSellerPaymentMethods`, `envia-killswitch.ts` | Untouched — they consume flag *values* |
 | FE Supabase client (read + write) | `@/lib/supabase` (`db`) | FE reads + admin writes to `platform_flags` |
 | BE read-only Supabase client | `apps/backend/src/api/store/_utils/supabase-read.ts` (`supabaseRead`) | BE reads `platform_flags` — single source of truth, zero new infra |
-| Migration convention | `apps/miyagisanchez/supabase/migrations/*.sql` | `platform_flags` table migration |
+| Migration convention | `apps/storefront/supabase/migrations/*.sql` | `platform_flags` table migration |
 | Admin page + shell + guards | `app/(shell)/admin/*`, `AdminShell.tsx`, `lib/admin/guard.ts` | `/admin/flags` page + write route, no new auth |
 | Admin audit (auto by `withAdmin`) | `lib/admin/audit.ts` + `admin_audit_log` | Every flip audited for free |
 | Existing flag behavior specs | `e2e/checkout-killswitch.spec.ts`, `envia-killswitch.spec.ts`, `subdomain-pricing.spec.ts`, `custom-domain-paywall.spec.ts`, `promoter-program.spec.ts` + BE unit specs | **Regression net** — must pass unchanged after the swap |

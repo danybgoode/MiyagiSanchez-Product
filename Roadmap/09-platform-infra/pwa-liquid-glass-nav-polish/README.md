@@ -25,7 +25,7 @@ Reviewer may auto-merge LOW stories on green CI **unless** they touch shared lay
 > iOS-keyboard + PWA-standalone smokes owed to Daniel.
 > Scope doc: [`00-ideas/seeds/pwa-liquid-glass-nav-polish.md`](../../00-ideas/seeds/pwa-liquid-glass-nav-polish.md).
 > **Source mockup: `handoff/Liquid-Glass-Navbars-(standalone).html`** — at the **monorepo root** `handoff/`,
-> NOT under `apps/` (a builder searching from inside `apps/miyagisanchez/` will miss it). It specifies the
+> NOT under `apps/` (a builder searching from inside `apps/storefront/` will miss it). It specifies the
 > **bars only** (top + bottom + the detached search bubble's glass + active capsule); it does **not** depict
 > the S2 search **bottom-sheet** interaction. es-MX default · light mode first.
 

@@ -114,7 +114,7 @@ Deliberately divergent, with the reason to re-check before "unifying":
   them as fill-ins; these are this project's live routines) and `review-config.json` (its review routing). The template ships neutral placeholders.
 - **`roadmap-extract.mjs`, `live-smoke.mjs`** — thin delegates: the extractor is
   `roadmap-to-notion.mjs --extract` (it drives the live Notion board), and live-smoke runs
-  `apps/miyagisanchez/scripts/live-smoke.mjs` against that app's own Playwright project.
+  `apps/storefront/scripts/live-smoke.mjs` against that app's own Playwright project.
 - **The review rail** — `cross-review.mjs`, `cross-panel.mjs`, `lib/cross-agent-cli.mjs` and their
   prompts: this copy and the template's evolved separately (their agy version pins differ, among
   others), and unifying them is the review-stack work's job, not the plugin-audit epic's.

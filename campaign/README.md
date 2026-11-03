@@ -93,7 +93,7 @@ El board es explícito: fotografía real de comercio y producto primero, y nada 
 
 ## Sistema visual de las tarjetas
 
-Tomado de `apps/miyagisanchez/references/miyagi-s-nchez-design-system`: Space Grotesk y Geist Mono, paleta selva/papel/azafrán, monograma MS. Cuatro fondos según territorio editorial, que dan ritmo al grid sin romper el lienzo tranquilo:
+Tomado de `apps/storefront/references/miyagi-s-nchez-design-system`: Space Grotesk y Geist Mono, paleta selva/papel/azafrán, monograma MS. Cuatro fondos según territorio editorial, que dan ritmo al grid sin romper el lienzo tranquilo:
 
 | Territorio | Fondo | Para qué |
 |---|---|---|

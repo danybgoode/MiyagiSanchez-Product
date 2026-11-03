@@ -14,7 +14,7 @@ updated: 2026-07-13
 # Scope — Docker build-args hardening for NEXT_PUBLIC_* vars
 
 ## Outcome & signal
-The Cloud Run frontend Docker build (`apps/miyagisanchez/Dockerfile` + `cloudbuild.yaml`) never
+The Cloud Run frontend Docker build (`apps/storefront/Dockerfile` + `cloudbuild.yaml`) never
 passes `NEXT_PUBLIC_*` env vars as Docker **build-args** — only `infra/gcp/deploy-frontend.sh` sets
 them, as Cloud Run **runtime** env vars, applied after the image is already built. Next.js inlines
 `NEXT_PUBLIC_*` at `next build` time, so any client-side (`'use client'`) code that reads one
@@ -35,7 +35,7 @@ whichever vars a client component ends up reading directly anyway.
 
 ## Suggested approach
 1. Add `ARG`/`ENV` declarations for the current known set of client-read `NEXT_PUBLIC_*` vars to the
-   `builder` stage of `apps/miyagisanchez/Dockerfile`.
+   `builder` stage of `apps/storefront/Dockerfile`.
 2. Pass them as `--build-arg` in `cloudbuild.yaml`'s `docker buildx build` step, sourced from Cloud
    Build substitutions or Secret Manager (whichever are actually public/non-secret — most of these,
    like a Stripe/MercadoPago *publishable* key or a store URL, are meant to be public).
@@ -53,7 +53,7 @@ plus the CI sync guard. **Out of v1:** auditing whether any *currently* broken v
 (that's the audit seed's job) — this seed is purely the pipeline hardening.
 
 ## Risk
-**HIGH, not LOW as originally filed** — corrected during planning. `apps/miyagisanchez/Dockerfile` +
+**HIGH, not LOW as originally filed** — corrected during planning. `apps/storefront/Dockerfile` +
 `cloudbuild.yaml` are shared CI/CD infra, which `WAYS-OF-WORKING.md`'s risk-tier rule explicitly names
 as a HIGH-risk trigger (Daniel-merge tier), independent of urgency. Not a live-money-path fix itself
 (the two live outages this hardens against are both already fixed by their own dedicated PRs), but
@@ -65,10 +65,10 @@ Merged as danybgoode/miyagisanchezcommerce#245 (app repo) + danybgoode/miyagi-pr
 (root repo, companion — both had to merge together since #245's `cloudbuild.yaml` depends on secrets
 #80's scripts describe).
 
-**Repo-boundary discovery mid-build:** `apps/miyagisanchez` and the root repo are two separate,
+**Repo-boundary discovery mid-build:** `apps/storefront` and the root repo are two separate,
 independently-hosted GitHub repos with separate CI — the originally-planned single cross-repo guard
 test could never run in either repo's CI. Redesigned as two self-contained guards
-(`infra/gcp/test/frontend-build-args.test.js` + `apps/miyagisanchez/e2e/frontend-build-args.spec.ts`),
+(`infra/gcp/test/frontend-build-args.test.js` + `apps/storefront/e2e/frontend-build-args.spec.ts`),
 anchored to the same explicit, hardcoded var list kept identical by convention (verified byte-identical
 by the fresh reviewer) rather than by reading across the repo boundary.
 

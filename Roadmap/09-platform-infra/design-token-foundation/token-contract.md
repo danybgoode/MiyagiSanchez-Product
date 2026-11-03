@@ -3,7 +3,7 @@
 > **What this is.** The canonical, product-source-of-truth list of the semantic tokens components
 > style by — **the substrate #6 (and every future surface) consumes.** Style by **intent**
 > (`--accent`, `--fg-muted`), never by **value** (`#1d6f42`). Source of truth is
-> `apps/miyagisanchez/app/globals.css`; this doc mirrors it (token names match exactly — if they ever
+> `apps/storefront/app/globals.css`; this doc mirrors it (token names match exactly — if they ever
 > diverge, `globals.css` wins and this doc is the bug). Written 2026-06-07 at epic close.
 
 ## The three layers (and the one rule)
@@ -69,7 +69,7 @@ semantic tokens above, so they re-skin with the theme.
 
 ## Locked vs. unlockable (the theme-override boundary) — #4 · US-2
 What a seasonal theme or a per-shop brand **may** change vs. what stays fixed. Enforced by the shipped
-seasonal engine's guardrails (`apps/miyagisanchez/lib/platform-theme.ts`); this is the product-source
+seasonal engine's guardrails (`apps/storefront/lib/platform-theme.ts`); this is the product-source
 statement of that boundary.
 
 | **Unlockable** (a theme/shop may override) | **Locked** (never theme-overridable) |

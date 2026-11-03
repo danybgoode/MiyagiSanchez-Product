@@ -27,7 +27,7 @@ stories:
 
 ## Stories
 
-### Story 1.1 — Hide print placements from every shop-storefront surface ✅ merged (PR [#171](https://github.com/danybgoode/miyagisanchezcommerce/pull/171), squash-merged as `8552974` to `main`, apps/miyagisanchez) — live in prod
+### Story 1.1 — Hide print placements from every shop-storefront surface ✅ merged (PR [#171](https://github.com/danybgoode/miyagisanchezcommerce/pull/171), squash-merged as `8552974` to `main`, apps/storefront) — live in prod
 **As a** buyer on any shop storefront (marketplace `/s/[slug]`, subdomain, custom domain, embed, UCP shop catalog), **I want** to never see `is_print_placement` products, **so that** miyagiprints (and any future print provider) shows only real, buyable offerings.
 **Acceptance:** https://miyagiprints.miyagisanchez.com and https://miyagisanchez.com/s/miyagiprints show zero ad-placement listings; the listing count on the shop header matches; general browse/search exclusion (already live in `apps/backend/src/api/store/listings/route.ts`) untouched; placements still purchasable via the backoffice ad flow. Filter lives in ONE shared seam (`getShopListings()` in `lib/listings.ts` — check the embed + UCP shop-catalog paths hit it too), with a regression spec.
 **Risk:** LOW

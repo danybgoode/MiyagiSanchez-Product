@@ -9,14 +9,17 @@ The **root repo**: product docs, process, and the delivery toolchain. It ships n
 no deploy rail — merging here deploys nothing.
 
 ```
-medusa-bonsai/                 ← THIS repo (danybgoode/MiyagiSanchez-Product)
+miyagisanchez-product/         ← THIS repo (danybgoode/MiyagiSanchez-Product)
 ├── Roadmap/                   ← product source of truth: poster, epics, sprints, retros, LEARNINGS
 ├── scripts/                   ← the delivery toolchain (~30 node scripts + their tests)
 ├── tasks/                     ← engineering delivery log
 └── apps/                      ← SEPARATE git repos, gitignored here. Never commit them from here.
     ├── backend/               ← Medusa v2 commerce engine
-    └── miyagisanchez/         ← Next.js 16 storefront + admin
+    └── storefront/            ← Next.js 16 storefront + admin
 ```
+
+Local folders were renamed 2026-11-03 to match the remotes: `medusa-bonsai/` → `miyagisanchez-product/`,
+`apps/miyagisanchez/` → `apps/storefront/`. Older Roadmap and retro text may still say the old names.
 
 `apps/*` are **their own repositories** with their own remotes, CI and deploy triggers. Changing code
 there is a different repo, a different branch, and a different PR.

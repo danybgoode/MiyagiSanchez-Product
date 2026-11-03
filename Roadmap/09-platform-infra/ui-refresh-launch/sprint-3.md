@@ -24,7 +24,7 @@ stories:
 # UI refresh before launch — Sprint 3: Polish passes — seller portal + checkout
 
 **Status:** 🟨 in progress — both stories built, PR open (`feat/ui-refresh-s3` against
-`apps/miyagisanchez`, title: "ui-refresh S3: seller portal + checkout visual polish [3.1 LOW / 3.2
+`apps/storefront`, title: "ui-refresh S3: seller portal + checkout visual polish [3.1 LOW / 3.2
 HIGH — Daniel merges]"), **Daniel's merge + money-path smoke owed before merge (HIGH tier — do not
 merge on green CI alone)**.
 

@@ -69,7 +69,7 @@ fail; it's in the `api` gate.
 ## Sprint 4 — Smoke walkthrough (do these in order)
 Env: production · https://miyagisanchez.com   (or the preview URL while testing pre-merge)
 
-1. Confirm `apps/miyagisanchez/app/shop/manage/settings/ShopSettings.tsx` no longer exists in the repo.
+1. Confirm `apps/storefront/app/shop/manage/settings/ShopSettings.tsx` no longer exists in the repo.
    → The file is gone; build is green.
 2. Sign in as a test seller and open https://miyagisanchez.com/shop/manage/settings
    → The index renders every section card, same as before.

@@ -33,7 +33,7 @@ ready for review — **awaiting Daniel's merge** (MED tier, not auto-mergeable o
 11 frontend routes already use `export const revalidate = N`, but that only controls Next's own
 regeneration cache **inside** the Cloud Run container — nothing today caches these responses at
 Cloudflare's edge (the ALB has Cloud CDN explicitly disabled). Research already found the real
-gating fact: `apps/miyagisanchez/app/(shell)/layout.tsx:30` calls `await headers()`, which forces
+gating fact: `apps/storefront/app/(shell)/layout.tsx:30` calls `await headers()`, which forces
 dynamic rendering on its entire subtree — so 9 of the 11 `revalidate` routes (everything under
 `(shell)`, every seller storefront included) never emit a cacheable `Cache-Control` regardless of
 their `revalidate` value. The one confirmed exception is the homepage

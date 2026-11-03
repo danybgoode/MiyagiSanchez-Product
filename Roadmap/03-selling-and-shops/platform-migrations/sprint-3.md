@@ -24,7 +24,7 @@ stories:
 # Platform migrations — Sprint 3: Packaging — landings + consultant runbook
 
 **Status:** ✅ MERGED + LIVE 2026-07-11. PR [#230](https://github.com/danybgoode/miyagisanchezcommerce/pull/230),
-squash-merged `56a4ddd` to `main` (apps/miyagisanchez), deployed via the frontend Cloud Run rail —
+squash-merged `56a4ddd` to `main` (apps/storefront), deployed via the frontend Cloud Run rail —
 confirmed live same day: all 5 `/vende/migracion*` pages + the runbook return 200, the sitemap
 lists all 5 new URLs, the `negocios`/`servicios` migration callout and the sell-sheet's runbook
 link both render, and the `og:image` route (the one live-fetch assertion that fails by design

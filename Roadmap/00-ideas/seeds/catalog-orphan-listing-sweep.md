@@ -25,7 +25,7 @@ shop sitting at the top of the public catalog, and how do we make sure one never
 ## This is not a harness bug. The smoke is right.
 
 The empty slug is **deliberate** and documented in our own code —
-`apps/miyagisanchez/lib/ucp/schema.ts:367-384`. When `toUcpListing()` gets a listing with **no
+`apps/storefront/lib/ucp/schema.ts:367-384`. When `toUcpListing()` gets a listing with **no
 linked shop**, it emits a fallback payload with `slug: ''`. The comment there is explicit that a
 synthetic non-empty placeholder was *tried and reverted*, because every consumer in the codebase
 reads `shop?.slug` and treats falsy as "no real shop" — a fake truthy slug just sends them to a
@@ -54,7 +54,7 @@ still published, and still served by `/api/ucp/catalog`. Four days later one of 
 
 ## The second finding — CI has been silently skipping this
 
-`apps/miyagisanchez/e2e/embed-shop.spec.ts:30-31` derives its slug the same way:
+`apps/storefront/e2e/embed-shop.spec.ts:30-31` derives its slug the same way:
 
 ```ts
 const slug = (await cat.json())?.items?.[0]?.shop?.slug

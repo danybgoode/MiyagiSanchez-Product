@@ -57,7 +57,7 @@ The escalate-don't-guess trigger list (money / auth / migrations / shared infra 
 failures) appears **four times**: `WAYS-OF-WORKING` → *Model tiers*, `WAYS-OF-WORKING` → *Review &
 merge* risk tiers, `groom` Stage 6, and the emitted kickoff prompt. Three of those say "one SSOT,
 don't fork a second copy here" — while being the fork. Same for the kill-switch polarity rule
-(`groom` Stage 6b, the seed template, the epic DoD, and `medusa-bonsai/scripts/flags.mjs`'s header).
+(`groom` Stage 6b, the seed template, the epic DoD, and `miyagisanchez-product/scripts/flags.mjs`'s header).
 
 ### 1.3 Ceremony that no longer earns its keep
 
@@ -102,7 +102,7 @@ Scored against `references/Steps-of-AI-Adoption.md`, honestly:
 | Step-3 requirement | Us |
 |---|---|
 | Subagents with worktree isolation | ✅ |
-| **Routines / `/loop` / `/batch` / `/goal`** | 🟡 — `medusa-bonsai/scripts/routines/` has 7 committed prompts (ops-nightly, prod-smoke, smoke-triage, roadmap-hygiene, pmo-report, weekly-recap, pr-review). **None of this is in the plugin.** This is the biggest *already-built, not-portable* asset we have |
+| **Routines / `/loop` / `/batch` / `/goal`** | 🟡 — `miyagisanchez-product/scripts/routines/` has 7 committed prompts (ops-nightly, prod-smoke, smoke-triage, roadmap-hygiene, pmo-report, weekly-recap, pr-review). **None of this is in the plugin.** This is the biggest *already-built, not-portable* asset we have |
 | Claude kicks off Claude | 🟡 — `codex-delegate.mjs` does it for Codex; nothing for Claude |
 | Automatic code review / security review | ❌ (see above) |
 | CLAUDE.md + Skills encode standards | ✅ strongly |
@@ -218,7 +218,7 @@ builder, which is the one thing our stack never had.
 
 ## 4. Permissions — the bottleneck you named, and it is worse than it looks
 
-`medusa-bonsai/.claude/settings.local.json` holds **175 one-off `allow` entries across 187 lines**,
+`miyagisanchez-product/.claude/settings.local.json` holds **175 one-off `allow` entries across 187 lines**,
 accreted one prompt at a time. Sample:
 
 ```

@@ -136,7 +136,7 @@ old root, and an upgraded content order.
    subdomains, custom domains and embeds never see it.
 6. **`/vende/fundadoras` and the promoter routes** are special-cased in the middleware. Only the bare landing moves;
    sub-paths keep resolving exactly as today.
-7. **Stale checkout.** The local `apps/miyagisanchez` was 18 commits behind `origin/main` when this was refined. The
+7. **Stale checkout.** The local `apps/storefront` was 18 commits behind `origin/main` when this was refined. The
    describe box and `/mx/precios` exist only on `origin/main`. Build from a fresh worktree.
 
 ## What already exists (reuse, don't rebuild)

@@ -57,7 +57,7 @@ bundle config).
 ## What we learned (promoted to LEARNINGS)
 - **Sync a stale local checkout against `origin/main` BEFORE reading "what already exists" during
   planning — a missing merge can hide an entire prior sprint's UI shape.** Sprint 5's planning session
-  found its `apps/miyagisanchez` checkout one commit behind `origin/main`, missing Sprint 4's merge —
+  found its `apps/storefront` checkout one commit behind `origin/main`, missing Sprint 4's merge —
   the local `PromoterCloseClient.tsx` still showed the pre-S4 3-step shape, silently missing the
   `transferEnabled` prop and the whole transfer sub-flow. Caught by reading via `git show
   origin/main:<path>` during planning, not assumed from a stale working tree; fast-forwarded before

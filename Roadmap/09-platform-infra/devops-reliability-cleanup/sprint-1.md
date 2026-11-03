@@ -23,7 +23,7 @@ stories:
 ---
 # Sprint 1 — app-repo fixes (smoke + tenant ping)
 
-**Epic:** [DevOps reliability cleanup](README.md) · **Risk:** all LOW · **Repo:** `apps/miyagisanchez` (`danybgoode/miyagisanchezcommerce`)
+**Epic:** [DevOps reliability cleanup](README.md) · **Risk:** all LOW · **Repo:** `apps/storefront` (`danybgoode/miyagisanchezcommerce`)
 **Goal:** the daily browser smoke is green again and a new-shop signup pings the ops Telegram chat.
 
 > Two independent stories in one app-repo branch (`feat/devops-reliability-cleanup`). Story 1 is reproduce-first

@@ -30,7 +30,7 @@ stories:
 ---
 # Sprint 1 — Homepage bug sweep (ship first)
 
-**Epic:** [Homepage Selección: bug sweep + admin curation + dynamic rotation](README.md) · **Repo:** `apps/miyagisanchez`
+**Epic:** [Homepage Selección: bug sweep + admin curation + dynamic rotation](README.md) · **Repo:** `apps/storefront`
 **Goal:** close the two live homepage defects and the auth-state leakage they exposed — **frontend-only, LOW
 risk, no money/auth mutation** — and ship it as the quick-win drop before any curation work. Every change keeps
 `/` a static CDN asset (`next build` → `○ /`).

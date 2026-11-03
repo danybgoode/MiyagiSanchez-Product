@@ -27,7 +27,7 @@ _Closed: 2026-07-02_
   dated `Roadmap/00-ideas/DOC-HYGIENE-REPORT-<date>.md` and never edits an existing doc.
   `skills/doc-hygiene/SKILL.md` is the model-facing wrapper: run the script, verify every flagged
   candidate against source before reporting it as real (the heuristics are deliberately cheap and can
-  false-positive — an app-repo path check needs both `apps/miyagisanchez/` and `apps/backend/`, and a
+  false-positive — an app-repo path check needs both `apps/storefront/` and `apps/backend/`, and a
   bullet documenting a historical file swap will always flag its own "old" path), and never auto-edit.
   Wired into weekly **Routine C** (`scripts/routines/roadmap-hygiene.prompt.md` step 4) as a fourth
   section of its existing single PR, not a second PR.
@@ -47,7 +47,7 @@ _Closed: 2026-07-02_
   choose more aggressive tightening (accepting less narrative specificity) over stopping short or
   guessing at the right tradeoff.
 - **A heuristic path-existence check across a monorepo needs every known app root, not just the repo
-  root** — `apps/miyagisanchez` and `apps/backend` are separate, gitignored repos here; a path like
+  root** — `apps/storefront` and `apps/backend` are separate, gitignored repos here; a path like
   `lib/flags.ts` in a LEARNINGS bullet is relative to one of *them*, not the root. Checking only the root
   produced ~50 false positives before the fix; checking against all known roots dropped it to ~4 genuine
   edge cases.

@@ -30,4 +30,4 @@
 - I briefly followed a stale Render CLI/service clue and manually triggered a Render deploy. That was wrong for this project; the active backend pipeline is Cloud Build `us-east4` -> Cloud Run `medusa-web`. The Render deploy was cancelled before completion.
 
 ## Durable Learning
-- Deployment source of truth lives in `apps/miyagisanchez/AGENTS.md`, `Roadmap/WAYS-OF-WORKING.md`, `Roadmap/LEARNINGS.md`, and `apps/backend/cloudbuild.yaml`: frontend deploys git-driven through Vercel; backend deploys git-driven through Cloud Build/Cloud Run. Ignore stale Render services for Miyagi backend shipping.
+- Deployment source of truth lives in `apps/storefront/AGENTS.md`, `Roadmap/WAYS-OF-WORKING.md`, `Roadmap/LEARNINGS.md`, and `apps/backend/cloudbuild.yaml`: frontend deploys git-driven through Vercel; backend deploys git-driven through Cloud Build/Cloud Run. Ignore stale Render services for Miyagi backend shipping.

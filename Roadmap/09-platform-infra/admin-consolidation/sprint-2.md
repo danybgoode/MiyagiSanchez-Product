@@ -30,7 +30,7 @@ stories:
 ---
 # Sprint 2 — Migrate sections to Clerk + audit; complete the gaps
 
-**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/miyagisanchez`
+**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/storefront`
 **Goal:** finish the auth migration (every admin page/route on Clerk, secret-in-URL killed for humans, audit on
 every mutation) and close the section gaps (re-home `/supply`, extract Vecindario, add the Referrals UI).
 Depends on S1's shell + guard.

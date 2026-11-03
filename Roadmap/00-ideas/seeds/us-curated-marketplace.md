@@ -178,8 +178,8 @@ valuable but does not satisfy marketplace discovery.
 | `apps/{backend,miyagisanchez}/lib/market-medusa.ts` | Resolve the new US marketplace channel through the existing three-state environment seam; never fall back to MX |
 | `apps/backend/src/lib/seller-market.ts` | Reuse the canonical seller operating-market projection; do not add a second country field |
 | `apps/backend/src/api/internal/market-backfill/route.ts` | Reuse its survey-before-write, ownership proof, pagination guard, and market-scoped link plan; do not run a blind all-product backfill |
-| `apps/miyagisanchez/lib/market-catalog.ts` + `lib/listings.ts` | Reuse fail-closed market reads and response verification; extend the one seam rather than special-case UIs |
-| `apps/miyagisanchez/lib/owned-market.ts` | Keep owned-shop reads independent of marketplace membership and preserve strict USD price selection |
+| `apps/storefront/lib/market-catalog.ts` + `lib/listings.ts` | Reuse fail-closed market reads and response verification; extend the one seam rather than special-case UIs |
+| `apps/storefront/lib/owned-market.ts` | Keep owned-shop reads independent of marketplace membership and preserve strict USD price selection |
 | `market-architecture-foundation` | Reuse market/locale/Region/channel separation, market-prefixed URLs, structured unavailable responses, and population guards |
 | `owned-shop-operating-channel` + `#US-3` | Keep the operating channel as buyability and seller-specific checkout; marketplace membership adds discovery only |
 | Medusa Product + Sales Channel modules | Products remain products and channel membership remains marketplace publication; no custom catalog table |

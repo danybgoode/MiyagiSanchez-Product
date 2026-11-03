@@ -49,7 +49,7 @@ stillness), density. **Ends in a written decision appended to this doc; Daniel a
 **As** every visitor, **I want** the approved token values live across all tokenized surfaces,
 **so that** the whole site inherits the new feel in one move.
 
-**Status:** built on `feat/ui-refresh-s1`, PR open against `apps/miyagisanchez` (title: "ui-refresh
+**Status:** built on `feat/ui-refresh-s1`, PR open against `apps/storefront` (title: "ui-refresh
 S1.2: approved token layer — rem scale + M3 radii [LOW, cross-cutting]"). Implemented exactly the S1.1
 change table: `--t-*` px→rem (`--t-base` 15→16px, `--t-md` 17→18px, rest unchanged sizes), root
 `font-size` unpinned from `--t-base` (now tracks browser default, `body` sets the explicit base),
@@ -92,7 +92,7 @@ If any step fails, note the step number + what you saw — that's the bug report
 
 ## Story 1.1 — Token spec (written decision, PENDING DANIEL APPROVAL)
 
-**SSOT:** all tokens live in `apps/miyagisanchez/app/globals.css` — the `@theme inline` block
+**SSOT:** all tokens live in `apps/storefront/app/globals.css` — the `@theme inline` block
 (Tailwind `--color-*`) + the `:root` block (`--r-*`, `--s-*`, `--t-*`, `--ease-*`, `--dur-*`,
 `--shadow-*`, glass). `globals.css` is on the raw-color guard's `guardExcludedFiles` list
 (`lib/design-token-audit.ts`), so editing **values** here is guard-clean by design; 1.2 edits values

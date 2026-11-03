@@ -38,7 +38,7 @@ N/A — pure docs/tooling, no commerce surface.
 - `scripts/build-order.mjs` + `.github/workflows/build-order-guard.yml` — the house shape this
   epic's checker + guard workflow directly mirror (plain node script, `--check` flag, dedicated
   `*-guard.yml`, `Roadmap/**` trigger paths).
-- `lib/design-token-audit.ts` / `lib/emoji-guard.ts` (apps/miyagisanchez) — the incremental-adoption
+- `lib/design-token-audit.ts` / `lib/emoji-guard.ts` (apps/storefront) — the incremental-adoption
   `enforcedSweptPaths` allow-list pattern this epic's own gate policy reuses (only swept
   macro-sections hard-gate; the rest stay visible-but-advisory during rollout).
 

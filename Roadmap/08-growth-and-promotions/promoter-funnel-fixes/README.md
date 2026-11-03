@@ -49,7 +49,7 @@ allow-list).
 | 1 | Add `seller`/`promoter` context to `resolveAgentContext` + es-MX onboarding `ask()` | low | ✅ PR [#157](https://github.com/danybgoode/miyagisanchezcommerce/pull/157) `b3a9956` |
 
 ## Deploy order
-Frontend-only (`apps/miyagisanchez` → Vercel). No backend/Cloud Run, no migration. One PR; reviewer may
+Frontend-only (`apps/storefront` → Vercel). No backend/Cloud Run, no migration. One PR; reviewer may
 auto-merge on a green gate (low-risk). Story 2's flag confirmation is an ops step owed to Daniel (Flagsmith).
 
 ## Definition of Done (epic)

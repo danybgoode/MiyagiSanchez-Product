@@ -29,9 +29,9 @@ bump. This epic cleans all four — pure observability/tooling, no commerce code
 | | |
 |---|---|
 | **Repos** | `danybgoode/miyagisanchezcommerce` (frontend app) · monorepo-root `danybgoode/miyagi-product-management` (`infra/`, `scripts/`, `Roadmap/`) |
-| **Ask 1** | `apps/miyagisanchez/.github/workflows/browser-smoke.yml` (nightly `0 9 * * *`) runs the Chromium `*.browser.spec.ts` project vs prod |
+| **Ask 1** | `apps/storefront/.github/workflows/browser-smoke.yml` (nightly `0 9 * * *`) runs the Chromium `*.browser.spec.ts` project vs prod |
 | **Ask 2** | `infra/gcp/backups/db-backup.sh` Cloud Run Job, `BACKUP_TARGETS` still includes retired `neon`; Cloud SQL native backups have no Telegram alert |
-| **Ask 3** | `tg.newShop()` defined in `apps/miyagisanchez/lib/telegram.ts` but never called; shop-create is `POST /api/sell/shop` |
+| **Ask 3** | `tg.newShop()` defined in `apps/storefront/lib/telegram.ts` but never called; shop-create is `POST /api/sell/shop` |
 | **Ask 4** | `scripts/lib/cross-agent-cli.mjs` pins `AGY_PINNED='1.0.7'`; installed agy is **1.0.10+** — `checkAgyVersion()` only warns, `runAntigravity()` returns empty |
 
 ## Medusa-first note
@@ -56,8 +56,8 @@ route/lib line.
 ## Scope — stories & risk
 | Sprint | Story | Repo | Risk |
 |---|---|---|---|
-| [S1](sprint-1.md) | S1 · Fix the daily browser smoke | `apps/miyagisanchez` | low |
-| [S1](sprint-1.md) | S3 · Restore new-tenant-signup Telegram ping | `apps/miyagisanchez` | low |
+| [S1](sprint-1.md) | S1 · Fix the daily browser smoke | `apps/storefront` | low |
+| [S1](sprint-1.md) | S3 · Restore new-tenant-signup Telegram ping | `apps/storefront` | low |
 | [S2](sprint-2.md) | S2 · Retire Neon target + Cloud SQL backup-failure alert | monorepo-root (`infra/gcp`) | low |
 | [S2](sprint-2.md) | S4 · Upgrade-and-adapt agy + fail-loud version check | monorepo-root (`scripts/`) | low |
 
@@ -106,7 +106,7 @@ Run each in a **fresh** Claude Code session (one per sprint). The Routines spike
 prompt in `spike-claude-routines.md` (no branch, no build).
 
 **Sprint 1 — app-repo fixes (smoke + tenant ping):**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/09-platform-infra/devops-reliability-cleanup/README.md and .../sprint-1.md. You're
 > building Sprint 1 (two LOW stories in the app repo: fix the red daily browser smoke, and restore the
 > new-shop Telegram ping). Enter plan mode, confirm the stories with me, then branch
@@ -124,7 +124,7 @@ prompt in `spike-claude-routines.md` (no branch, no build).
 > nightly are owed to me.
 
 **Sprint 2 — infra/tooling fixes (backup alert + agy):**
-> Read apps/miyagisanchez/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
+> Read apps/storefront/AGENTS.md, Roadmap/WAYS-OF-WORKING.md and Roadmap/LEARNINGS.md. Skim team memory.
 > Then read Roadmap/09-platform-infra/devops-reliability-cleanup/README.md and .../sprint-2.md. You're
 > building Sprint 2 (two LOW stories in the monorepo-root repo). Enter plan mode, confirm with me, then branch
 > feat/devops-reliability-cleanup off latest main. Story 2: (a) document + stage the owed-to-Daniel gcloud

@@ -62,7 +62,7 @@ decisions taken at refining: the scope seed.
 <!-- One paragraph: the outcome this epic delivers and for whom. Plain product language, no tech. -->
 
 ## Platform-first note
-Storefront-only (`apps/miyagisanchez`): routing, a page move, copy and specs. No commerce data, no Supabase table, no
+Storefront-only (`apps/storefront`): routing, a page move, copy and specs. No commerce data, no Supabase table, no
 Medusa change, no migration. Copy stays in the dictionary so `/admin/contenido` keeps editing it.
 
 ## What already exists (reuse, don't rebuild)

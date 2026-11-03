@@ -101,7 +101,7 @@ This brain-dump lands on a **mature automation surface**. Concrete primitives to
 - **Class:** Chore (small epic — one-time sweep + a standing maintenance mechanism). **Stage-2.5:**
   *light-enhancement* (the rolling half already exists as Routine C + the `consolidate-memory` skill; the
   one-time sweep is genuinely new work but bounded).
-- **Real target (corrected):** the *repo* team-memory is tiny (`apps/miyagisanchez/memory/MEMORY.md` = 3
+- **Real target (corrected):** the *repo* team-memory is tiny (`apps/storefront/memory/MEMORY.md` = 3
   lines). The over-budget docs are **`LEARNINGS.md` (1,125 lines / 114 KB)** and the **`README.md` poster
   (114 KB)** — both loaded at session start — plus the seven `.claude/context/*.md` (~1,260 lines). That's
   the sweep surface. (Confirm which "team memory" agents flag as over-budget — repo memory vs the

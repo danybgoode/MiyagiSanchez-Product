@@ -103,7 +103,7 @@ webhook already use — no new fulfillment primitive.
 
 ### US-3 · Source badge + ML metadata in the order UI — low ✅
 **Built:** `apps/backend` `473b632` (metadata already selected by `normalizeMedusaOrder`, curated into
-`source`/`ml_order_id`/`ml_pack_id` top-level fields — no query change needed) + `apps/miyagisanchez`
+`source`/`ml_order_id`/`ml_pack_id` top-level fields — no query change needed) + `apps/storefront`
 `0c735b9`. Pure `lib/ml-order-badge.ts` (`isMlOrder`/`mlOrderBadgeLabel`) feeds a small "Mercado Libre"
 badge in `OrdersInbox.tsx`'s list + a detail section in `OrderDetail.tsx` with the ML order/pack id.
 
@@ -155,7 +155,7 @@ badge in `OrdersInbox.tsx`'s list + a detail section in `OrderDetail.tsx` with t
 1. Backend: `cd apps/backend && npm run build && npx tsc --noEmit && npm run test:unit` → build succeeds,
    `tsc` clean, 14/14 suites · 117/117 tests green (includes the new `ml-sync.unit.spec.ts`
    idempotency/mapping tests and `ml-order-materialize.unit.spec.ts`).
-2. Frontend: `cd apps/miyagisanchez && npx tsc --noEmit && npm run build && npx playwright test
+2. Frontend: `cd apps/storefront && npx tsc --noEmit && npm run build && npx playwright test
    --project=api` → clean typecheck, build succeeds, `e2e/ml-order-badge.spec.ts` +
    `e2e/flags-admin.spec.ts` (15 known flags, including `ml.orders_enabled`) green.
 
@@ -184,7 +184,7 @@ badge in `OrdersInbox.tsx`'s list + a detail section in `OrderDetail.tsx` with t
 **Owed to Daniel (money/auth/live-ML-sandbox — cannot be automated from this session):**
 7. In `/admin/flags` (or directly in `platform_flags`), flip `ml.orders_enabled` **ON** — only after
    step 5's migration is confirmed live. *(The flag row seeds via
-   `apps/miyagisanchez/supabase/migrations/20260703160000_ml_orders_enabled_flag.sql` at normal
+   `apps/storefront/supabase/migrations/20260703160000_ml_orders_enabled_flag.sql` at normal
    Supabase deploy — not applied from this build session, per the established "Supabase has no
    separate dev credential" caution.)*
 8. Place one real purchase on a seller's **ML sandbox** listing that's linked via `product_ml_link`.

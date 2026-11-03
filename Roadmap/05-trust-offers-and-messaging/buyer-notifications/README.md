@@ -93,7 +93,7 @@ es-MX (+ en) for all new buyer copy + any buyer Telegram bodies. Clerk untouched
 | | B2.3 Unlink + "Enviar prueba" + polish/bilingual; **dual-audience unlink safety** on the shared `telegram_links` row | HIGH |
 
 ## Deploy order (two repos, async)
-The seam + buyer dispatch + routing + the settings page are **frontend** (`apps/miyagisanchez`); any
+The seam + buyer dispatch + routing + the settings page are **frontend** (`apps/storefront`); any
 schema delta ships via the **Supabase CLI**. Confirm whether any in-scope buyer event fires from the
 **backend** (Cloud Run) — if so, merge backend-first / degrade gracefully (LEARNINGS). **Default-on +
 the guest fall-through keep the 99% path byte-for-byte unchanged** during any deploy-lag window. Rebase

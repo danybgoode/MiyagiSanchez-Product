@@ -40,6 +40,6 @@ Polish of the "Own channel" flow (the seller's custom domain) — 7 stories in o
 - The storefront UX once the domain is live is **another task** ("Own shop experience"), out of scope.
 
 ## Process notes
-- Frontend-only (`apps/miyagisanchez` → Vercel). es-MX strings to match the section (no i18n keys).
+- Frontend-only (`apps/storefront` → Vercel). es-MX strings to match the section (no i18n keys).
 - Vercel's anycast IP (`76.76.21.21`) and the CNAME target are hardcoded in `lib/domain-utils.ts` — if
   Vercel changes them, update there (one place, shared by UI + routes).

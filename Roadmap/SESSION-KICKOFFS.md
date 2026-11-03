@@ -71,7 +71,7 @@ cost nothing — the leverage is the defined verb, not trimming "great work."
 ## 1 · Groom a raw ask — Cowork (strong model)
 ```
 Groom: <ask>.
-Read apps/miyagisanchez/AGENTS.md (Start here) + Roadmap/LEARNINGS.md; skim team memory + Roadmap/00-ideas/BUILD-ORDER.md.
+Read apps/storefront/AGENTS.md (Start here) + Roadmap/LEARNINGS.md; skim team memory + Roadmap/00-ideas/BUILD-ORDER.md.
 Use the groom skill — planning only, no code. Orient → classify → "can we already do this?" → disambiguate
 → Medusa-first reframe → slice into sprints. Land the scope doc; on my approval, scaffold the epic + sprint
 docs (commit path-scoped) and emit the per-sprint Claude Code kickoffs. Never assume — validate at each gate.
@@ -96,7 +96,7 @@ orchestrator subagent reviewers on LOW), merges pre-authorized on green, **done 
 Only for a one-sprint epic, or when a sprint's outcome genuinely changes the next sprint's scope. Say
 which when you use it.
 ```
-Read apps/miyagisanchez/AGENTS.md (Start here) + Roadmap/LEARNINGS.md, then
+Read apps/storefront/AGENTS.md (Start here) + Roadmap/LEARNINGS.md, then
 Roadmap/<NN-macro>/<epic-slug>/README.md + sprint-<N>.md.
 Build Sprint <N> of "<epic-slug>" per WAYS-OF-WORKING, in your OWN git worktree off latest main on
 feat/<epic-slug>. Plan mode → confirm stories with me → build one story at a time. Commit per story
@@ -114,7 +114,7 @@ general pass, a security lens when the changed paths trigger it, and the fresh `
 
 ## 3 · Run a spike — Claude Code (strong model)
 ```
-Read apps/miyagisanchez/AGENTS.md (Start here) + Roadmap/LEARNINGS.md, then <brief path>.
+Read apps/storefront/AGENTS.md (Start here) + Roadmap/LEARNINGS.md, then <brief path>.
 Run the <name> spike: time-boxed, READ-ONLY investigation → a written DECISION appended to the brief. No
 branch, no code. Answer the brief's questions against the live codebase; sort each capability into
 already-possible / light-enhancement / genuinely-new; end with Go / No-go / Go-with-constraints.
@@ -143,7 +143,7 @@ gate at any tier (`WAYS-OF-WORKING.md` → *Review & merge*).
 
 ## 5 · Strategy / process work — Cowork (strong model)
 ```
-Read apps/miyagisanchez/AGENTS.md (Start here), Roadmap/WAYS-OF-WORKING.md, Roadmap/LEARNINGS.md; skim team
+Read apps/storefront/AGENTS.md (Start here), Roadmap/WAYS-OF-WORKING.md, Roadmap/LEARNINGS.md; skim team
 memory + Roadmap/00-ideas/BUILD-ORDER.md.
 <task>. Docs/planning only. Never assume — validate before editing any canonical doc. No git commits (flag
 the changed files for me to review + commit).

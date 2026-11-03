@@ -56,7 +56,7 @@ script's default is not proof a resource exists.
 | Region | `us-east4` | chosen to co-locate with the DB; keep it |
 | Cloud SQL Postgres | `medusa-pg` | **production commerce data — the whole ballgame** |
 | Cloud Run (backend) | `medusa-web` | `apps/backend`, ~12 min deploy |
-| Cloud Run (frontend) | `miyagi-web` | `apps/miyagisanchez`, behind Cloudflare |
+| Cloud Run (frontend) | `miyagi-web` | `apps/storefront`, behind Cloudflare |
 | Artifact Registry | `medusa`, `frontend` | Docker repos |
 | Memorystore Redis | `medusa-redis` | |
 | VPC connector | `medusa-conn`, range `10.8.0.0/28` | range must not overlap in the new project |

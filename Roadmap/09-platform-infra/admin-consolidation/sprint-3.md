@@ -16,7 +16,7 @@ stories:
 ---
 # Sprint 3 — Tenant directory (read-only)
 
-**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/miyagisanchez`
+**Epic:** [Admin consolidation + tenant management](README.md) · **Repo:** `apps/storefront`
 **Goal:** a read-only `/admin/tenants` directory to list, search, and inspect shops/sellers. Highest-signal,
 lowest-risk tenant slice. Depends only on **S1** (shell + auth) — can run **in parallel with S2** (a second
 agent), with a single scribe for `lib/admin/sections.ts`.

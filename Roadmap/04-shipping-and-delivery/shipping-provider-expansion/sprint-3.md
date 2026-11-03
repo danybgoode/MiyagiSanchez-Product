@@ -93,7 +93,7 @@ spec-locked against the published PDF, and a tariff republication is a one-const
 **Risk:** low
 **Built:** 28 bands (not 26 — recount against the PDF), `apps/backend/src/lib/correos-tariff.ts` +
 `correos-gate.ts` (pure flag×opt-in AND, mirrors `envia-killswitch.ts`) + FE byte-for-byte twin
-`apps/miyagisanchez/lib/correos-tariff.ts` (rental-pricing.ts precedent). 39 backend Jest + 36 FE
+`apps/storefront/lib/correos-tariff.ts` (rental-pricing.ts precedent). 39 backend Jest + 36 FE
 Playwright specs, all green. **Cross-review fix (`795c0ad` backend / `f60fcb2` frontend):** added
 `quoteCorreosForPieces` — the table prices "por pieza" (per piece), and the initial cut summed all
 cart items into one weight before quoting, which could wrongly reject an eligible multi-item order once

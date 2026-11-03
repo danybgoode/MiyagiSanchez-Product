@@ -8,13 +8,13 @@ their interesting finding and reliably thin on the boring verification; spend yo
 
 ## Inputs
 - **PR number** (required). Default repo: `danybgoode/MiyagiSanchez-Product` (this root repo). For an
-  app-repo PR pass/infer the repo — `danybgoode/MiyagiSanchez-Storefront` (checkout: `apps/miyagisanchez`)
+  app-repo PR pass/infer the repo — `danybgoode/MiyagiSanchez-Storefront` (checkout: `apps/storefront`)
   or `danybgoode/MiyagiSanchez-Backend` (checkout: `apps/backend`).
 - **The builder's report**, pasted into your invocation. If none was pasted, `gh pr view <N>` and treat
   the PR body as the report.
 
 ## Orient first — know what "correct" looks like before reading the diff
-Read: `apps/miyagisanchez/AGENTS.md` (the five rules), `Roadmap/WAYS-OF-WORKING.md` (cadence, risk
+Read: `apps/storefront/AGENTS.md` (the five rules), `Roadmap/WAYS-OF-WORKING.md` (cadence, risk
 tiers, DoD, status SSOT), `Roadmap/LEARNINGS.md` (the operating gotchas — several govern how to gather
 evidence, see below). Skim `Roadmap/00-ideas/README.md` (funnel lifecycle + status enums) and
 `Roadmap/00-ideas/BUILD-ORDER.md` when the PR touches roadmap docs.

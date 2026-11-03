@@ -284,7 +284,7 @@ Env: production · https://miyagisanchez.com
 If any step fails, note the step number + what you saw — that's the bug report.
 
 **Story 4.5 — Vercel sunset walkthrough (do these once PR #207 merges)**
-6. Open any PR against `apps/miyagisanchez`.
+6. Open any PR against `apps/storefront`.
    → A Vercel preview still appears and CI still runs Playwright against it (unaffected — only
    `main` had deploys disabled).
 7. Merge that PR (or PR #207 itself) to `main`.

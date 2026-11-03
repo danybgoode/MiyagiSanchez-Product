@@ -69,7 +69,7 @@ changes until the finding was confirmed):
    **Code path is wired correctly — ruled out.**
 3. **Unintended grant stamped on new shops?** No. Grepped every writer of
    `subdomain_grant`/`custom_domain_grant` across both app repos
-   (`grep -rln "subdomain_grant" apps/miyagisanchez apps/backend`) — only the admin
+   (`grep -rln "subdomain_grant" apps/storefront apps/backend`) — only the admin
    grant/revoke route, the Stripe webhook completion handlers, and the one-time
    grandfather backfill script write it; nothing in `lib/provisioning.ts`'s
    `ensureSupabaseShopMirror` INSERT path, the sweepstakes onboarding

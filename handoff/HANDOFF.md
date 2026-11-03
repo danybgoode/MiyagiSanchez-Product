@@ -5,7 +5,7 @@
 
 ## Paste-this-prompt for Claude Code
 
-> I'm handing you a designed, signed-off homepage redesign for miyagisanchez.com (the `apps/miyagisanchez` Next.js app). The full spec is in `HANDOFF.md` in this folder and the visual source of truth is `mockups-directions.html` (open in a browser; use the "Dirección B" frames — signed-out and signed-in — plus the icon mapping in section 00). `audit.html` has the reasoning if you need context for a decision.
+> I'm handing you a designed, signed-off homepage redesign for miyagisanchez.com (the `apps/storefront` Next.js app). The full spec is in `HANDOFF.md` in this folder and the visual source of truth is `mockups-directions.html` (open in a browser; use the "Dirección B" frames — signed-out and signed-in — plus the icon mapping in section 00). `audit.html` has the reasoning if you need context for a decision.
 >
 > Before writing code: read `Roadmap/WAYS-OF-WORKING.md`, `Roadmap/LEARNINGS.md` and `AGENTS.md`, then plan this as an epic (`feat/homepage-polish-b`) with stories matching the "Stories" section of HANDOFF.md. Scaffold the epic docs first, get my approval on the plan, then build story by story with smoke tests. Never violate the five rules in AGENTS.md — all commerce data via Medusa Store API, Supabase only for favorites/offers/conversations, es-MX copy only (the homepage is NOT on the bilingual allow-list), Clerk for auth state, and keep UCP surfaces accurate if data sources change.
 >

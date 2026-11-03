@@ -30,7 +30,7 @@ individual row.
 | | |
 |---|---|
 | **What it is** | Homepage bug fixes (hover + auth-leak) → admin pin/reorder of the Selección → per-window rotation |
-| **Repos touched** | `apps/miyagisanchez` (all). Possibly a tiny `apps/backend` read/route for the product-metadata write (S2.0 pre-flight decides). |
+| **Repos touched** | `apps/storefront` (all). Possibly a tiny `apps/backend` read/route for the product-metadata write (S2.0 pre-flight decides). |
 | **Output** | Per-row Categorías hover · signed-out CTAs gated everywhere · `/admin/seleccion` (pin/unpin + reorder) · deterministic per-ISR-window shuffle of the unpinned remainder |
 | **SSOT** | `lib/home-curation.ts` (curation/sort/shuffle logic) · `metadata.featured` + `metadata.featured_rank` on the Medusa product (the pin) · `lib/admin/sections.ts` (admin nav) |
 
@@ -91,7 +91,7 @@ individual row.
 
 ## Deploy order & dependencies
 
-- **Frontend-led**, single repo (`apps/miyagisanchez`). Branch `feat/homepage-seleccion-curation` off latest `main`.
+- **Frontend-led**, single repo (`apps/storefront`). Branch `feat/homepage-seleccion-curation` off latest `main`.
 - **S1 first** (independently shippable; LOW). May merge on its own as the quick-win drop.
 - **S2 after S1.** **S2.0 pre-flight gates S2.1.** If S2.0 finds a backend route is needed, **merge backend first**
   (Cloud Run ~12 min, no preview) and degrade the frontend gracefully.

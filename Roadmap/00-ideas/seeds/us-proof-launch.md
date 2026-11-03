@@ -223,13 +223,13 @@ Publication rules:
 
 | Primitive | Reuse in `#US-4` |
 |---|---|
-| `apps/miyagisanchez/app/(site)/us/page.tsx` | Keep the canonical US URL, static/no-JS readability, honest invitation, and structural absence of a catalog |
+| `apps/storefront/app/(site)/us/page.tsx` | Keep the canonical US URL, static/no-JS readability, honest invitation, and structural absence of a catalog |
 | `#US-2` scope and future shipped contracts | Reuse the flag-on proposition, exact-three-shop application, admin review, activation, `/partner` orientation, emails, and PII-free events |
 | `#US-3` proof bundle and close decision | Source every public capability row, limitation, retained-system statement, and continue/reshape/stop decision |
-| `apps/miyagisanchez/lib/analytics-events.ts` + `lib/analytics-gating.ts` | Reuse the platform-surface GTM event pusher and white-label exclusion; add only fixed, PII-free proof/source tags where needed |
-| `apps/miyagisanchez/lib/fundadoras-application.ts` + `/api/vende/fundadoras/apply` | Reuse the precedent for server re-enforcement, idempotency, append-only consent, and PII-free events through `#US-2`; do not point US applications at the Fundadoras cohort |
-| `apps/miyagisanchez/lib/copy-overrides*.ts` | Preserve the general marketing-copy system, but intentionally keep evidence-backed proof outside editable overrides |
-| `apps/miyagisanchez` design tokens, `/vende` page patterns, metadata, and marketing readability specs | Reuse the visual/accessibility/SEO rails; no US visual system |
+| `apps/storefront/lib/analytics-events.ts` + `lib/analytics-gating.ts` | Reuse the platform-surface GTM event pusher and white-label exclusion; add only fixed, PII-free proof/source tags where needed |
+| `apps/storefront/lib/fundadoras-application.ts` + `/api/vende/fundadoras/apply` | Reuse the precedent for server re-enforcement, idempotency, append-only consent, and PII-free events through `#US-2`; do not point US applications at the Fundadoras cohort |
+| `apps/storefront/lib/copy-overrides*.ts` | Preserve the general marketing-copy system, but intentionally keep evidence-backed proof outside editable overrides |
+| `apps/storefront` design tokens, `/vende` page patterns, metadata, and marketing readability specs | Reuse the visual/accessibility/SEO rails; no US visual system |
 | US needfinding outcome · recruitment brief · outreach sequences in `madmen/clients/miyagi-sanchez/` | Retain the approved persona, no-cutover message, fit/not-fit rules, first behavior, human-send rules, and organic-first distribution baseline |
 | June UX refresh `00-rescope-delta.md` | Apply its claim/trust honesty and existing seller-acquisition rails; no direct US-acquisition finding requires a new surface |
 

@@ -96,7 +96,7 @@ epic's idea doc (`Roadmap/00-ideas/seeds/custom-domain-checkout.md`).
 
 ## Notes
 
-- **Frontend only** (`apps/miyagisanchez`). Runs in parallel with `feat/sweepstakes` — don't touch its
+- **Frontend only** (`apps/storefront`). Runs in parallel with `feat/sweepstakes` — don't touch its
   files. We worked in an **isolated worktree** (`.claude/worktrees/feat+own-shop-experience`).
 - **We DO touch `middleware.ts`** (unlike the polish epic): it's the heart of this epic.
 - Strings in **es-MX** (the section is 100% Spanish, no i18n keys).

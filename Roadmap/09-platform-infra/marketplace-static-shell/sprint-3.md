@@ -120,7 +120,7 @@ as a **separate security follow-up** (out of scope for this sprint).
 
 ## Deploy / provisioning run-order (HIGH — Daniel)
 1. **Provision the secrets first** (image-only deploys preserve them): create Secret Manager shells
-   `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (values from `apps/miyagisanchez/.env.local`), grant the runtime
+   `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (values from `apps/storefront/.env.local`), grant the runtime
    SA `medusa-run@` `secretAccessor`, and
    `gcloud run services update medusa-web --region=us-east4 --update-secrets=SUPABASE_URL=SUPABASE_URL:latest,SUPABASE_SERVICE_ROLE_KEY=SUPABASE_SERVICE_ROLE_KEY:latest`
    (**additive** — preserves the others). **Owed to Daniel** (prod-infra write + handles the service-role key).

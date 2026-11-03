@@ -45,12 +45,12 @@ connect is gated.
 
 ## What already exists (reuse, don't rebuild)
 - `apps/backend/src/modules/subscriptions/` — `SubscriptionPlan` + `Subscription` models + service (platform-side, Stripe + status lifecycle already present). Add a platform-owned plan; subscriber = seller.
-- `apps/miyagisanchez/lib/stripe-subscriptions.ts` — `createSubscriptionPrice` + `createSubscriptionCheckout` (platform-side subscription mode), used as-is minus the 97% seller transfer (platform is the payee here).
-- `apps/miyagisanchez/app/api/sell/shop/domain/route.ts` (+ `cloudflare/*` sub-routes) — the surface to gate. Gate **every** domain mutation, not just POST (LEARNINGS: a server gate must cover every mutation).
-- `apps/miyagisanchez/lib/vercel-domains.ts` + `lib/domain-utils.ts` — provisioning unchanged; we only gate it.
+- `apps/storefront/lib/stripe-subscriptions.ts` — `createSubscriptionPrice` + `createSubscriptionCheckout` (platform-side subscription mode), used as-is minus the 97% seller transfer (platform is the payee here).
+- `apps/storefront/app/api/sell/shop/domain/route.ts` (+ `cloudflare/*` sub-routes) — the surface to gate. Gate **every** domain mutation, not just POST (LEARNINGS: a server gate must cover every mutation).
+- `apps/storefront/lib/vercel-domains.ts` + `lib/domain-utils.ts` — provisioning unchanged; we only gate it.
 - `app/admin/coupons/*` + `app/api/checkout/validate-coupon` + `lib/referrals.ts` (platform-coupon minting pattern) — extend for the domain-subscription coupon (100% off year 1, capped at 100).
-- `apps/miyagisanchez/lib/flags.ts` — Flagsmith, fail-open. Add `domain.paywall_enabled` kill-switch (off ⇒ ungated) for staged rollout.
-- `apps/miyagisanchez/lib/about-content.ts` — the `pricing` section is a live stub already naming "el dominio propio y el subdominio"; fill with real numbers (es + en — bilingual allow-list, rule #5).
+- `apps/storefront/lib/flags.ts` — Flagsmith, fail-open. Add `domain.paywall_enabled` kill-switch (off ⇒ ungated) for staged rollout.
+- `apps/storefront/lib/about-content.ts` — the `pricing` section is a live stub already naming "el dominio propio y el subdominio"; fill with real numbers (es + en — bilingual allow-list, rule #5).
 - UCP manifest + MCP server (`/api/ucp/*`) — the domain subscription + coupon must be agent-accessible (rule #3).
 
 ## Scope — stories

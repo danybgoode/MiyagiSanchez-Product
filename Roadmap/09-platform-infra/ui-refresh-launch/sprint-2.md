@@ -24,7 +24,7 @@ stories:
 # UI refresh before launch — Sprint 2: Polish passes — buyer core + marketing
 
 **Status:** 🟨 in progress — both stories built, PR open (`feat/ui-refresh-s2`, PR #282 against
-`apps/miyagisanchez`, title: "ui-refresh S2: buyer core + marketing polish passes [LOW]"),
+`apps/storefront`, title: "ui-refresh S2: buyer core + marketing polish passes [LOW]"),
 **Daniel's preview walkthrough owed before merge**.
 
 ## Stories

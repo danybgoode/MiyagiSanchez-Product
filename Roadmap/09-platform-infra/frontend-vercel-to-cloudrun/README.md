@@ -16,7 +16,7 @@ stories_total: 17
 
 ## Why
 
-Move `apps/miyagisanchez` (Next.js 16) off Vercel onto Cloud Run us-east4 — the rail the backend
+Move `apps/storefront` (Next.js 16) off Vercel onto Cloud Run us-east4 — the rail the backend
 already ships on — behind a Cloudflare edge that fronts everything (apex, wildcard, tenant custom
 domains via SSL for SaaS, CDN, bot protection). Drivers (validated at grooming, 2026-07-09):
 control over the runtime (Vercel timeouts + ~4.5 MB body ceiling keep biting), latency/locality

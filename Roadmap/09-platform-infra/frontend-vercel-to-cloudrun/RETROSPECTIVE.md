@@ -4,7 +4,7 @@ _Closed: 2026-07-10_
 
 ## What shipped
 
-**Sprint 1** — `apps/miyagisanchez` containerized (Next.js standalone + sharp), the two
+**Sprint 1** — `apps/storefront` containerized (Next.js standalone + sharp), the two
 `runtime='edge'` routes converted to Node, Cloud Build → Artifact Registry → Cloud Run `miyagi-web`
 shadow-deployed dark alongside Vercel (secrets re-minted, never copied), shadow-soak proved the
 rail before any traffic moved.

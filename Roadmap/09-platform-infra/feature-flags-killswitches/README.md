@@ -38,7 +38,7 @@ first-class.
 |---|---|
 | **Instance** | Flagsmith **SaaS** (`app.flagsmith.com`), project `miyagisanchezmarketplace` (id 39767, org 30549) |
 | **Environments** | Production (`YWCRELpbn2VJn32ijkan27`) · Development (`UmCgZPX5RCzP7qjHZowE4K`) — both empty until this epic |
-| **Keys staged** | `apps/miyagisanchez/.env.local`: `FLAGSMITH_ENVIRONMENT_KEY` (server, Dev), `NEXT_PUBLIC_FLAGSMITH_ENVIRONMENT_KEY` (Dev client), `FLAGSMITH_ADMIN_API_TOKEN` (REST/tooling). ⚠️ **Production server-side key to be generated before go-live.** |
+| **Keys staged** | `apps/storefront/.env.local`: `FLAGSMITH_ENVIRONMENT_KEY` (server, Dev), `NEXT_PUBLIC_FLAGSMITH_ENVIRONMENT_KEY` (Dev client), `FLAGSMITH_ADMIN_API_TOKEN` (REST/tooling). ⚠️ **Production server-side key to be generated before go-live.** |
 | **SDK** | `flagsmith-nodejs` — **local in-process evaluation** (~0 ms/request, periodic env-doc refresh; request volume ≠ eval volume → SaaS free 50K/mo is ample) |
 
 ## Non-negotiable design rules

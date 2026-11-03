@@ -50,7 +50,7 @@ builder route is gone or redirects with a "la maqueta ahora vive en el estudio z
 `print_layouts` data stays (harmless — note it so the doc-hygiene sweep doesn't flag drift).
 **Announce:** touches a shipped admin surface — announce per WAYS-OF-WORKING before merge.
 **Risk:** LOW
-**Done:** commit `e97627d` in `apps/miyagisanchez`, branch `feat/zine-editing-central-s3`. Confirmed
+**Done:** commit `e97627d` in `apps/storefront`, branch `feat/zine-editing-central-s3`. Confirmed
 via Explore that the "builder" (`app/(shell)/admin/print/[editionId]/builder/page.tsx` +
 `BuilderClient.tsx`) is a separate code path from the print/export pipeline
 (`.../[editionId]/print/page.tsx`, `.../pdf`, `.../export`), which reads the same `print_layouts`

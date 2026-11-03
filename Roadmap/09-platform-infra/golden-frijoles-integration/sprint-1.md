@@ -52,7 +52,7 @@ have something to depend on instead of a version that exists only on my laptop.
 ### Story 1.2 — Migrate the storefront to `@golden-frijoles/sdk` ✅ (#366)
 **As a** builder, **I want** the storefront importing the renamed package, **so that** the flag
 provider, the mirror, the definition catalog and the scenario provider all speak one brand.
-**Acceptance:** no `@golden-beans/sdk` import remains in `apps/miyagisanchez`; `npx tsc --noEmit`,
+**Acceptance:** no `@golden-beans/sdk` import remains in `apps/storefront`; `npx tsc --noEmit`,
 `npm run build` and the Playwright `api` project are green; `/`, `/mx` and `/mx/l` still render 200
 against the branch preview.
 **Risk:** LOW

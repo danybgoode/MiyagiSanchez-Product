@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-10-30 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-11-03 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -184,10 +184,11 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (9)
+## ⬜ Funnel — seeds not yet scaffolded (10)
 
 - [Affinity marketplace infrastructure — partner-operated markets](seeds/affinity-marketplace-infrastructure.md) — Raw · Epic
 - [AI-adoption guardrails — close the step-1/2 gaps the ladder names (browser smoke · security review · proactive monitor · OTel)](seeds/ai-adoption-maturity-benchmark.md) — Ready · Chore
+- [Business infrastructure — describe any business, we set up everything](seeds/business-infrastructure-productize-anything.md) — Raw · Epic
 - [Custom static pages for seller shops](seeds/custom-static-pages.md) — Raw · Feature
 - [Designer collaboration portal (deferred from #4)](seeds/designer-collaboration-portal.md) — Raw · Feature
 - [Flag lane cleanup — drop the parked platform_flags + legacy mirror, retire dead env vars](seeds/flag-lane-cleanup.md) — Raw · Chore
@@ -208,4 +209,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 168 · seeds in funnel: 9 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 168 · seeds in funnel: 10 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

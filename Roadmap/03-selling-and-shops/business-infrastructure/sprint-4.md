@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 4
 title: "The shop answers"
 risk: high
-phase: Shaping
+phase: Building
 stories_total: 3
 stories:
   - id: S4.1

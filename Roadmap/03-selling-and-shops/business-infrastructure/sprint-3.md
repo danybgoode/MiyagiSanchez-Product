@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 3
 title: "Tu plan: what to sell, what to change"
 risk: high
-phase: Shaping
+phase: In review
 stories_total: 4
 stories:
   - id: S3.1
@@ -37,7 +37,7 @@ stories:
 ---
 # Business infrastructure — Sprint 3: «Tu plan» — what to sell, what to change
 
-**Status:** ⬜ not started
+**Status:** 🔍 in review — storefront PR #468, backend #223 ✅ merged
 
 ## Build contract (locked by the architect before the builder started)
 Cite D8–D10 and D12. `lib/business-plan/engine.ts` is pure and the only place a figure is computed; it imports
@@ -93,7 +93,7 @@ Env: production · https://miyagisanchez.com
 2. Read the explanation under the numbers.
    → Every figure in it is one shown above it.
 3. Tap the first move.
-   → It opens the existing page for that action (e.g. Ganancias for a price); nothing has changed yet.
+   → It opens the existing page for that action (the product's editor for a price, the share kit for buyers); nothing has changed yet.
 4. (owed to Daniel) On the 1st of next month, check your email or Telegram.
    → One check-in arrives saying whether you are on track.
 

@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 1
 title: "The door opens, for any business"
 risk: high
-phase: Building
+phase: Shipped
 stories_total: 3
 stories:
   - id: S1.1
@@ -12,25 +12,25 @@ stories:
     i_want: "«Quedármela» to open a sign-up I can scroll and finish on phone and desktop"
     so_that: "I can keep the shop without knowing to press Tab"
     risk: high
-    status: planned
+    status: done
   - id: S1.2
     title: "Any business is recognised"
     as_a: "a cook, tutor, maker, rental or digital seller"
     i_want: "the description to recognise what kind of business I run, and let me change it in one tap"
     so_that: "the shop is built for how I actually sell"
     risk: high
-    status: planned
+    status: done
   - id: S1.3
     title: "The shop fits the business"
     as_a: "a merchant of any kind"
     i_want: "the right kind of listings, cobros and entregas pre-chosen for my business"
     so_that: "my shop is ready to sell the way I already do"
     risk: high
-    status: planned
+    status: done
 ---
 # Business infrastructure — Sprint 1: The door opens, for any business
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped
 
 ## Build contract (locked by the architect before the builder started)
 Cite the epic README's D1–D3. S1.1 ships as its own PR (`fix/p2s-keep-sheet-scroll`) and merges first.
@@ -49,7 +49,7 @@ Cite the epic README's D1–D3. S1.1 ships as its own PR (`fix/p2s-keep-sheet-sc
 
 ## Stories
 
-### Story 1.1 — The keep sheet scrolls and signs up
+### Story 1.1 — The keep sheet scrolls and signs up ✅ `57ccca4`
 **As a** merchant who just saw their shop, **I want** «Quedármela» to open a sign-up I can scroll and finish on phone
 and desktop, **so that** I can keep the shop without knowing to press Tab.
 **Acceptance:** signed out on `/p2s/<id>`, tapping «Quedármela» shows the sign-up over the canvas; the whole form,
@@ -57,7 +57,7 @@ including Google and the email continue button, can be reached by scrolling on a
 the close button still close it; the root cause is named in the PR.
 **Risk:** high (sign-up path)
 
-### Story 1.2 — Any business is recognised
+### Story 1.2 — Any business is recognised ✅ `00eb7b1`
 **As a** cook, tutor, maker, rental or digital seller, **I want** the description to recognise what kind of business
 I run, and let me change it in one tap, **so that** the shop is built for how I actually sell.
 **Acceptance:** "doy clases de guitarra", "vendo tamales los domingos", "hago muebles sobre pedido", "rento
@@ -65,7 +65,7 @@ inflables", "vendo plantillas de Canva" and "vendo ropa de paca" land on service
 digital and products; the canvas names the shape and changing it regenerates the shop (one version used).
 **Risk:** high
 
-### Story 1.3 — The shop fits the business
+### Story 1.3 — The shop fits the business ✅ `00eb7b1`
 **As a** merchant of any kind, **I want** the right kind of listings, cobros and entregas pre-chosen for my business,
 **so that** my shop is ready to sell the way I already do.
 **Acceptance:** a services shop's examples are services; a food shop has cash + hand delivery pre-selected and no
@@ -90,7 +90,7 @@ Env: production · https://miyagisanchez.com
    → You land on your kept shop.
 4. In «Cobros y entregas», look at what is pre-selected.
    → Cash and hand delivery are on; Correos is not offered.
-5. In a private window, describe "doy clases de guitarra a domicilio" and tap «Cambiar tipo de negocio» → Productos.
+5. In a private window, describe "doy clases de guitarra a domicilio"; under «Tipo de negocio» pick Productos and tap «Otra versión».
    → The shop regenerates as a products shop and one version is used.
 
 If any step fails, note the step number + what you saw — that's the bug report.

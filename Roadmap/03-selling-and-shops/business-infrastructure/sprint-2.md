@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 2
 title: "One business model per shop"
 risk: high
-phase: Shaping
+phase: Shipped
 stories_total: 3
 stories:
   - id: S2.1
@@ -12,25 +12,25 @@ stories:
     i_want: "one model of my business where every number says whether it is estimated, told by me or measured"
     so_that: "I know which numbers to trust and which to fix"
     risk: high
-    status: planned
+    status: done
   - id: S2.2
     title: "«Tus números» in the canvas"
     as_a: "a merchant describing a new business"
     i_want: "to see what each thing costs me, what it takes and what limits me, before I sign up"
     so_that: "I start with my numbers, not without them"
     risk: high
-    status: planned
+    status: done
   - id: S2.3
     title: "Existing shops are seeded from their sales"
     as_a: "a merchant already selling on Miyagi"
     i_want: "my model filled from my real catalog, costs and sales, asked only for what is missing"
     so_that: "I get the same plan without retyping my business"
     risk: high
-    status: planned
+    status: done
 ---
 # Business infrastructure — Sprint 2: One business model per shop
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped
 
 ## Build contract (locked by the architect before the builder started)
 Cite D4–D7 and D11. Migration **M1** (`supabase/migrations/2026110320xxxx_business_models.sql`): `shop_drafts.numbers
@@ -43,14 +43,14 @@ model. The photo confirm card carries the replaced example's `unit_cost` (D4).
 
 ## Stories
 
-### Story 2.1 — The business model and its sources
+### Story 2.1 — The business model and its sources ✅ `512c4a8`
 **As a** merchant, **I want** one model of my business where every number says whether it is estimated, told by me or
 measured, **so that** I know which numbers to trust and which to fix.
 **Acceptance:** a pure spec shows: told beats estimated; measured replaces estimated only past `MEASURED_MIN_UNITS`;
 missing stays missing (never 0); the row is created at keep from the draft's numbers.
 **Risk:** high (migration)
 
-### Story 2.2 — «Tus números» in the canvas
+### Story 2.2 — «Tus números» in the canvas ✅ `512c4a8`
 **As a** merchant describing a new business, **I want** to see what each thing costs me, what it takes and what limits
 me, before I sign up, **so that** I start with my numbers, not without them.
 **Acceptance:** after the catalog block, a «Tus números» block shows cost per offer, minutes per unit, monthly
@@ -58,7 +58,7 @@ capacity and its limiting resource, fixed monthly costs, each marked «estimado�
 draft; replacing an example with a photo keeps its cost as the product's cost.
 **Risk:** high
 
-### Story 2.3 — Existing shops are seeded from their sales
+### Story 2.3 — Existing shops are seeded from their sales ✅ `512c4a8`
 **As a** merchant already selling on Miyagi, **I want** my model filled from my real catalog, costs and sales, asked
 only for what is missing, **so that** I get the same plan without retyping my business.
 **Acceptance:** `/shop/manage/plan` for a shop with products and costs shows them as `measured`/`told`; a product
@@ -77,10 +77,10 @@ Env: production · https://miyagisanchez.com
 1. Signed out, describe "hago pasteles sobre pedido en Puebla" at https://miyagisanchez.com/mx/vende.
    → After the examples, «Tus números» shows a cost per cake, hours per cake, how many you can make a month and what
    limits you (the oven or your time), all marked «estimado».
-2. Change the cost of one cake.
-   → The value keeps your number and is no longer marked «estimado» after a reload.
-3. (auth — owed to Daniel) Keep the shop, then open https://miyagisanchez.com/shop/manage/plan.
-   → The same numbers are there.
+2. (auth — owed to Daniel) Keep the shop, then open https://miyagisanchez.com/shop/manage/plan.
+   → The same numbers are there, marked «estimado».
+3. (auth — owed to Daniel) Change the cost of one cake and tap «Guardar mis números».
+   → After a reload it keeps your number and shows «tuyo».
 4. (auth — owed to Daniel) On your own existing shop, open https://miyagisanchez.com/shop/manage/plan.
    → Your products appear with their real costs; any product without a cost says "falta tu costo".
 

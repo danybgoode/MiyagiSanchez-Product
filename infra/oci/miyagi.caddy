@@ -58,6 +58,18 @@ mschz.org, www.mschz.org {
 	}
 }
 
+# panfleto.com.mx — the Panfleto shop's own domain (marketplace_shops.custom_domain; the middleware maps the Host to
+# the shop). Its zone is Daniel's, in a separate Cloudflare account, so it is a direct proxied A record with its own
+# Origin CA cert rather than a Cloudflare-for-SaaS custom hostname (that one timed out while DNS still pointed at
+# Vercel). Moved off the paused Vercel account 2026-11-03.
+panfleto.com.mx {
+	tls /etc/caddy/certs/panfletomx.pem /etc/caddy/certs/panfletomx.key
+	import miyagi_headers
+	reverse_proxy miyagi-web:8080 {
+		import miyagi_upstream
+	}
+}
+
 # Tenant custom domains (Cloudflare for SaaS) are NOT served by a catch-all. An `https://` block here took
 # over the whole Caddy: Caddy turned it into a matcher-less TLS connection policy pinned to Miyagi's cert,
 # and panfleto.win, app.panfleto.win and aomx's host were served `CN=miyagisanchez.com` (PR #209 review,

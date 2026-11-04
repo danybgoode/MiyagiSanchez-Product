@@ -185,8 +185,9 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (10)
+## ⬜ Funnel — seeds not yet scaffolded (12)
 
+- [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [Affinity marketplace infrastructure — partner-operated markets](seeds/affinity-marketplace-infrastructure.md) — Raw · Epic
 - [AI-adoption guardrails — close the step-1/2 gaps the ladder names (browser smoke · security review · proactive monitor · OTel)](seeds/ai-adoption-maturity-benchmark.md) — Ready · Chore
 - [Business data consolidation — one place for the tools a business already uses](seeds/business-data-consolidation.md) — Raw · Epic
@@ -197,6 +198,7 @@
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
+- [Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages](seeds/plans-gratis-negocio-and-promoter-packages.md) — Raw · Epic
 
 ## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
@@ -210,4 +212,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 169 · seeds in funnel: 10 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 169 · seeds in funnel: 12 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

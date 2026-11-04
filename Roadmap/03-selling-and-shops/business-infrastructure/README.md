@@ -1,6 +1,6 @@
 ---
-status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped        # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 locked_at: "2026-11-03T22:00:00Z"
 slug: business-infrastructure
@@ -34,6 +34,10 @@ retention_days: null
 satisfied_event: null
 satisfied_min_score: null
 build_order: 12
+actual_usd: 2.25
+actual_mtok: 10
+actual_models: "claude-opus-5-5 ≈$2.25"
+actual_basis: "this machine · 2026-11-04 · 1 session · prices 2026-10-02"
 ---
 
 # Epic: Business infrastructure — describe any business, we set up everything
@@ -171,6 +175,19 @@ existing settings FAQ (no new FAQ store). Messaging stays stamps-only; the chat 
   with the seller's own Ganancias read.
 - **D16:** `get_business_plan` is owner-only (not in the partner read set) until the product owner decides whether a
   partner may read a merchant's goal and costs.
+
+- **D13 (S4):** a non-streaming JSON reply with an `answered` flag, not SSE + a tool loop (answers are ≤ 4 sentences;
+  the handoff is its own endpoint). The chat's payment and delivery facts come from the platform's own
+  `publicShopPaymentAvailability` + `readChooserState`; the history the model sees always starts with the buyer.
+- **D14 (S4):** agents (`ask_shop`) spend from their own subjects (`shop_chat:agent:*`, 50/shop, 500 global) and their
+  own limiter key; the conversation token does not slide (one human check = one 30-minute conversation).
+- **D15 (S4):** mounted on `ShopRenderer` (marketplace + own domain + subdomain), product pages (above the buy bar)
+  and the embed; the generated FAQ is SHOWN on the draft before keep (not edited there).
+- **D17 (S5):** leaving a question has its own limiters (5/h per IP, 30/day per shop); a failed answer email releases
+  the claim; the purge runs on the DAILY check-in timer and also clears questions left unanswered for 90 days; the FAQ
+  write is refused unless the thread's shop is the one the write lands on. A shop changing hands leaves old threads
+  with the old owner (accepted).
+- **D18:** M2 shipped with S5, not S4.
 
 ### Owed follow-ups found during the build (outside this epic)
 - No `frame-ancestors` / `X-Frame-Options` anywhere except `/embed/*` (sign-up pages are frameable) — PR #465 review.

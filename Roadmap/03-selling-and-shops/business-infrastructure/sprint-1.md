@@ -30,7 +30,7 @@ stories:
 ---
 # Business infrastructure — Sprint 1: The door opens, for any business
 
-**Status:** ✅ shipped
+**Status:** ✅ shipped · **Merged:** danybgoode/MiyagiSanchez-Storefront#465 · danybgoode/MiyagiSanchez-Storefront#466
 
 ## Build contract (locked by the architect before the builder started)
 Cite the epic README's D1–D3. S1.1 ships as its own PR (`fix/p2s-keep-sheet-scroll`) and merges first.
@@ -49,7 +49,7 @@ Cite the epic README's D1–D3. S1.1 ships as its own PR (`fix/p2s-keep-sheet-sc
 
 ## Stories
 
-### Story 1.1 — The keep sheet scrolls and signs up ✅ `57ccca4`
+### Story 1.1 — The keep sheet scrolls and signs up ✅ danybgoode/MiyagiSanchez-Storefront#465
 **As a** merchant who just saw their shop, **I want** «Quedármela» to open a sign-up I can scroll and finish on phone
 and desktop, **so that** I can keep the shop without knowing to press Tab.
 **Acceptance:** signed out on `/p2s/<id>`, tapping «Quedármela» shows the sign-up over the canvas; the whole form,
@@ -57,7 +57,7 @@ including Google and the email continue button, can be reached by scrolling on a
 the close button still close it; the root cause is named in the PR.
 **Risk:** high (sign-up path)
 
-### Story 1.2 — Any business is recognised ✅ `00eb7b1`
+### Story 1.2 — Any business is recognised ✅ danybgoode/MiyagiSanchez-Storefront#466
 **As a** cook, tutor, maker, rental or digital seller, **I want** the description to recognise what kind of business
 I run, and let me change it in one tap, **so that** the shop is built for how I actually sell.
 **Acceptance:** "doy clases de guitarra", "vendo tamales los domingos", "hago muebles sobre pedido", "rento
@@ -65,7 +65,7 @@ inflables", "vendo plantillas de Canva" and "vendo ropa de paca" land on service
 digital and products; the canvas names the shape and changing it regenerates the shop (one version used).
 **Risk:** high
 
-### Story 1.3 — The shop fits the business ✅ `00eb7b1`
+### Story 1.3 — The shop fits the business ✅ danybgoode/MiyagiSanchez-Storefront#466
 **As a** merchant of any kind, **I want** the right kind of listings, cobros and entregas pre-chosen for my business,
 **so that** my shop is ready to sell the way I already do.
 **Acceptance:** a services shop's examples are services; a food shop has cash + hand delivery pre-selected and no

@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 4
 title: "The shop answers"
 risk: high
-phase: Building
+phase: Shipped
 stories_total: 3
 stories:
   - id: S4.1
@@ -12,25 +12,25 @@ stories:
     i_want: "to ask a question in my own words and get the shop's own answer"
     so_that: "I can decide to buy without waiting for the owner"
     risk: high
-    status: planned
+    status: done
   - id: S4.2
     title: "Everywhere the shop is, and for agents"
     as_a: "a buyer on any of the shop's channels, or a buyer's agent"
     i_want: "the same answers on the shop, the product page, the shop's own domain, the embed and over MCP"
     so_that: "the shop answers wherever I meet it"
     risk: high
-    status: planned
+    status: done
   - id: S4.3
     title: "FAQ written at describe, editable"
     as_a: "a merchant"
     i_want: "my shop's frequent questions written for me when I describe it, and editable later"
     so_that: "the chat can answer from day one"
     risk: low
-    status: planned
+    status: done
 ---
 # Business infrastructure — Sprint 4: The shop answers
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped · **Merged:** danybgoode/MiyagiSanchez-Storefront#469
 
 ## Build contract (locked by the architect before the builder started)
 Cite D13–D16. Port from `~/dobby/bonsai-chat/server.mjs` (system prompt rules, SSE frames `{t:'text'|'action'|'done'|
@@ -45,7 +45,7 @@ describe is a draft field on `words` (no new block), applied at keep through the
 
 ## Stories
 
-### Story 4.1 — The shop's chat
+### Story 4.1 — The shop's chat ✅ danybgoode/MiyagiSanchez-Storefront#469
 **As a** buyer on a shop, **I want** to ask a question in my own words and get the shop's own answer, **so that** I
 can decide to buy without waiting for the owner.
 **Acceptance:** the chat answers from the shop's FAQ, policies, cobros/entregas and catalog; prices and stock match
@@ -53,14 +53,14 @@ the shop page; a question it cannot answer gets «no sé» and the offer to leav
 answers from shop B; the rate limit and daily cap refuse politely.
 **Risk:** high (public AI endpoint, tenancy)
 
-### Story 4.2 — Everywhere the shop is, and for agents
+### Story 4.2 — Everywhere the shop is, and for agents ✅ danybgoode/MiyagiSanchez-Storefront#469
 **As a** buyer on any of the shop's channels, or a buyer's agent, **I want** the same answers on the shop, the product
 page, the shop's own domain, the embed and over MCP, **so that** the shop answers wherever I meet it.
 **Acceptance:** the launcher renders on `/s/<slug>`, a product page, a subdomain and the embed, clear of the tab bar;
 `ask_shop` is listed in the MCP tools and the manifest and returns `{ answer, answered }`.
 **Risk:** high
 
-### Story 4.3 — FAQ written at describe, editable
+### Story 4.3 — FAQ written at describe, editable ✅ danybgoode/MiyagiSanchez-Storefront#469
 **As a** merchant, **I want** my shop's frequent questions written for me when I describe it, and editable later,
 **so that** the chat can answer from day one.
 **Acceptance:** the words block includes 4–6 FAQ items for the shape; they are editable in the canvas; at keep they

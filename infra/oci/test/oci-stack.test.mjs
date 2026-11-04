@@ -95,6 +95,8 @@ const CLOUD_SCHEDULER = {
   'merchant-lifecycle-sweep': '10',
   // Born on the VM (prompt-to-shop S5.4, D19): never a Cloud Scheduler job. 15:00 UTC = 09:00 Mexico City.
   'p2s-nudges': '15',
+  // Born on the VM too (business-infrastructure S3.4, D12): daily, sends once per merchant per month in the first week.
+  'business-checkin': '15',
 }
 
 test('one timer per Cloud Scheduler cron, at the same UTC hour, calling the same route', () => {

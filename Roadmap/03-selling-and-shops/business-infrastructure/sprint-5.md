@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 5
 title: "Handoff that learns"
 risk: high
-phase: Shaping
+phase: Building
 stories_total: 1
 stories:
   - id: S5.1

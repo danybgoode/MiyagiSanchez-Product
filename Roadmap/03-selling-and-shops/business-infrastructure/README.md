@@ -146,6 +146,40 @@ goes to Supabase (AGENTS rule 2): the business model and the chat threads.
 **Deviations from the seed, named:** D4 (COGS via photo confirm, not keep). The seed's "FAQ block" becomes the
 existing settings FAQ (no new FAQ store). Messaging stays stamps-only; the chat is beside it.
 
+### Amendments during the build (each one from a review finding or a live fact; the decision above stands otherwise)
+
+- **D2 (S1, PR #466 review):** services, made-to-order and rentals ALSO get «Entrega acordada» at keep (they meet
+  their buyers; cash at checkout needs hand delivery); digital does not. The chooser offers Correos only to shapes
+  that ship, unless it is already on (`offersCorreos`). A re-run always sends the shop's current shape
+  (`rerunShape`), so a tone-only «Otra versión» cannot undo the merchant's correction.
+- **D4 (S2, amended):** the estimated cost is **never** written into Medusa COGS — it would read back as *measured*.
+  A photo product carries `metadata.p2s_example`; the model inherits that example's estimate, still `estimated`, until
+  the merchant types a cost. The photo product takes the SHOP's listing type.
+- **D6 (S2):** `business_models` is keyed by the Medusa **seller id** (slugs change), not the slug; seeded lazily on the
+  first visit to «Tu plan» (the keep path is untouched). The model never deletes an offer: superseded examples and
+  products a read did not return are **retired**, recomputed from the full list on every merge (idempotent — PR #467
+  review caught an earlier version eroding examples one batch per visit).
+- **S2.2:** the canvas «Tus números» is read-only; numbers are edited on the signed-in `/shop/manage/plan` (one write
+  path, real auth).
+- **D9 (S3, PR #468 review):** reprice links to the product's own editor (`/sell/edit/<id>`), never for an example,
+  and says «antes de comisiones» (Ganancias applies the live fee). Capacity is compared before anything is said about
+  it: no capacity or a missing time → the plan names that gap.
+- **D10:** a refused model text is cached too (`{hash, text: null}`), so the same inputs never spend twice.
+- **D12 (S3):** the timer runs **daily at 15:00 UTC** and sends at most once per merchant per month, only in the
+  month's first week; an incomplete ledger (revenue with no order line) is «could not tell», retried next day; a run
+  that could read no one answers 503. Backend `GET /internal/profit/ledger` (backend #223) shares `readSellerLedger`
+  with the seller's own Ganancias read.
+- **D16:** `get_business_plan` is owner-only (not in the partner read set) until the product owner decides whether a
+  partner may read a merchant's goal and costs.
+
+### Owed follow-ups found during the build (outside this epic)
+- No `frame-ancestors` / `X-Frame-Options` anywhere except `/embed/*` (sign-up pages are frameable) — PR #465 review.
+- `/internal/*` is publicly routable (401 without the secret): block it at the edge and reach Medusa over the VM's
+  internal network — backend #223 review.
+- `cross-review.mjs` run from the root cannot read an app PR's head (it fetches from the wrong remote): run it from the
+  app checkout until fixed — PR #465.
+- The check-in's month is a UTC month (≤ 6 h shift at month end for Mexico).
+
 ## Scope — stories
 | Sprint | Story | Risk |
 |---|---|---|

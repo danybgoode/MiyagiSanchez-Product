@@ -1,0 +1,9 @@
+[Unit]
+Description=Miyagi: /api/cron/business-checkin daily at 15:00 UTC (09:00 America/Mexico_City) — the monthly «Tu plan» check-in (sends once per merchant per month, first week only)
+
+[Timer]
+OnCalendar=*-*-* 15:00:00 UTC
+Unit=miyagi-cron@business-checkin.service
+
+[Install]
+WantedBy=timers.target

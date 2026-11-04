@@ -16,9 +16,10 @@
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
-## 📋 Ready to build (scaffolded, not started) (3)
+## 📋 Ready to build (scaffolded, not started) (4)
 
 - [BYO Envía connect](../../04-shipping-and-delivery/envia-byo-connect/README.md) — 04 Shipping · 0/11 stories · risk: High
+- [Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages](../../08-growth-and-promotions/plans-gratis-negocio-and-promoter-packages/README.md) — 08 Growth · 0/15 stories · risk: High
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
@@ -185,7 +186,7 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (12)
+## ⬜ Funnel — seeds not yet scaffolded (11)
 
 - [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [Affinity marketplace infrastructure — partner-operated markets](seeds/affinity-marketplace-infrastructure.md) — Raw · Epic
@@ -198,7 +199,6 @@
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
-- [Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages](seeds/plans-gratis-negocio-and-promoter-packages.md) — Raw · Epic
 
 ## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
@@ -212,4 +212,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 169 · seeds in funnel: 12 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 170 · seeds in funnel: 11 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

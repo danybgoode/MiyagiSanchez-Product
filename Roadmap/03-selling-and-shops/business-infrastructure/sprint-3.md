@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 3
 title: "Tu plan: what to sell, what to change"
 risk: high
-phase: In review
+phase: Shipped
 stories_total: 4
 stories:
   - id: S3.1
@@ -12,32 +12,32 @@ stories:
     i_want: "to say how much I want to earn a month and see how much I must sell and what limits me"
     so_that: "I know whether my business can pay me and why not"
     risk: high
-    status: planned
+    status: done
   - id: S3.2
     title: "Moves you can act on"
     as_a: "a merchant"
     i_want: "the few changes that move me toward my goal, each one tap from the tool that does it"
     so_that: "the plan turns into action, not a report"
     risk: high
-    status: planned
+    status: done
   - id: S3.3
     title: "The words, never the maths"
     as_a: "a merchant"
     i_want: "the plan explained in plain words that only use my real numbers"
     so_that: "I understand it and can trust every figure"
     risk: high
-    status: planned
+    status: done
   - id: S3.4
     title: "The monthly check-in"
     as_a: "a merchant"
     i_want: "a message each month saying whether I am on track and what to do next"
     so_that: "the plan keeps working after the first day"
     risk: high
-    status: planned
+    status: done
 ---
 # Business infrastructure — Sprint 3: «Tu plan» — what to sell, what to change
 
-**Status:** 🔍 in review — storefront PR #468, backend #223 ✅ merged
+**Status:** ✅ shipped · **Merged:** danybgoode/MiyagiSanchez-Storefront#468 · danybgoode/MiyagiSanchez-Backend#223
 
 ## Build contract (locked by the architect before the builder started)
 Cite D8–D10 and D12. `lib/business-plan/engine.ts` is pure and the only place a figure is computed; it imports
@@ -49,7 +49,7 @@ file lands in the ROOT repo `infra/oci/systemd/`; installing it on the VM is the
 
 ## Stories
 
-### Story 3.1 — The plan: volume, break-even, bottleneck
+### Story 3.1 — The plan: volume, break-even, bottleneck ✅ danybgoode/MiyagiSanchez-Storefront#468
 **As a** merchant, **I want** to say how much I want to earn a month and see how much I must sell and what limits me,
 **so that** I know whether my business can pay me and why not.
 **Acceptance:** with a goal, the plan shows needed monthly volume, break-even, and one binding constraint: capacity,
@@ -57,21 +57,21 @@ demand, or "fill this number first"; the engine spec covers each branch, zero/ne
 inputs.
 **Risk:** high
 
-### Story 3.2 — Moves you can act on
+### Story 3.2 — Moves you can act on ✅ danybgoode/MiyagiSanchez-Storefront#468
 **As a** merchant, **I want** the few changes that move me toward my goal, each one tap from the tool that does it,
 **so that** the plan turns into action, not a report.
 **Acceptance:** up to three ranked moves (reprice, push the best earner per unit of the bottleneck, pause a
 loss-maker, share, fill a number), each opening its existing page; nothing changes until the merchant confirms there.
 **Risk:** high (links to the price Apply)
 
-### Story 3.3 — The words, never the maths
+### Story 3.3 — The words, never the maths ✅ danybgoode/MiyagiSanchez-Storefront#468
 **As a** merchant, **I want** the plan explained in plain words that only use my real numbers, **so that** I
 understand it and can trust every figure.
 **Acceptance:** the explanation is es-MX; a spec proves a text with a figure not in the engine output is rejected and
 the template is shown; it is regenerated only when the inputs change.
 **Risk:** high
 
-### Story 3.4 — The monthly check-in
+### Story 3.4 — The monthly check-in ✅ danybgoode/MiyagiSanchez-Storefront#468
 **As a** merchant, **I want** a message each month saying whether I am on track and what to do next, **so that** the
 plan keeps working after the first day.
 **Acceptance:** the cron sends at most one check-in per shop per month on the merchant's chosen channels, comparing

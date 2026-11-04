@@ -30,7 +30,7 @@ stories:
 ---
 # Business infrastructure — Sprint 2: One business model per shop
 
-**Status:** ✅ shipped
+**Status:** ✅ shipped · **Merged:** danybgoode/MiyagiSanchez-Storefront#467
 
 ## Build contract (locked by the architect before the builder started)
 Cite D4–D7 and D11. Migration **M1** (`supabase/migrations/2026110320xxxx_business_models.sql`): `shop_drafts.numbers
@@ -43,14 +43,14 @@ model. The photo confirm card carries the replaced example's `unit_cost` (D4).
 
 ## Stories
 
-### Story 2.1 — The business model and its sources ✅ `512c4a8`
+### Story 2.1 — The business model and its sources ✅ danybgoode/MiyagiSanchez-Storefront#467
 **As a** merchant, **I want** one model of my business where every number says whether it is estimated, told by me or
 measured, **so that** I know which numbers to trust and which to fix.
 **Acceptance:** a pure spec shows: told beats estimated; measured replaces estimated only past `MEASURED_MIN_UNITS`;
 missing stays missing (never 0); the row is created at keep from the draft's numbers.
 **Risk:** high (migration)
 
-### Story 2.2 — «Tus números» in the canvas ✅ `512c4a8`
+### Story 2.2 — «Tus números» in the canvas ✅ danybgoode/MiyagiSanchez-Storefront#467
 **As a** merchant describing a new business, **I want** to see what each thing costs me, what it takes and what limits
 me, before I sign up, **so that** I start with my numbers, not without them.
 **Acceptance:** after the catalog block, a «Tus números» block shows cost per offer, minutes per unit, monthly
@@ -58,7 +58,7 @@ capacity and its limiting resource, fixed monthly costs, each marked «estimado�
 draft; replacing an example with a photo keeps its cost as the product's cost.
 **Risk:** high
 
-### Story 2.3 — Existing shops are seeded from their sales ✅ `512c4a8`
+### Story 2.3 — Existing shops are seeded from their sales ✅ danybgoode/MiyagiSanchez-Storefront#467
 **As a** merchant already selling on Miyagi, **I want** my model filled from my real catalog, costs and sales, asked
 only for what is missing, **so that** I get the same plan without retyping my business.
 **Acceptance:** `/shop/manage/plan` for a shop with products and costs shows them as `measured`/`told`; a product

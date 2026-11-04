@@ -1339,6 +1339,17 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   Record a genuine "not yet observed, here's why" finding rather than force an artificial trigger
   or silently claim success. *(2026-07-14, deploy-pipeline-tuning S5.)*
 
+- **`cross-review.mjs` run from the ROOT repo reads none of an app PR's files and can still post "clean"**
+  (business-infrastructure, PR #465, 2026-11-04). It reads the PR's files with `git show <head>:<path>` in its working
+  directory and fetches a missing head from `origin` — the root repo's remote. Every file was omitted and vibe posted a
+  clean pass over nothing. Run it from the app's own checkout (`cd apps/storefront && node ../../scripts/cross-review.mjs …`)
+  until the script fetches from the PR's repo. A clean review that "attached 0 files" is not a review.
+- **An unlayered global CSS rule beats Tailwind v4's `@layer utilities`, whatever the specificity**
+  (business-infrastructure S1.1, PR #465). `.platform-main-shell > :not(.platform-theme-spot) { position: relative }`
+  sat outside any layer, so every direct child of the main shell that asked for `fixed` or `sticky` silently became
+  `relative`: prompt-to-shop's sign-up sheet rendered in page flow under its button and could not be scrolled to. Put
+  site-wide defaults in `@layer base`/`components`; overlays mount on `document.body` (`components/ui/BodyPortal.tsx`).
+
 ## Vercel domains / DNS (the subdomains epic, 2026-06-06)
 - **Per-host domain registration doesn't scale: a Vercel project caps at 50 domains.** For "every shop
   gets a subdomain" (164 shops), registering each `slug.host` is a dead end (and consuming the cap also
@@ -2733,6 +2744,19 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   none of them catch it, since `<i className="iconoir-typo" />` is valid JSX referencing a valid-but-
   empty CSS selector.)*
 
+- **A mutation that stays green may be the SCENARIO, not the code** (business-infrastructure S3, 2026-11-04). Twice a
+  deliberate break stayed green because the fixture gave both branches of the decision the same answer: the best
+  earner per HOUR was also the best per SALE, and a losing plan's average loss equalled one product's loss already
+  allowed elsewhere. Before dismissing a green mutation, build the case where the two answers DIFFER — the spec cannot
+  see a decision its fixture does not exercise.
+- **Reuse the platform's own rule; a re-written one drifts the week it is written** (business-infrastructure S4,
+  PR #469). The shop chat listed payment methods from a hand-written check: SPEI never showed (the public payload has
+  `configured`, not a CLABE — the spec's fixture carried a CLABE production never sends), card ignored the v2 account
+  generation, cash ignored "only with hand delivery". `publicShopPaymentAvailability` + `readChooserState` already
+  said all of it. Fixtures come from the REAL sanitized shape, never a hand-built richer one.
+- **An LLM history window of EVEN length over an alternating dialog starts on the model's turn** — Gemini refuses a
+  conversation that does not start with the user (PR #469). Trim leading model turns after windowing.
+
 ## Medusa gotchas
 - **A missing projection is not proof of a missing Medusa link: validate both directions before a
   data repair.** A public listing emitted an empty shop slug even though product→link→seller was
@@ -3398,6 +3422,18 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   so the "same" write could stamp a non-cheapest variant's price as the card's "desde" price.
   Caught only because the reviewer asked *why* the precedent was safe, not just *whether* the code
   matched it. *(2026-07-16, mcp-parity-core S3.2 — Codex catch, min-across-live-grid recompute.)*
+
+- **A merge into a stored model must be IDEMPOTENT — recompute from the full list, retire instead of delete**
+  (business-infrastructure S2, 2026-11-04). «Tu plan» merged the shop's live catalog into the stored model on every
+  visit and pruned stand-in examples from the list the PREVIOUS visit had already pruned: each page view removed one
+  more batch, including numbers the merchant had typed. A second bug in the same merge re-stamped every unchanged
+  measured value with today's date, so every visit was a "change" and a write. The fix that held: never delete an
+  input — mark it retired — and decide retirement from the full stored list every time; an unchanged value keeps its
+  stored entry, date included. Spec: merge three times, expect one merge's answer.
+- **Writing an estimate into a store that is later read as MEASURED launders its provenance**
+  (business-infrastructure D4, amended). The plan proposed carrying an AI-estimated cost into the product's real COGS;
+  the next read of the catalog would have called it measured. Carry the estimate beside the record (here, the photo
+  product names the example it replaced) and keep its label.
 
 ## Working efficiently across a long epic
 - **EPIC-MODE IS THE DEFAULT NOW (2026-07-24). The single highest-leverage act in a whole-epic run is the

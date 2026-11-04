@@ -3,7 +3,7 @@ epic: business-infrastructure
 sprint: 5
 title: "Handoff that learns"
 risk: high
-phase: Building
+phase: Shipped
 stories_total: 1
 stories:
   - id: S5.1
@@ -12,11 +12,11 @@ stories:
     i_want: "the question sent to me, my reply emailed to the buyer, and my reply saved as a frequent question"
     so_that: "I answer each question once and the shop answers it next time"
     risk: high
-    status: planned
+    status: done
 ---
 # Business infrastructure — Sprint 5: Handoff that learns
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped · **Merged:** danybgoode/MiyagiSanchez-Storefront#470
 
 ## Build contract (locked by the architect before the builder started)
 Cite D17. Migration **M2** (`shop_chat_threads`, service role only, REVOKE `PUBLIC, anon, authenticated`) applied by
@@ -30,7 +30,7 @@ existing validator and its 12-item cap — a full FAQ says so). The monthly cron
 
 ## Stories
 
-### Story 5.1 — Handoff that learns
+### Story 5.1 — Handoff that learns ✅ danybgoode/MiyagiSanchez-Storefront#470
 **As a** merchant whose shop could not answer a buyer, **I want** the question sent to me, my reply emailed to the
 buyer, and my reply saved as a frequent question, **so that** I answer each question once and the shop answers it next
 time.
@@ -51,7 +51,7 @@ Env: production · https://miyagisanchez.com
 1. On your shop's chat, ask something it cannot answer and leave your email.
    → It confirms the shop will write back.
 2. (auth — owed to Daniel) Check your Telegram or email as the merchant.
-   → The question arrives with the conversation.
+   → The question arrives (the email carries the last turns of the conversation).
 3. (auth — owed to Daniel) Open https://miyagisanchez.com/shop/manage/preguntas and reply.
    → The buyer email receives your answer once.
 4. Tap «Guardar como pregunta frecuente», then ask the chat the same question again.

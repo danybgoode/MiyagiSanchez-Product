@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-11-04 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-11-05 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -210,7 +210,7 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 |---|---|---|
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
-| Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages | In progress | Scaffolded |
+| Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages | In progress | Shipped |
 
 ---
 _Epics: 170 · seeds in funnel: 11 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._

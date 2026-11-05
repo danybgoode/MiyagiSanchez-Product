@@ -1,6 +1,6 @@
 # Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages — Retrospective
 
-_Closed: 2026-11-05 (merged; the production deploy and the money smokes are owed to Daniel)_
+_Closed: 2026-11-05 (merged and deployed; the money smokes and phone walkthroughs are owed to Daniel)_
 _Intent: yes | mostly | no_
 <!-- Did we build what the product owner meant? One word, THEIR answer: yes, mostly or no. Required by `epic-dod` only
      when the epic's seed or README carries a numeric `intent_match:` (intent-match D17); the calibration learns from
@@ -49,9 +49,9 @@ _Crew (actual): Opus 5.5 built every story, including the low ones planned for S
   the new spec, not its neighbours.
 
 ## Gaps / follow-ups
-- **Owed to Daniel:** the VM deploy (`update.sh`) for Backend #224 and Storefront #471–#475; `seed-negocio-plan.mjs`
-  with production credentials; `npm run negocio:trial-backfill -- --apply` and `npm run subdomain:cancel-paid -- --apply`
-  (dry run first, once); the money smokes (a monthly and a yearly Negocio payment, the installment option, a transfer
+- **Done 2026-11-05:** deployed, plan seeded, 18 trials stamped; the subdomain cancel had nothing to cancel (0 paid
+  subscriptions anywhere).
+- **Owed to Daniel:** the money smokes (a monthly and a yearly Negocio payment, the installment option, a transfer
   and a card package close); the phone walkthroughs in each sprint doc; the self-close product call; this retro's
   Intent word.
 - **Not built:** the `current_period` fix in the sibling monthly handlers; a per-IP share of the monthly chat

@@ -1562,6 +1562,14 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   ops-routines-reporting S3 close-out.)*
 
 ## Build & QA
+- **Stripe API `2026-06-24.dahlia` moved a subscription's period onto its ITEM** (`items.data[0].current_period_*`);
+  `subscription.current_period_end` reads `undefined`, so a grant computed from it is silently wrong. Read the item.
+  The domain, subdomain and ML-sync monthly handlers still read the old field. *(plans-gratis-negocio, 2026-11-05.)*
+- **Charge the unit that costs, not the request.** One allowance spend in front of a retry loop let a 60-a-day cap
+  buy 120 model calls; spend per attempt. *(plans-gratis-negocio S5, Codex security, 2026-11-05.)*
+- **When CI skips the API suite, run it in full locally before merging, not only your new spec.** With the Vercel
+  preview blocked, S4 merged a stale pinned flag inventory that stayed red on main until S5's full run; two other
+  commits that epic went in red for the same reason. *(2026-11-05.)*
 
 - **A path constant that becomes `/` breaks two idioms silently** (root-shop-builder-home, 2026-10-30): every
   `${base}/child` concatenation becomes `//child` — a protocol-relative URL to a host named `child` — and every

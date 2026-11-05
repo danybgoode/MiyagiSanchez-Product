@@ -3,7 +3,7 @@ epic: plans-gratis-negocio-and-promoter-packages
 sprint: 1
 title: "The plan underneath"
 risk: high
-phase: Shaping
+phase: Building
 stories_total: 4
 stories:
   - id: S1.1

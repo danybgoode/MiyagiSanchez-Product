@@ -1,6 +1,6 @@
 ---
-status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Shaping       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Verifying      # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: plans-gratis-negocio-and-promoter-packages
 title: "Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages"
@@ -138,6 +138,28 @@ Live data read 2026-11-04: `marketplace_shops` 60 rows, 18 owned (`clerk_user_id
   the three packages and `negocio_renewal`. Applied by the orchestrator through MCP **before** the PR that needs it
   merges, then `schema_migrations` realigned and verified live.
 
+### Amendments made while building (2026-11-04/05 — each found against live code or by a reviewer)
+- **D4** — the trial stamp uses `merge_shop_metadata` with a guard (`guardFor()`: absent / JSON-null), not a bare
+  `.is()` filter: a JSON `null` key passed the filter and a second write could re-stamp. The backfill is
+  `scripts/backfill-negocio-trial.ts` (`npm run negocio:trial-backfill`), not `.mjs`.
+- **D6** — Stripe API `2026-06-24.dahlia` puts a subscription's period on its **item**
+  (`items.data[0].current_period_*`); the handler reads it there. A one-time session grants only when
+  `payment_status === 'paid'`. Negocio checkouts carry idempotency keys.
+- **D5** — the standalone custom-domain and ML-sync purchases are **retired** (their routes answer 410 «incluido en
+  Negocio»); everything already paid keeps entitling. Domain teardown asks `decideDomainRelease`, which knows Negocio.
+- **D8** — prompt-to-shop owner versions are enforced nowhere today (`ownerVersionsPerMonth` has no reader), so only
+  chat (`chat_month`) and photos are bounded by plan. The version number stays in the module, unused.
+- **D11** — the cancel script is `scripts/cancel-subdomain-subscriptions.ts` (`npm run subdomain:cancel-paid`), with a
+  Resend preflight and per-subscription markers so a rerun neither cancels nor emails twice.
+- **D12** — both close paths **settle at source**: by card the promoter pays only the platform's share (the commission
+  never accrues), by transfer they send it. A promoter may not close a package on a shop they **own** (self-close);
+  a missing commission rate answers 503, never a 0% fallback. M2 (`20261105010000`) lets package rows with a
+  `payment_ref` coexist with the old one-per-SKU unique index.
+- **D13** — the renewal rule lives in `lib/promoter-packages.ts` (`isRenewalPayment`, 12–24 months), timed by the
+  Stripe payment, not the webhook's processing time.
+- **D14** — the promoter's photo budget is `photo_analysis:promoter:<id>` on the `daily_budget` kind, 60 a day, and
+  **every model attempt** (the first and its one retry) spends one unit.
+
 ## What already exists (reuse, don't rebuild)
 - Entitlement seam: `lib/domain-entitlement.ts`, `lib/ml-sync-entitlement.ts` and their `*-entitlement-server.ts`
   composers (the only callers' seam: canal-propio, the domain routes, the ML pages, `lib/ml-channel-toggle.ts`, admin
@@ -190,16 +212,16 @@ xhigh), and the security lens on every PR here that touches Stripe, the webhook,
    `scripts/cancel-subdomain-subscriptions.mjs --apply` (decision b).
 
 ## Definition of Done (epic)
-- [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
-- [ ] Each `sprint-N.md` has its smoke walkthrough (real URLs)
+- [ ] All sprints merged to `main` (Backend #224; Storefront #471 `cfa58dc`, #472 `bb7e5a3`, #473 `f001016`, #474 `7373268`, #475 `39ae94e`) + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
+- [x] Each `sprint-N.md` has its smoke walkthrough (real URLs)
 - [ ] This README marked ✅; every sprint status ticked with commit refs
-- [ ] `RETROSPECTIVE.md` written
-- [ ] Product poster (`Roadmap/README.md`) updated
-- [ ] Team memory + `MEMORY.md` index updated
-- [ ] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
-- [ ] **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
+- [x] `RETROSPECTIVE.md` written (the Intent word is Daniel's)
+- [x] Product poster (`Roadmap/README.md`) updated
+- [x] Team memory + `MEMORY.md` index updated
+- [x] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
+- [x] *(n/a: no flag, D18)* **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
       exists **in Golden Frijoles, in every env**, with the stated polarity, **and its switch is set there** —
       `frijoles flags get <key>` must print `on vN` or `off vN` in its PRODUCTION row (a bare `off` with no version
       means nothing is served there, so the app runs on its own built-in default). A newly synced flag goes live as written in its file; a sync never switches an existing one. *Verify-only — not a new gate; whether a high-risk epic needs one
       is decided at refining, not here.*
-- [ ] Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)
+- [ ] *(held: `shipped` = merged AND deployed; the VM deploy is owed to Daniel)* Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)

@@ -27,7 +27,7 @@ stories:
 
 ## Build contract (locked by the architect before the builder started)
 
-Cite the epic README's locked decisions: D14. Writes only to the unclaimed shop the promoter just opened (the existing ownership checks of `/api/promoter/close/listing`); never to a claimed shop.
+Cite the epic README's locked decisions: D14. **As built (#475):** the photo route only suggests, for a shop the promoter may close (`promoterMayCloseShop`). Saving still goes through `/api/promoter/close/listing`, which checks only that the shop exists, not that the promoter opened it or that it is unclaimed. That gap predates this sprint (pr-reviewer, #475) and is a **product call for Daniel**: gate it, or keep today's behaviour.
 
 ## Sprint QA
 - **api spec(s):** `e2e/promoter-photo-step.spec.ts` (pure card → listing mapping, ownership refusal).
@@ -40,6 +40,6 @@ Env: production · https://miyagisanchez.com
 1. Go to https://miyagisanchez.com/promotor/cerrar
    → open a test shop, take a photo of a product → a card with a name and price appears; «Publicar» → it is on the shop
 2. Go to https://miyagisanchez.com/promotor/relaciones
-   → the test shop is listed
+   → the test shop is listed (this comes from the existing shop-opening flow, not this sprint)
 
 If any step fails, note the step number + what you saw — that's the bug report.

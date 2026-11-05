@@ -1,6 +1,6 @@
 ---
-status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Verifying      # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped       # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped        # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: plans-gratis-negocio-and-promoter-packages
 title: "Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages"
@@ -224,4 +224,4 @@ xhigh), and the security lens on every PR here that touches Stripe, the webhook,
       `frijoles flags get <key>` must print `on vN` or `off vN` in its PRODUCTION row (a bare `off` with no version
       means nothing is served there, so the app runs on its own built-in default). A newly synced flag goes live as written in its file; a sync never switches an existing one. *Verify-only — not a new gate; whether a high-risk epic needs one
       is decided at refining, not here.*
-- [ ] *(held: `shipped` = merged AND deployed; the VM deploy is owed to Daniel)* Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)
+- [x] Deployed 2026-11-05 (Storefront `39ae94e`, Backend `bf79685` confirmed running); plan seeded (`subplan_01M6MQYTQP6ZT6Z64ERV4QMK5G`); trial backfill stamped 18 owned shops (ends 2026-12-05); the subdomain cancel found 0 paid subscriptions in Stripe and Medusa Commerce, so nothing to cancel. Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)

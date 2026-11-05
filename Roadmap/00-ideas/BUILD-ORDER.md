@@ -10,11 +10,10 @@
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
 
-## 🏗️ Building now (4)
+## 🏗️ Building now (3)
 
 - [Panfleto — the first premium shop](../../03-selling-and-shops/panfleto-premium-shop/README.md) — 03 Selling & Shops · 5/8 stories · risk: High · Wave 1
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
-- [Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages](../../08-growth-and-promotions/plans-gratis-negocio-and-promoter-packages/README.md) — 08 Growth · 0/15 stories · risk: High
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
 ## 📋 Ready to build (scaffolded, not started) (3)
@@ -23,7 +22,7 @@
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
-## ✅ Shipped (160)
+## ✅ Shipped (161)
 
 - [Cars vertical — tratocar-grade browse & trust](../../01-discovery-and-shopping/cars-vertical-tratocar-parity/README.md) — 01 Discovery · 8/8 stories
 - [Discovery Polish](../../01-discovery-and-shopping/discovery-polish/README.md) — 01 Discovery · 7/7 stories
@@ -129,6 +128,7 @@
 - [Sweepstakes](../../08-growth-and-promotions/sweepstakes/README.md) — 08 Growth · 9/9 stories · risk: Low
 - [The shop builder opens at miyagisanchez.com](../../08-growth-and-promotions/root-shop-builder-home/README.md) — 08 Growth · 10/10 stories · risk: Low
 - [Tiendas Fundadoras acquisition](../../08-growth-and-promotions/tiendas-fundadoras-acquisition/README.md) — 08 Growth · 6/6 stories · risk: High · #3-fm
+- [Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages](../../08-growth-and-promotions/plans-gratis-negocio-and-promoter-packages/README.md) — 08 Growth · 15/15 stories · risk: High
 - [A third prose writer, and the worktree bug that swallowed reports](../../09-platform-infra/prose-rail-headless/README.md) — 09 Platform-infra · 3/3 stories
 - [Admin consolidation + tenant management](../../09-platform-infra/admin-consolidation/README.md) — 09 Platform-infra · 9/9 stories
 - [agy drift doctor — self-healing for the Antigravity CLI pin](../../09-platform-infra/agy-drift-doctor/README.md) — 09 Platform-infra · 2/2 stories
@@ -200,7 +200,7 @@
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
 
-## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (3)
+## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
 These epics’ authoritative README-frontmatter `status:` disagrees with what the sprint/retro
 derivation infers. The board trusts the **frontmatter**; a mismatch usually means a close-out
@@ -210,7 +210,6 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 |---|---|---|
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
-| Two plans (Gratis + Negocio), a 30-day trial, and three promoter packages | In progress | Shipped |
 
 ---
-_Epics: 170 · seeds in funnel: 11 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 170 · seeds in funnel: 11 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

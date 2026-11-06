@@ -188,4 +188,4 @@ Storefront only, one PR per sprint, merged in order. No backend change, no migra
       `frijoles flags get <key>` must print `on vN` or `off vN` in its PRODUCTION row (a bare `off` with no version
       means nothing is served there, so the app runs on its own built-in default). A newly synced flag goes live as written in its file; a sync never switches an existing one. *Verify-only — not a new gate; whether a high-risk epic needs one
       is decided at refining, not here.*
-- [ ] *(held: the branches are verified landed, every tip equals its merged PR head, but deleting them needs Daniel)* Feature branches deleted (root `feat/promoter-panel`, Storefront `feat/promoter-panel-s1..s4`); **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)
+- [x] Feature branches deleted 2026-11-06 by Daniel, after each tip was verified equal to its merged PR head (root `feat/promoter-panel`, Storefront `feat/promoter-panel-s1..s4`); **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)

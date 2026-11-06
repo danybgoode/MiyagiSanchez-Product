@@ -3,7 +3,7 @@ epic: promoter-panel
 sprint: 4
 title: "Cobra, el recibo, Entrégala and the panel's look"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 3
 stories:
   - id: S4.1
@@ -30,7 +30,7 @@ stories:
 ---
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Sprint 4: Cobra, el recibo, Entrégala and the panel's look
 
-**Status:** ✅ merged — Storefront [#483](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/483), squash `952f2d9` (deploy owed: Daniel runs `update.sh`)
+**Status:** ✅ merged — Storefront [#483](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/483), squash `952f2d9` · deployed 2026-11-06
 
 ## Stories
 

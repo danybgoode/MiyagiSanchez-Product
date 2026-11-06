@@ -3,7 +3,7 @@ epic: promoter-panel
 sprint: 1
 title: "The ownership guard and promoter imports"
 risk: high
-phase: Locking architecture
+phase: Verifying
 stories_total: 3
 stories:
   - id: S1.1
@@ -12,25 +12,25 @@ stories:
     i_want: "to add products only to the shops I opened that nobody has claimed yet"
     so_that: "no promoter account can write to a merchant's live shop"
     risk: high
-    status: planned
+    status: done
   - id: S1.2
     title: "Shopify import into the shop the promoter opened"
     as_a: "a promoter"
     i_want: "to bring a Shopify merchant's catalog into the shop I just opened"
     so_that: "the shop has its products in one step, before the claim"
     risk: high
-    status: planned
+    status: done
   - id: S1.3
     title: "File import (Tiendanube, WooCommerce, Big Cartel)"
     as_a: "a promoter"
     i_want: "to upload the export file of a merchant on Tiendanube, WooCommerce or Big Cartel"
     so_that: "their catalog arrives without typing"
     risk: high
-    status: planned
+    status: done
 ---
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Sprint 1: The ownership guard and promoter imports
 
-**Status:** ⬜ not started
+**Status:** ✅ merged — Storefront [#480](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/480), squash `ff3a8be` (deploy owed: Daniel runs `update.sh`)
 
 ## Stories
 

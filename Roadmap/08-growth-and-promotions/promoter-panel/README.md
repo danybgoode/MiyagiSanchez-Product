@@ -1,6 +1,6 @@
 ---
-status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Locking architecture # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Verifying # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: promoter-panel
 title: "El panel del promotor: open a shop in one visit, manual-first, in four steps"
@@ -127,6 +127,19 @@ Live data: all four promoter flags ON in production (`promoter.enabled`, `promot
   - The existing activation email (`notifyMerchantCloseReceipt`) stays, with amounts formatted one way (`$2,000 MXN`).
 - **D11 · Copy lives in the locales.** One `promotorPanel` block in `locales/es.json` (mirrored in `en.json`) holds every string in the seed's «The copy». Components carry none. The no-cerrar spec extends to it.
 - **D12 · The look.** The panel and `/admin/promoter` use `.btn` / `.btn-primary` / `.btn-secondary`, `.card-panel`, `Banner`, real `<label>`s, and a stepper component «1 El negocio · 2 Sus productos · 3 Cobra · 4 Entrégala». The address `/promotor/cerrar` stays.
+
+## Amendments during the build (as built, 2026-11-06)
+Where the code differs from the lock above, the code and this list are right:
+- **D1:** the guard is `promoterShopEditAccess`, not `promoterMayEditShop`. It returns `ok | claimed | not_yours | unavailable`, and a relationship read that fails answers 503 (fail closed). The migration close also gained the `promoterMayCloseShop` guard it was missing (pr-reviewer, #480).
+- **D2/D4:** the cap counts products **already in the shop**: an import adds at most `150 − existing`, never 150 per request. Imports are one at a time per shop, using an `import_lock` in the shop's metadata with a 10-minute lifetime. A staged Shopify batch is claimed by a conditional status write, so it imports once. The import bodies are read with a 4 MB cap, and images are fetched through `pinnedFetch`, re-checking every redirect and copying exactly their own bytes (Codex security, #480).
+- **D3:** Big Cartel has no product export, so it goes to typed cards (`stepTwoPath`), not to the file import. WooCommerce's Spanish «Tipo» column is the product type, never our listing type, and a variable product takes its lowest variation price.
+- **D5:** «Abrir su tienda» links the shop to the lead it **just** created, by the id the create returned, never to a stale one in the form's state (pr-reviewer, #481).
+- **D6:** the WhatsApp is also a duplicate key, checked after phone and before email. A duplicate in **another promoter's** list answers only that it exists, never its record id or which field matched (Codex security, #481). The US market and the business description are kept under «Más datos».
+- **D6:** «¿Vende hoy en otra plataforma?» replaces only its own value in `current_channels`, so any other channel already on the lead is kept.
+- **D10:** the receipt token is signed with a key **derived** for receipts from `CLAIM_JWT_SECRET` (`HMAC(secret, 'receipt:v1')`), so a claim token never verifies as a receipt. It does not expire. A read that fails shows «unavailable», never «Pendiente». A rejected transfer shows a «problem» line that points to help. The email is sent once per shop and option (Resend idempotency key).
+- **Consent:** «Guardar la aprobación del dueño» moved from the old lead form into the private-preview block in «Entrégala». It shows only once the preview is `approved`, the only state the route accepts.
+- **Counter wording:** «{n} productos agregados en esta visita».
+- **Follow-up, not built:** `main_category` is saved for a new shop opened from the panel, but not for an existing seller's shop.
 
 ## What already exists (reuse, don't rebuild)
 - **Workspace:** `app/(shell)/promotor/cerrar/{page,PromoterCloseClient,RelationshipStep,ListingStep,PreviewStep}.tsx`.

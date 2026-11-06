@@ -3,7 +3,7 @@ epic: promoter-panel
 sprint: 4
 title: "Cobra, el recibo, Entrégala and the panel's look"
 risk: high
-phase: Locking architecture
+phase: Verifying
 stories_total: 3
 stories:
   - id: S4.1
@@ -12,25 +12,25 @@ stories:
     i_want: "a receipt on WhatsApp right away, with a page that shows whether my plan is on"
     so_that: "I have proof of payment and a way to reach Miyagi Sánchez if something's wrong"
     risk: high
-    status: planned
+    status: done
   - id: S4.2
     title: "The panel shell: stepper, «Cobra», «Entrégala»"
     as_a: "a promoter"
     i_want: "to always know where I am and what comes next"
     so_that: "opening a shop feels like four clear steps"
     risk: low
-    status: planned
+    status: done
   - id: S4.3
     title: "/admin/promoter on the site's components"
     as_a: "Daniel"
     i_want: "the promoter admin to look like the rest of the site"
     so_that: "its buttons read as buttons"
     risk: low
-    status: planned
+    status: done
 ---
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Sprint 4: Cobra, el recibo, Entrégala and the panel's look
 
-**Status:** ⬜ not started
+**Status:** ✅ merged — Storefront [#483](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/483), squash `952f2d9` (deploy owed: Daniel runs `update.sh`)
 
 ## Stories
 

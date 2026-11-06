@@ -3,7 +3,7 @@
 > **GENERATED — do not hand-edit.** `node scripts/owed-ledger.mjs`.
 > Re-derived from the spec tree on every run, never from a maintained list.
 
-_Generated: 2026-11-03_
+_Generated: 2026-11-06_
 
 **86 check(s) owed across 79 spec file(s).**
 

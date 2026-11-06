@@ -3,7 +3,7 @@ epic: promoter-panel
 sprint: 2
 title: "El negocio"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 2
 stories:
   - id: S2.1
@@ -23,7 +23,7 @@ stories:
 ---
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Sprint 2: El negocio
 
-**Status:** ✅ merged — Storefront [#481](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/481), squash `3774d43` (deploy owed: Daniel runs `update.sh`)
+**Status:** ✅ merged — Storefront [#481](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/481), squash `3774d43` · deployed 2026-11-06
 
 ## Stories
 

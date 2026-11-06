@@ -1,6 +1,6 @@
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Retrospective
 
-_Closed: 2026-11-06 (built and merged; the deploy and the money smokes are owed to Daniel)_
+_Closed: 2026-11-06 (merged and deployed; the money smokes and the walkthroughs are owed to Daniel)_
 _Intent: yes | mostly | no_
 <!-- Did we build what the product owner meant? One word, THEIR answer: yes, mostly or no. Required by `epic-dod` only
      when the epic's seed or README carries a numeric `intent_match:` (intent-match D17); the calibration learns from
@@ -35,7 +35,6 @@ _Crew (actual): Opus 5.5 orchestrated and built all four sprints (no Sonnet buil
 
 ## Gaps / follow-ups
 - **Owed to Daniel:**
-  - Deploy main: S1–S4, plus #479's favicon.
   - Money smokes: a card close and a transfer close with a test promoter, checking that the receipt page turns Activo after the admin approves.
   - Phone walkthroughs of sprints 1–4 (each sprint doc has its walkthrough).
   - The Intent answer above.

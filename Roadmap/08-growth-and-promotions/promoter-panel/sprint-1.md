@@ -3,7 +3,7 @@ epic: promoter-panel
 sprint: 1
 title: "The ownership guard and promoter imports"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 3
 stories:
   - id: S1.1
@@ -30,7 +30,7 @@ stories:
 ---
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Sprint 1: The ownership guard and promoter imports
 
-**Status:** ✅ merged — Storefront [#480](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/480), squash `ff3a8be` (deploy owed: Daniel runs `update.sh`)
+**Status:** ✅ merged — Storefront [#480](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/480), squash `ff3a8be` · deployed 2026-11-06
 
 ## Stories
 

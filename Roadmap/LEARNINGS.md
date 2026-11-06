@@ -610,6 +610,11 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   "no security path touched", "cites an UNMERGED PR" — until the unknown state is carried explicitly.
 
 ## Tooling gotchas
+- **`Buffer.concat(chunks).buffer` is Node's SHARED pool, not your bytes.** For a small result the Buffer is a view
+  into an 8 KB pooled `ArrayBuffer`; `.buffer.slice(0)` copies the WHOLE pool, so an "image" uploaded from it carried
+  other requests' memory to a public bucket. Copy into `new Uint8Array(total)` sized to exactly what was read, or use
+  `buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)`. *(2026-11-06, promoter-panel #480, Codex
+  security lens.)*
 - **A TRANSIENT PROVIDER ERROR IS NOT A BROKEN CONTRACT — AND COLLAPSING THEM DISABLES THE TOOL.**
   `agy-doctor`'s probe classified ANY non-zero exit as `'error'`, `'error'` meant "the CLI interface
   changed", and that verdict refuses to bump the version pin. So when agy's GPT-OSS fallback started
@@ -2854,6 +2859,19 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   pricing-money-path-remediation S1 — backend PR #89.)*
 
 ## Architecture
+- **A duplicate check that reads EVERY tenant's rows is an existence oracle — answer the caller's own match in full,
+  anyone else's with a bare "exists".** The promoter lead create looked a WhatsApp number up across all promoters'
+  private CRMs and returned the matching record's id and which field matched in its 409, so any promoter could probe
+  whether a number sat in a rival's list. The fix keeps the dedupe (telling a promoter "someone already has this
+  business" is its job) but returns the id and match reason only when the row's owner is the caller; an unknown owner
+  counts as someone else's (fail closed). Check every cross-tenant uniqueness lookup for what its refusal carries.
+  *(2026-11-06, promoter-panel #481, Codex security lens.)*
+- **A status that keys on "a paid row exists" lies twice: on a repeat sale and on a lapsed grant.** The receipt page
+  read «Activo» whenever the (promoter, shop, package) attribution was `paid`, but that row is one row forever,
+  overwritten in place: a second sale still being confirmed borrowed the first sale's «Activo», and a grant that ran
+  out still read «Activo hasta» a past date. Decide from the LATEST event first (an open transfer → Pendiente), then
+  the entitlement's own expiry against now; test it with a `now` and a repeat sale. *(2026-11-06, promoter-panel
+  #483, pr-reviewer.)*
 - **Medusa's public store routes are a write surface for anyone holding an id — a server-built cart must be
   server-OWNED.** `POST /store/carts/:id` accepts client `metadata`, the payment-collection and payment-session routes
   accept caller `data`, and `/complete` is public. A cart our server builds and prices (counter sale, payment link)

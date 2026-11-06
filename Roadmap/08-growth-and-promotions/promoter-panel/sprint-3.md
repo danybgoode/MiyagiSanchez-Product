@@ -3,7 +3,7 @@ epic: promoter-panel
 sprint: 3
 title: "Sus productos"
 risk: low
-phase: Locking architecture
+phase: Verifying
 stories_total: 2
 stories:
   - id: S3.1
@@ -12,18 +12,18 @@ stories:
     i_want: "to photograph a product, set the price and save it"
     so_that: "three products take a couple of minutes"
     risk: low
-    status: planned
+    status: done
   - id: S3.2
     title: "The import paths in «Sus productos»"
     as_a: "a promoter"
     i_want: "step 2 to follow where the merchant already sells"
     so_that: "a Shopify or Tiendanube merchant needs no typing"
     risk: low
-    status: planned
+    status: done
 ---
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Sprint 3: Sus productos
 
-**Status:** ⬜ not started
+**Status:** ✅ merged — Storefront [#482](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/482), squash `7205a60` (deploy owed: Daniel runs `update.sh`)
 
 ## Stories
 

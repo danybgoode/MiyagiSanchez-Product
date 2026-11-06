@@ -3,7 +3,7 @@ epic: promoter-panel
 sprint: 2
 title: "El negocio"
 risk: high
-phase: Locking architecture
+phase: Verifying
 stories_total: 2
 stories:
   - id: S2.1
@@ -12,18 +12,18 @@ stories:
     i_want: "to type a merchant's data once"
     so_that: "saving a lead and opening the shop never ask the same thing twice"
     risk: high
-    status: planned
+    status: done
   - id: S2.2
     title: "The panel copy and the choice lists"
     as_a: "a promoter recruited on the street"
     i_want: "every screen in plain words, and choices instead of free text"
     so_that: "I understand what to do without asking anyone"
     risk: low
-    status: planned
+    status: done
 ---
 # El panel del promotor: open a shop in one visit, manual-first, in four steps — Sprint 2: El negocio
 
-**Status:** ⬜ not started
+**Status:** ✅ merged — Storefront [#481](https://github.com/danybgoode/MiyagiSanchez-Storefront/pull/481), squash `3774d43` (deploy owed: Daniel runs `update.sh`)
 
 ## Stories
 

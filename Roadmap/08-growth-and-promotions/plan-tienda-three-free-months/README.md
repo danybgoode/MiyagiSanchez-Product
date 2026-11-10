@@ -94,7 +94,7 @@ United States plans. No feature flag.
 
 ## Architecture lock (2026-11-09, against storefront `952f2d9`, backend `16a1a1e` and live data)
 
-**Progress:** sprint 1 merged 2026-11-10 (Storefront #484 → `94c99b6`), migration M0 `merge_shop_metadata_guards` applied live first and recorded as `20261110000000`. Backend half of S2.2 merged 2026-11-10 (Backend #228 → `21830e8`). Nothing deployed yet (D20).
+**Progress:** sprint 1 merged 2026-11-10 (Storefront #484 → `94c99b6`), migration M0 `merge_shop_metadata_guards` applied live first and recorded as `20261110000000`. Backend half of S2.2 merged 2026-11-10 (Backend #228 → `21830e8`). Backend #229 (five more subscription status writes; the subscription list made server-only) merged 2026-11-10 → `a2fd738`. Sprint 2 storefront merged 2026-11-10 (Storefront #485 → `6f817a3`). Nothing deployed yet (D20).
 
 **Live data read on 2026-11-09 (Supabase, production):** 61 shops, 18 owned. All 18 owned shops carry a trial and
 every trial ends `2026-12-05T02:18:22Z`. 0 shops hold a `negocio_grant`. 0 owned shops lack a trial.

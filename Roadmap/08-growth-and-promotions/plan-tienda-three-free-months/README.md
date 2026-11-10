@@ -164,8 +164,13 @@ the buyer's own cancel. Plan Negocio's lapse write had the same fault and is fix
    unpaid, loses its «ya estás en Plan Gratis» notice and reads «no tiene un plan activo» (verifier, #484).
    Between the sprint 1 deploy and the marker, the only visible difference is the agent tool `get_plan` answering
    `unpaid` for unclaimed shops; no gate differs.
-4. The pause timer is enabled by Daniel by hand, after a dry run he has read.
-5. A merge builds the image; the deploy is `update.sh` on the VM. Prove the running container equals the merge SHA.
+4. Seed the monthly Plan Tienda plan once the backend runs #228: `node --env-file=<VM prod env> scripts/seed-tienda-plan.mjs`
+   from a storefront checkout (needs `STRIPE_SECRET_KEY`, `MEDUSA_STORE_URL`, `MEDUSA_INTERNAL_SECRET` from the VM env
+   files, never `.env.local`). Verify `GET /internal/tienda-subscription` returns a `stripe_price_id` with
+   `price_cents: 2900`. Until then the monthly button refuses with 503 and the yearly one works (verifier, #485).
+5. The pause timer is enabled by Daniel by hand, after a dry run he has read.
+6. A merge builds the image; the deploy is `update.sh` on the VM. Prove the running container equals the merge SHA.
+7. After the backend deploy: repair pass for custom-domain, subdomain and Mercado Libre sync subscriptions whose status changed in Stripe while their writes were dead (Backend #229): list live rows, fetch each Stripe subscription, replay its status through the PATCH routes.
 
 ## Definition of Done (epic)
 - [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)

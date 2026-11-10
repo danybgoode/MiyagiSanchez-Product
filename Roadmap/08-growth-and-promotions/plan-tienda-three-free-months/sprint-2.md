@@ -33,7 +33,7 @@ stories:
 **Status:** ⬜ not started
 
 ## Build contract (locked by the architect before the builder started)
-Decisions in the epic README that bind this sprint: D3, D5, D6. Backend first: the `tienda_plan` setup route and subscription read, modelled on `setup-negocio-plan` and `negocio-subscription`. Then the storefront. Prices only through `lib/tienda-pricing.ts`.
+Decisions in the epic README that bind this sprint: D3, D5, D6. Backend first: the `tienda_plan` setup route and subscription read, modelled on `setup-negocio-plan` and `negocio-subscription`. Then the storefront. Prices only through `lib/tienda-pricing.ts`. **Added at review of Backend #228 (2026-11-10), binding on the storefront half:** (1) on every Stripe subscription event, for Plan Negocio and Plan Tienda, the webhook retrieves the subscription from Stripe and sends its CURRENT status to the backend PATCH, never the status in the event payload, so a delayed event cannot restore a plan; (2) it sends Stripe's status as is (`unpaid`, `paused`, `incomplete`, `incomplete_expired` included) and stops mapping `unpaid` to `past_due`; the backend decides what is live; (3) `{ updated }` counts rows written or already cancelled, and 0 still means failure; (4) the Tienda grant writer uses `merge_shop_metadata_guards` with a guard on every key it read (D12b).
 
 ## Stories
 

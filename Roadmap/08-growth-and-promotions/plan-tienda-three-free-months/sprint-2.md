@@ -32,6 +32,9 @@ stories:
 
 **Status:** ⬜ not started
 
+## Build contract (locked by the architect before the builder started)
+Decisions in the epic README that bind this sprint: D3, D5, D6. Backend first: the `tienda_plan` setup route and subscription read, modelled on `setup-negocio-plan` and `negocio-subscription`. Then the storefront. Prices only through `lib/tienda-pricing.ts`.
+
 ## Stories
 
 ### Story 2.1 — Plan Tienda for a year, in one payment

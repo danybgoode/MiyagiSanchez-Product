@@ -39,6 +39,9 @@ stories:
 
 **Status:** ⬜ not started
 
+## Build contract (locked by the architect before the builder started)
+Decisions in the epic README that bind this sprint: D7, D8, D9, D10. The pause job is not deployed until the D2 marker is verified live. Validate, then claim, then apply. `--dry-run` writes nothing.
+
 ## Stories
 
 ### Story 3.1 — Three free months for a new shop

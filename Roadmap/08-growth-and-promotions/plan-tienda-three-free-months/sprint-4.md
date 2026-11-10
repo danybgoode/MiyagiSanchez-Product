@@ -39,6 +39,9 @@ stories:
 
 **Status:** ⬜ not started
 
+## Build contract (locked by the architect before the builder started)
+Decisions in the epic README that bind this sprint: D11, D12, D13, D14. M1 is applied before the PR merges. `negocio_semestral` waits for Daniel's answer to D12; build the rest first.
+
 ## Stories
 
 ### Story 4.1 — Three packages, three free months on top

@@ -39,6 +39,9 @@ stories:
 
 **Status:** ⬜ not started
 
+## Build contract (locked by the architect before the builder started)
+Decisions in the epic README that bind this sprint: D1, D2, D3, D4, D15. Storefront only. The legacy script runs in production (bundled into the web container) and is verified by a live count BEFORE this sprint is called done. `derivePlan` keeps every existing test green; `unpaid` is a new outcome, never a rename of `gratis`.
+
 ## Stories
 
 ### Story 1.1 — The plan seam knows Plan Tienda

@@ -14,7 +14,7 @@
 
 - [Panfleto — the first premium shop](../../03-selling-and-shops/panfleto-premium-shop/README.md) — 03 Selling & Shops · 5/8 stories · risk: High · Wave 1
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
-- [Plan Tienda, three free months, and the promoter packages that follow](../../08-growth-and-promotions/plan-tienda-three-free-months/README.md) — 08 Growth · 0/15 stories · risk: High
+- [Plan Tienda, three free months, and the promoter packages that follow](../../08-growth-and-promotions/plan-tienda-three-free-months/README.md) — 08 Growth · 4/15 stories · risk: High
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
 ## 📋 Ready to build (scaffolded, not started) (3)
@@ -203,7 +203,7 @@
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
 
-## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (3)
+## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
 These epics’ authoritative README-frontmatter `status:` disagrees with what the sprint/retro
 derivation infers. The board trusts the **frontmatter**; a mismatch usually means a close-out
@@ -213,7 +213,6 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 |---|---|---|
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
-| Plan Tienda, three free months, and the promoter packages that follow | In progress | Scaffolded |
 
 ---
-_Epics: 172 · seeds in funnel: 12 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 172 · seeds in funnel: 12 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

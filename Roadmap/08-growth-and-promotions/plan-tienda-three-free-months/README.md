@@ -94,6 +94,8 @@ United States plans. No feature flag.
 
 ## Architecture lock (2026-11-09, against storefront `952f2d9`, backend `16a1a1e` and live data)
 
+**Progress:** sprint 1 merged 2026-11-10 (Storefront #484 → `94c99b6`), migration M0 `merge_shop_metadata_guards` applied live first and recorded as `20261110000000`. Backend half of S2.2 merged 2026-11-10 (Backend #228 → `21830e8`). Nothing deployed yet (D20).
+
 **Live data read on 2026-11-09 (Supabase, production):** 61 shops, 18 owned. All 18 owned shops carry a trial and
 every trial ends `2026-12-05T02:18:22Z`. 0 shops hold a `negocio_grant`. 0 owned shops lack a trial.
 `marketplace_promoter_commission_rates.rate_pct` is an **integer**; rows today: `negocio_anual=55`,
@@ -116,6 +118,8 @@ these at apply time.
 | D11 | **Packages.** `PACKAGES` gains a `grants` list per package, dated from the payment day: `tienda_anual` $500 → Negocio 3 months, then Tienda 12; `negocio_semestral` $1,100 → Negocio 9; `negocio_anual` $2,000 → Negocio 15. `negocio_arranque` and `setup_gratis` move to `RETIRED_PACKAGE_SKUS`: the sale answers 410, every read still works. The one pending `negocio_anual` transfer grants 15 months if approved after the deploy. |
 | D12 | **Rates.** `tienda_anual = 60`, `negocio_anual = 55` (unchanged), `tienda_renewal = 10`, `negocio_upgrade = 20`. **`negocio_semestral = 55`** (Daniel, 2026-11-10): $600 of $1,100 is 54.54% and the column is an integer, so the package is charge $1,100, pass $495, keep $605. No schema change. |
 | D12b | **Migration M0 (sprint 1), added at review 2026-11-10.** `merge_shop_metadata_guards`: a new function beside `merge_shop_metadata` that lands a patch only if every listed key is still as read. Needed because a Plan Negocio payment rewrites the Plan Tienda grant in the same statement, and a single guard would let it erase a concurrent Plan Tienda payment (Codex, #484). Additive; service role only. |
+| D19 | **Moving up from Plan Tienda (added 2026-11-10).** A shop on a live monthly Plan Tienda subscription may buy Plan Negocio. When Plan Negocio activates (monthly or yearly), the webhook sets the Plan Tienda subscription to cancel at its period end: no refund, no double charge after that period. A dated Plan Tienda grant is kept and moved forward under a dated Plan Negocio grant (D4). |
+| D20 | **Sprints 2 and 3 deploy together (added 2026-11-10).** Sprint 2's pages say «3 meses gratis», which is only true once sprint 3 sets the trial to 90 days. Neither deploys alone. The legacy marker runs at that joint deploy, with `--cutoff` set to that instant, and in any case before 2026-12-05. If sprint 3 slips past 2026-11-28, deploy sprint 1 alone and run the marker then. |
 | D13 | **Migration M1 (sprint 4).** Widen the transfers `sku` CHECK with the two new packages; insert the four rate rows `on conflict do nothing`; widen any other `sku` CHECK the builder finds by reading `pg_constraint` live. Applied by the orchestrator through MCP before the PR merges; `schema_migrations` realigned. |
 | D14 | **Renewal and upgrade.** `tienda_renewal`: a Tienda payment in months [12, 24) after the promoter's first package payment for that shop. `negocio_upgrade`: the first Negocio payment within 12 months of a `tienda_anual` package payment for that shop. Each accrues once, keyed by `payment_ref`. |
 | D15 | **AI report.** `scripts/ai-usage-report.ts` reads `ai_allowance` (kinds `chat_month`, `photo`) for a month. Cost is printed only if the builder finds it logged; otherwise «no registrado», and the gap is named in the retro. |

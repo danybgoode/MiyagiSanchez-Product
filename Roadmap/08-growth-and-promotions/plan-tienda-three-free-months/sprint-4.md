@@ -40,13 +40,13 @@ stories:
 **Status:** ⬜ not started
 
 ## Build contract (locked by the architect before the builder started)
-Decisions in the epic README that bind this sprint: D11, D12, D13, D14. M1 is applied before the PR merges. `negocio_semestral` waits for Daniel's answer to D12; build the rest first.
+Decisions in the epic README that bind this sprint: D11, D12, D13, D14. M1 is applied before the PR merges.
 
 ## Stories
 
 ### Story 4.1 — Three packages, three free months on top
 **As** a promoter at a merchant's counter, **I want** to sell Tienda for a year, Negocio for six months or Negocio for a year, **so that** every merchant has a package at their size.
-**Acceptance:** `tienda_anual` ($500, pass $200, keep $300), `negocio_semestral` ($1,100, pass $500, keep $600) and `negocio_anual` ($2,000, pass $900, keep $1,100) are sold by card and by transfer. Each grants three months of Plan Negocio from the payment day and then its paid time (12 months of Tienda, 6 or 12 more of Negocio). `negocio_arranque` and `setup_gratis` are refused with a plain message; their old receipts, transfers and rows still open. If the stored rate cannot give exactly $600 of $1,100, stop and ask.
+**Acceptance:** `tienda_anual` ($500, pass $200, keep $300), `negocio_semestral` ($1,100, pass $495, keep $605) and `negocio_anual` ($2,000, pass $900, keep $1,100) are sold by card and by transfer. Each grants three months of Plan Negocio from the payment day and then its paid time (12 months of Tienda, 6 or 12 more of Negocio). `negocio_arranque` and `setup_gratis` are refused with a plain message; their old receipts, transfers and rows still open.
 **Risk:** high
 
 ### Story 4.2 — 10% of Plan Tienda renewals

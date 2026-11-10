@@ -114,7 +114,7 @@ these at apply time.
 | D9 | **Pause.** A pure `decidePlanPause` returns pause · leave · unavailable. The job pauses only an owned shop whose plan resolved (uncached) to `unpaid` with reason `unpaid`. It first claims `metadata.plan_pause = { paused_at }` (guard `absent`, read back), then calls `POST /internal/sellers/:id/status { status: 'paused', reason: 'plan_unpaid' }`. The claim is the record that this pause is the plan's. Exposed as a cron route like the trial notices; Daniel enables the timer by hand. |
 | D10 | **Restore.** After a Tienda or Negocio payment or subscription activation is recorded, a shop holding `plan_pause` is set `active` (reason `plan_paid`) and the claim is cleared afterwards, relink first. No `plan_pause`, no restore. The builder verifies in live code that a paused seller's owner can still open `/shop/manage/negocio`; if not, that page and its checkout routes are opened to them and nothing else. |
 | D11 | **Packages.** `PACKAGES` gains a `grants` list per package, dated from the payment day: `tienda_anual` $500 → Negocio 3 months, then Tienda 12; `negocio_semestral` $1,100 → Negocio 9; `negocio_anual` $2,000 → Negocio 15. `negocio_arranque` and `setup_gratis` move to `RETIRED_PACKAGE_SKUS`: the sale answers 410, every read still works. The one pending `negocio_anual` transfer grants 15 months if approved after the deploy. |
-| D12 | **Rates.** `tienda_anual = 60`, `negocio_anual = 55` (unchanged), `tienda_renewal = 10`, `negocio_upgrade = 20`. **`negocio_semestral` is OPEN:** $600 of $1,100 is 54.54% and the column is an integer. Daniel chooses before sprint 4: 55% (keep $605, pass $495), or $1,200 at 50% (keep $600, pass $600), or widen the column. |
+| D12 | **Rates.** `tienda_anual = 60`, `negocio_anual = 55` (unchanged), `tienda_renewal = 10`, `negocio_upgrade = 20`. **`negocio_semestral = 55`** (Daniel, 2026-11-10): $600 of $1,100 is 54.54% and the column is an integer, so the package is charge $1,100, pass $495, keep $605. No schema change. |
 | D13 | **Migration M1 (sprint 4).** Widen the transfers `sku` CHECK with the two new packages; insert the four rate rows `on conflict do nothing`; widen any other `sku` CHECK the builder finds by reading `pg_constraint` live. Applied by the orchestrator through MCP before the PR merges; `schema_migrations` realigned. |
 | D14 | **Renewal and upgrade.** `tienda_renewal`: a Tienda payment in months [12, 24) after the promoter's first package payment for that shop. `negocio_upgrade`: the first Negocio payment within 12 months of a `tienda_anual` package payment for that shop. Each accrues once, keyed by `payment_ref`. |
 | D15 | **AI report.** `scripts/ai-usage-report.ts` reads `ai_allowance` (kinds `chat_month`, `photo`) for a month. Cost is printed only if the builder finds it logged; otherwise «no registrado», and the gap is named in the retro. |
@@ -122,8 +122,13 @@ these at apply time.
 | D17 | **Routing.** Sprint 1 and every money, pause and commission story: the strongest model. S1.3, S1.4, S2.3, S3.2, S4.4: a Sonnet-class builder. Every PR: the fresh verifier, then `review-route.mjs`. |
 | D18 | **Where each contract lives.** Plan rules: `lib/plan.ts`. Prices: `lib/tienda-pricing.ts`, `lib/negocio-pricing.ts`. Packages and splits: `lib/promoter-packages.ts` plus the rates table. Seller status: the backend's `seller-status.ts`. Builders import these; nothing restates them. |
 
-**Scope the live system corrected:** the pitch's "check the column's precision" is answered (D12, integer). The
+**Scope the live system corrected:** the pitch's "check the column's precision" is answered (D12, integer; the six-month split is $495 / $605, not $500 / $600). The
 pitch's "keeps its remaining Tienda time" holds for dated Negocio grants only (D4).
+
+**Found while building (2026-11-10), fixed after sprint 2 on Daniel's instruction:** five backend routes call
+`updateSubscriptions(id, { status })`, a shape Medusa's generated method does not accept, so their status writes never
+land: the custom-domain, subdomain and Mercado Libre sync subscription routes, `store/subscriptions` (replay path) and
+the buyer's own cancel. Plan Negocio's lapse write had the same fault and is fixed in Backend #228.
 
 ## Scope — stories
 | Sprint | Story | Risk |

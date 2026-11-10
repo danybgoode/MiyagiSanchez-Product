@@ -316,6 +316,47 @@ export function floorSprintDone(sprintStatus, total, done) {
   return sprintStatus === 'Shipped' && total > 0 ? total : done;
 }
 
+// ── Notion asks callers to slow down; a full sync must wait, not die ────────────────────────────
+// A --sync is about 650 sequential requests, and Notion's limit (about 3 requests a second, shared by
+// every integration on the workspace) answers the excess with HTTP 429 and a `Retry-After` in
+// seconds. The request used to throw on the first one, so the board sync failed 9 runs out of 14
+// between 2026-11-04 and 2026-11-09, each about a minute in, and passed only on quiet nights.
+// 429, 5xx and a dropped connection are retried; any other answer (a bad token, a malformed
+// property) is the caller's bug and still fails at once. Retrying is safe: every write here is a
+// PATCH by page id or a create keyed by slug in a single-writer workflow (`concurrency: notion-sync`).
+export const NOTION_MAX_ATTEMPTS = 6;
+export const NOTION_MAX_WAIT_S = 60;
+
+/** Pure — seconds to wait before attempt `attempt + 1`: the server's `Retry-After` when it gives one, else 1, 2, 4… capped. */
+export function retryWaitSeconds(retryAfter, attempt) {
+  const asked = Number(retryAfter);
+  const wait = Number.isFinite(asked) && asked > 0 ? asked : 2 ** (attempt - 1);
+  return Math.min(wait, NOTION_MAX_WAIT_S);
+}
+
+/** Runs `send()` (→ a fetch Response) until it answers, waiting out 429 / 5xx / network errors. Resolves the JSON body. */
+export async function requestWithRetry(send, { sleep = (s) => new Promise((r) => setTimeout(r, s * 1000)), log = console.error } = {}) {
+  for (let attempt = 1; ; attempt++) {
+    const last = attempt >= NOTION_MAX_ATTEMPTS;
+    let res;
+    try {
+      res = await send();
+    } catch (err) {
+      if (last) throw err;
+      const wait = retryWaitSeconds(null, attempt);
+      log(`notion: request failed (${err?.message ?? err}) — retry ${attempt}/${NOTION_MAX_ATTEMPTS - 1} in ${wait}s`);
+      await sleep(wait);
+      continue;
+    }
+    const text = await res.text();
+    if (res.ok) return JSON.parse(text);
+    if ((res.status !== 429 && res.status < 500) || last) throw new Error(text || `HTTP ${res.status}`);
+    const wait = retryWaitSeconds(res.headers?.get?.('retry-after'), attempt);
+    log(`notion: HTTP ${res.status} — retry ${attempt}/${NOTION_MAX_ATTEMPTS - 1} in ${wait}s`);
+    await sleep(wait);
+  }
+}
+
 // Decide the live PR overlay label from the PR state — the SINGLE source the workflow (`--lifecycle`)
 // and its node:test both read, so the bash and the test can't drift. Draft PR → In progress;
 // ready PR → In review; closed (merged or not) → clear (notion-sync.yml re-derives Status on merge).
@@ -485,10 +526,10 @@ async function main() {
   const needsNotion = mode === 'sync' || (mode === 'pr' && !hasFlag('--dry'));
   if (needsNotion && (!TOKEN || !DB)) { console.error('set NOTION_TOKEN and NOTION_DB_ID'); process.exitCode = 1; return; }
   const NV = '2022-06-28';
-  const api = (path, init = {}) => fetch(`https://api.notion.com/v1${path}`, {
+  const api = (path, init = {}) => requestWithRetry(() => fetch(`https://api.notion.com/v1${path}`, {
     ...init,
     headers: { Authorization: `Bearer ${TOKEN}`, 'Notion-Version': NV, 'Content-Type': 'application/json', ...(init.headers || {}) },
-  }).then(async (r) => { const j = await r.json(); if (!r.ok) throw new Error(JSON.stringify(j)); return j; });
+  }));
 
   const sel = (v) => (v ? { select: { name: String(v) } } : { select: null });
   const rt = (v) => ({ rich_text: v ? [{ text: { content: String(v) } }] : [] });

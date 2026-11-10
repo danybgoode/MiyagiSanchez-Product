@@ -27,6 +27,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   floorSprintStatus, lifecycleForPr, normalizeBuildOrder, deriveEpicStatus,
+  requestWithRetry, retryWaitSeconds, NOTION_MAX_ATTEMPTS, NOTION_MAX_WAIT_S,
   frontmatterStatusBucket, seedStatusLabel, floorSprintDone, danglingSeedEpicPointers,
 } from './roadmap-to-notion.mjs';
 
@@ -206,4 +207,58 @@ test('deriveEpicStatus: an epic whose sprints live in another repo derives from 
   assert.equal(deriveEpicStatus([], false, 'in-progress'), 'Scaffolded');
   // Marked external but local sprints exist → a real inconsistency, so the normal rules still apply.
   assert.equal(deriveEpicStatus([{ status: 'Shipped' }], false, 'in-progress', { external: true }), 'Shipped');
+});
+
+// --- notion-sync went red 9 runs in 14 (2026-11-04 → 11-09) on the FIRST HTTP 429 of a full sync ----
+const answer = (status, body, retryAfter) => ({
+  ok: status >= 200 && status < 300,
+  status,
+  headers: { get: (h) => (h === 'retry-after' ? (retryAfter ?? null) : null) },
+  text: async () => JSON.stringify(body),
+});
+const quiet = { log: () => {} };
+
+test('retryWaitSeconds: the server\'s Retry-After wins; without one it doubles; never past the cap', () => {
+  assert.equal(retryWaitSeconds('6', 1), 6);
+  assert.equal(retryWaitSeconds(null, 1), 1);
+  assert.equal(retryWaitSeconds(undefined, 3), 4);
+  assert.equal(retryWaitSeconds('not-a-number', 2), 2);
+  assert.equal(retryWaitSeconds('0', 2), 2, 'a zero wait would hammer the API');
+  assert.equal(retryWaitSeconds('3600', 1), NOTION_MAX_WAIT_S);
+});
+
+test('requestWithRetry: a rate-limited request waits what Notion asked, then succeeds', async () => {
+  const replies = [answer(429, { code: 'rate_limited' }, '6'), answer(503, {}), answer(200, { id: 'p1' })];
+  const waits = [];
+  let calls = 0;
+  const body = await requestWithRetry(async () => replies[calls++], { ...quiet, sleep: async (s) => waits.push(s) });
+  assert.deepEqual(body, { id: 'p1' });
+  assert.equal(calls, 3);
+  assert.deepEqual(waits, [6, 2], '429 honours Retry-After; the 503 has none, so it backs off');
+});
+
+test('requestWithRetry: a dropped connection is retried too', async () => {
+  let calls = 0;
+  const body = await requestWithRetry(async () => {
+    if (calls++ === 0) throw new TypeError('fetch failed');
+    return answer(200, { ok: 1 });
+  }, { ...quiet, sleep: async () => {} });
+  assert.deepEqual(body, { ok: 1 });
+});
+
+test('requestWithRetry: a caller error (bad token, bad property) fails at once, with Notion\'s message', async () => {
+  let calls = 0;
+  const sleep = async () => assert.fail('a 4xx must not wait');
+  await assert.rejects(
+    requestWithRetry(async () => (calls++, answer(401, { code: 'unauthorized' })), { ...quiet, sleep }),
+    /unauthorized/);
+  assert.equal(calls, 1);
+});
+
+test('requestWithRetry: it gives up after the last attempt instead of waiting forever', async () => {
+  let calls = 0;
+  await assert.rejects(
+    requestWithRetry(async () => (calls++, answer(429, { code: 'rate_limited' }, '1')), { ...quiet, sleep: async () => {} }),
+    /rate_limited/);
+  assert.equal(calls, NOTION_MAX_ATTEMPTS);
 });

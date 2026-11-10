@@ -74,7 +74,7 @@ Env: production · https://miyagisanchez.com
 
 1. Open a new test shop and go to https://miyagisanchez.com/shop/manage/negocio
    → «3 meses gratis» with the end date ninety days out
-2. In https://miyagisanchez.com/admin/tenants move that shop's trial end to yesterday and run the plan job
+2. Ask Claude to move that test shop's trial end to yesterday (`plan:set-trial-end`, inside the web container) and run the plan job with `dry_run=0`
    → the shop shows «pausada» with the reason plan_unpaid, and its public address no longer shows the shop
 3. (money path, owed to Daniel) Signed in as its owner, open https://miyagisanchez.com/shop/manage/negocio and pay Plan Tienda with a test card
    → within a minute the shop is «activa» and its public address shows it again

@@ -3,7 +3,7 @@ epic: own-shop-positioning
 sprint: 3
 title: "Pages by business type"
 risk: low
-phase: Locking architecture
+phase: In review
 stories_total: 1
 stories:
   - id: S3.1
@@ -12,11 +12,11 @@ stories:
     i_want: "to send a merchant one link that speaks to their business"
     so_that: "they see their kind of shop working"
     risk: low
-    status: planned
+    status: in-progress
 ---
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Sprint 3: Pages by business type
 
-**Status:** ⬜ not started
+**Status:** 🟡 in review — storefront #492
 
 ## Stories
 

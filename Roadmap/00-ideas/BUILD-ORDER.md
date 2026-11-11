@@ -207,7 +207,7 @@
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
 
-## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (4)
+## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (3)
 
 These epics’ authoritative README-frontmatter `status:` disagrees with what the sprint/retro
 derivation infers. The board trusts the **frontmatter**; a mismatch usually means a close-out
@@ -218,7 +218,6 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop | In progress | Scaffolded |
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
-| Own-shop positioning: the site says what Miyagi Sánchez is now | In progress | Scaffolded |
 
 ---
-_Epics: 174 · seeds in funnel: 14 · status drift: 4. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 174 · seeds in funnel: 14 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._

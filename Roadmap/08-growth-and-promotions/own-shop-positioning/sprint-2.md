@@ -3,7 +3,7 @@ epic: own-shop-positioning
 sprint: 2
 title: "What the shop already does"
 risk: low
-phase: Locking architecture
+phase: In review
 stories_total: 1
 stories:
   - id: S2.1
@@ -12,11 +12,11 @@ stories:
     i_want: "to see what the shop already does for me"
     so_that: "I understand it is more than a catalog"
     risk: low
-    status: planned
+    status: in-progress
 ---
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Sprint 2: What the shop already does
 
-**Status:** ⬜ not started
+**Status:** 🟡 in review — storefront #492
 
 ## Stories
 

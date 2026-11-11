@@ -3,7 +3,7 @@ epic: own-shop-positioning
 sprint: 1
 title: "The definition"
 risk: low
-phase: Locking architecture
+phase: In review
 stories_total: 1
 stories:
   - id: S1.1
@@ -12,11 +12,11 @@ stories:
     i_want: "to hear «your own shop, built with you, 0% commission»"
     so_that: "the site backs what the promoter told me"
     risk: low
-    status: planned
+    status: in-progress
 ---
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Sprint 1: The definition
 
-**Status:** ⬜ not started
+**Status:** 🟡 in review — storefront #492
 
 ## Stories
 

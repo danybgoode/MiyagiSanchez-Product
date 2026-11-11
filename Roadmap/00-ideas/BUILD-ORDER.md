@@ -15,7 +15,7 @@
 - [Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop](../../03-selling-and-shops/merchant-features-surfaced-by-promoter-kit/README.md) — 03 Selling & Shops · 0/4 stories · risk: High
 - [Panfleto — the first premium shop](../../03-selling-and-shops/panfleto-premium-shop/README.md) — 03 Selling & Shops · 5/8 stories · risk: High · Wave 1
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
-- [Own-shop positioning: the site says what Miyagi Sánchez is now](../../08-growth-and-promotions/own-shop-positioning/README.md) — 08 Growth · 0/3 stories · risk: Low
+- [Own-shop positioning: the site says what Miyagi Sánchez is now](../../08-growth-and-promotions/own-shop-positioning/README.md) — 08 Growth · 3/3 stories · risk: Low
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
 ## 📋 Ready to build (scaffolded, not started) (3)
@@ -207,7 +207,7 @@
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
 
-## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (3)
+## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (4)
 
 These epics’ authoritative README-frontmatter `status:` disagrees with what the sprint/retro
 derivation infers. The board trusts the **frontmatter**; a mismatch usually means a close-out
@@ -218,6 +218,7 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop | In progress | Scaffolded |
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
+| Own-shop positioning: the site says what Miyagi Sánchez is now | In progress | Shipped |
 
 ---
-_Epics: 174 · seeds in funnel: 14 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 174 · seeds in funnel: 14 · status drift: 4. Regenerate with `node scripts/build-order.mjs`._

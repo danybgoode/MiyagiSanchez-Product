@@ -10,8 +10,9 @@
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
 
-## 🏗️ Building now (3)
+## 🏗️ Building now (4)
 
+- [Checkout trusts nothing the caller names](../../02-checkout-and-payments/checkout-trust-hardening/README.md) — 02 Checkout & Payments · 0/4 stories · risk: High
 - [Panfleto — the first premium shop](../../03-selling-and-shops/panfleto-premium-shop/README.md) — 03 Selling & Shops · 5/8 stories · risk: High · Wave 1
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
@@ -190,14 +191,13 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (15)
+## ⬜ Funnel — seeds not yet scaffolded (14)
 
 - [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [A merchant pays a promoter's package by card, through Miyagi Sánchez](seeds/merchant-pays-promoter-by-card.md) — Raw · Feature
 - [Affinity marketplace infrastructure — partner-operated markets](seeds/affinity-marketplace-infrastructure.md) — Raw · Epic
 - [AI-adoption guardrails — close the step-1/2 gaps the ladder names (browser smoke · security review · proactive monitor · OTel)](seeds/ai-adoption-maturity-benchmark.md) — Ready · Chore
 - [Business data consolidation — one place for the tools a business already uses](seeds/business-data-consolidation.md) — Raw · Epic
-- [Checkout trusts nothing the caller names: zero totals, shipping quotes, offer reuse](seeds/checkout-trust-hardening.md) — Raw · Feature
 - [Custom static pages for seller shops](seeds/custom-static-pages.md) — Raw · Feature
 - [Designer collaboration portal (deferred from #4)](seeds/designer-collaboration-portal.md) — Raw · Feature
 - [Flag lane cleanup — drop the parked platform_flags + legacy mirror, retire dead env vars](seeds/flag-lane-cleanup.md) — Raw · Chore
@@ -208,7 +208,7 @@
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
 
-## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
+## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (3)
 
 These epics’ authoritative README-frontmatter `status:` disagrees with what the sprint/retro
 derivation infers. The board trusts the **frontmatter**; a mismatch usually means a close-out
@@ -216,8 +216,9 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 
 | Epic | frontmatter (used) | sprint/retro-derived |
 |---|---|---|
+| Checkout trusts nothing the caller names | In progress | Scaffolded |
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 174 · seeds in funnel: 15 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 175 · seeds in funnel: 14 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._

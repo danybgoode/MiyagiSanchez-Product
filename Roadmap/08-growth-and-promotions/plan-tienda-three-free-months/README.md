@@ -1,6 +1,6 @@
 ---
-status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Building      # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped       # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: plan-tienda-three-free-months
 title: "Plan Tienda, three free months, and the promoter packages that follow"
@@ -94,7 +94,13 @@ United States plans. No feature flag.
 
 ## Architecture lock (2026-11-09, against storefront `952f2d9`, backend `16a1a1e` and live data)
 
-**Progress:** sprint 1 merged 2026-11-10 (Storefront #484 → `94c99b6`), migration M0 `merge_shop_metadata_guards` applied live first and recorded as `20261110000000`. Backend half of S2.2 merged 2026-11-10 (Backend #228 → `21830e8`). Backend #229 (five more subscription status writes; the subscription list made server-only) merged 2026-11-10 → `a2fd738`. Sprint 2 storefront merged 2026-11-10 (Storefront #485 → `6f817a3`). Nothing deployed yet (D20).
+**Progress:** sprint 1 merged 2026-11-10 (Storefront #484 → `94c99b6`), migration M0 `merge_shop_metadata_guards` applied live first and recorded as `20261110000000`. Backend half of S2.2 merged 2026-11-10 (Backend #228 → `21830e8`). Backend #229 (five more subscription status writes; the subscription list made server-only) merged 2026-11-10 → `a2fd738`. Sprint 2 storefront merged 2026-11-10 (Storefront #485 → `6f817a3`). Sprint 4 merged 2026-11-10 (Storefront #486 → `6ceb707`, migration M1 `plan_tienda_packages` applied live first, recorded `20261111000000`). Sprint 3 merged 2026-11-10 (Storefront #487 → `ef400ae`).
+
+**Live 2026-11-11 01:30 UTC** (one `update.sh`: Storefront `ef400ae`, Backend `a2fd738`; running container revisions checked equal to the merge commits; `/api/cron/plan-pause` and `/api/sell/tienda/checkout` answer 401; `/mx/precios` shows Plan Tienda, «desde $19», «3 meses», «IVA incluido»).
+- Legacy marker run at cutoff `2026-11-11T01:30:51Z`: dry run 61 to mark, then applied, 61 marked; live count 61 of 61, the 18 owned shops included.
+- Pause job dry run: 18 owned shops read, 0 candidates, 18 left as legacy. The timer is NOT enabled.
+- Plan Tienda monthly seeded: Stripe price `price_1UaQRHL2vn3I7zOLhkXUyV13` ($29 MXN/month, lookup key `tienda_monthly`), Medusa plan `subplan_01M743X2D8K26WZ4ZSCS8DVAM2`; the backend read answers it with `price_cents: 2900`.
+- Subscription repair pass (Backend #229): nothing to repair; production holds no subscriptions on any platform plan.
 
 **Live data read on 2026-11-09 (Supabase, production):** 61 shops, 18 owned. All 18 owned shops carry a trial and
 every trial ends `2026-12-05T02:18:22Z`. 0 shops hold a `negocio_grant`. 0 owned shops lack a trial.

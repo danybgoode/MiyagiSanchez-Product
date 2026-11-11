@@ -1567,6 +1567,10 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   ops-routines-reporting S3 close-out.)*
 
 ## Build & QA
+
+- **The storefront's api Playwright project defaults to the PRODUCTION base URL.** A builder running the suite "locally"
+  sends real requests to miyagisanchez.com. Every brief now says `PLAYWRIGHT_BASE_URL=http://127.0.0.1:9`; specs that
+  need a live host then fail with ECONNREFUSED and are named, never claimed. *(plan-tienda epic, 2026-11-10)*
 - **Stripe API `2026-06-24.dahlia` moved a subscription's period onto its ITEM** (`items.data[0].current_period_*`);
   `subscription.current_period_end` reads `undefined`, so a grant computed from it is silently wrong. Read the item.
   The domain, subdomain and ML-sync monthly handlers still read the old field. *(plans-gratis-negocio, 2026-11-05.)*
@@ -2771,6 +2775,12 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   conversation that does not start with the user (PR #469). Trim leading model turns after windowing.
 
 ## Medusa gotchas
+
+- **A generated `update<Model>s` takes ONE argument; `(id, patch)` never writes.** The id string is read as the data and
+  the patch as the shared context, so the call throws not-found, and behind `.catch(() => {})` nothing reports it. Six
+  subscription routes had been dead this way since launch (found 2026-11-10, Backend #228/#229). Fixing a dead write makes
+  it LIVE: in the same change, make a final status final in one conditional statement (`... where status <> 'canceled'`),
+  because Stripe does not order events and a late `active` would revive a cancelled plan. *(plan-tienda epic)*
 - **A missing projection is not proof of a missing Medusa link: validate both directions before a
   data repair.** A public listing emitted an empty shop slug even though product→link→seller was
   intact; eight soft-deleted sibling products left sparse seller→products slots, the read threw, and
@@ -2859,6 +2869,16 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   pricing-money-path-remediation S1 — backend PR #89.)*
 
 ## Architecture
+
+- **A webhook step that alerts and answers 200 never heals.** If a later delivery could fix it, answer 500 so Stripe
+  retries; order the idempotent records before the one-time messages, and run "after payment" hooks (restore, shares) on
+  a replay too, or a crash between the write and the hook loses it for good. Keep 200 for what a retry cannot fix, so the
+  retry window is not three days of alerts. A share the RULES do not pay (0%, self-referral) is done, not a failure.
+  *(plan-tienda epic, Storefront #485/#486, 2026-11-10)*
+- **A job that takes accounts offline needs a code guard for its precondition, not only a deploy step.** The pause job
+  refused to run while no shop carried the legacy marker; that guard is what made a missed or reordered deploy step
+  safe. Same for notices that would announce the action. And never release a claim on an UNKNOWN answer from a slow
+  backend that flips status last. *(plan-tienda epic, Storefront #487, 2026-11-10)*
 - **A duplicate check that reads EVERY tenant's rows is an existence oracle — answer the caller's own match in full,
   anyone else's with a bare "exists".** The promoter lead create looked a WhatsApp number up across all promoters'
   private CRMs and returned the matching record's id and which field matched in its 409, so any promoter could probe

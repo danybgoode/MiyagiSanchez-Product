@@ -3,7 +3,7 @@ epic: plan-tienda-three-free-months
 sprint: 1
 title: "Plan Tienda exists"
 risk: high
-phase: Verifying
+phase: Shipped
 stories_total: 4
 stories:
   - id: S1.1
@@ -37,7 +37,7 @@ stories:
 ---
 # Plan Tienda, three free months, and the promoter packages that follow — Sprint 1: Plan Tienda exists
 
-**Status:** ✅ merged 2026-11-10 (Storefront #484 → `94c99b6`), not deployed (D20)
+**Status:** ✅ merged 2026-11-10 (Storefront #484 → `94c99b6`), live 2026-11-11 01:30 UTC
 
 ## Build contract (locked by the architect before the builder started)
 Decisions in the epic README that bind this sprint: D1, D2, D3, D4, D15. Storefront only. The legacy script runs in production (bundled into the web container) and is verified by a live count BEFORE this sprint is called done. `derivePlan` keeps every existing test green; `unpaid` is a new outcome, never a rename of `gratis`.

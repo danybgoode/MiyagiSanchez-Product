@@ -10,10 +10,12 @@
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
 
-## 🏗️ Building now (3)
+## 🏗️ Building now (5)
 
+- [Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop](../../03-selling-and-shops/merchant-features-surfaced-by-promoter-kit/README.md) — 03 Selling & Shops · 0/4 stories · risk: High
 - [Panfleto — the first premium shop](../../03-selling-and-shops/panfleto-premium-shop/README.md) — 03 Selling & Shops · 5/8 stories · risk: High · Wave 1
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
+- [Own-shop positioning: the site says what Miyagi Sánchez is now](../../08-growth-and-promotions/own-shop-positioning/README.md) — 08 Growth · 0/3 stories · risk: Low
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
 ## 📋 Ready to build (scaffolded, not started) (3)
@@ -188,7 +190,7 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (16)
+## ⬜ Funnel — seeds not yet scaffolded (14)
 
 - [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [A merchant pays a promoter's package by card, through Miyagi Sánchez](seeds/merchant-pays-promoter-by-card.md) — Raw · Feature
@@ -200,14 +202,12 @@
 - [Flag lane cleanup — drop the parked platform_flags + legacy mirror, retire dead env vars](seeds/flag-lane-cleanup.md) — Raw · Chore
 - [Ink + highlight — a visual language that doesn't read as AI-default, and the copy that goes with it](seeds/ink-highlight-ui-upgrade.md) — Ready · Feature
 - [Measure AI cost per shop for a month](seeds/ai-cost-per-shop.md) — Raw · Chore
-- [Own-shop positioning: the site says what Miyagi Sánchez is now](seeds/own-shop-positioning.md) — Raw · Epic
 - [Plan Tienda follow-ups: finish a partial pause, restore sweep, approval repair, US welcome email](seeds/plan-tienda-follow-ups.md) — Raw · Chore
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
-- [What the promoter kit review surfaced: package the features merchants cannot see, and fix the gaps](seeds/merchant-features-surfaced-by-promoter-kit.md) — Raw · Epic
 
-## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
+## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (4)
 
 These epics’ authoritative README-frontmatter `status:` disagrees with what the sprint/retro
 derivation infers. The board trusts the **frontmatter**; a mismatch usually means a close-out
@@ -215,8 +215,10 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 
 | Epic | frontmatter (used) | sprint/retro-derived |
 |---|---|---|
+| Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop | In progress | Scaffolded |
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
+| Own-shop positioning: the site says what Miyagi Sánchez is now | In progress | Scaffolded |
 
 ---
-_Epics: 172 · seeds in funnel: 16 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 174 · seeds in funnel: 14 · status drift: 4. Regenerate with `node scripts/build-order.mjs`._

@@ -188,7 +188,7 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (12)
+## ⬜ Funnel — seeds not yet scaffolded (13)
 
 - [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [A merchant pays a promoter's package by card, through Miyagi Sánchez](seeds/merchant-pays-promoter-by-card.md) — Raw · Feature
@@ -202,6 +202,7 @@
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
+- [What the promoter kit review surfaced: package the features merchants cannot see, and fix the gaps](seeds/merchant-features-surfaced-by-promoter-kit.md) — Raw · Epic
 
 ## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
@@ -215,4 +216,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 172 · seeds in funnel: 12 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 172 · seeds in funnel: 13 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

@@ -110,7 +110,7 @@ Medusa owns inventory: seats are tracked variant inventory (`manage_inventory`),
 | 3 | S3.2 Promoter field reports are counted | low |
 
 ## Deploy order
-Storefront only, except two Supabase migrations the orchestrator applies before the code that needs them deploys: S2's RSVP re-key (`marketplace_event_registrations` → listing; re-verify 0 rows at apply time) and S3's `platform_feedback.author_kind` CHECK adding `promoter`. Merge builds the image; deploy with the VM `update.sh`; prove the running container's SHA equals the merge SHA.
+Backend first? No — **storefront #490 first, then backend #230 straight after** (fresh review, 2026-11-11): the old storefront sends a defaulted `quantity: 1` for every non-product, so a backend-first window would turn new events into one-seat events, while the new storefront against the old backend just leaves seats untracked. One Supabase migration: S3's `platform_feedback.author_kind` CHECK adding `promoter` (applied live 2026-11-11, `20261111010000`). S2 needs none (D6). Merge builds the image; deploy with the VM `update.sh`; prove the running container's SHA equals the merge SHA.
 
 ## Definition of Done (epic)
 - [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)

@@ -1,6 +1,6 @@
 ---
-status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Shaping       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped       # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: plan-tienda-three-free-months
 title: "Plan Tienda, three free months, and the promoter packages that follow"
@@ -92,6 +92,58 @@ No change to Plan Negocio. No limited free plan for new shops. No extension of t
 third plan. No home page, navigation or `/acerca` repositioning (its own idea). No deletion of a paused shop. No
 United States plans. No feature flag.
 
+## Architecture lock (2026-11-09, against storefront `952f2d9`, backend `16a1a1e` and live data)
+
+**Progress:** sprint 1 merged 2026-11-10 (Storefront #484 → `94c99b6`), migration M0 `merge_shop_metadata_guards` applied live first and recorded as `20261110000000`. Backend half of S2.2 merged 2026-11-10 (Backend #228 → `21830e8`). Backend #229 (five more subscription status writes; the subscription list made server-only) merged 2026-11-10 → `a2fd738`. Sprint 2 storefront merged 2026-11-10 (Storefront #485 → `6f817a3`). Sprint 4 merged 2026-11-10 (Storefront #486 → `6ceb707`, migration M1 `plan_tienda_packages` applied live first, recorded `20261111000000`). Sprint 3 merged 2026-11-10 (Storefront #487 → `ef400ae`).
+
+**Live 2026-11-11 01:30 UTC** (one `update.sh`: Storefront `ef400ae`, Backend `a2fd738`; running container revisions checked equal to the merge commits; `/api/cron/plan-pause` and `/api/sell/tienda/checkout` answer 401; `/mx/precios` shows Plan Tienda, «desde $19», «3 meses», «IVA incluido»).
+- Legacy marker run at cutoff `2026-11-11T01:30:51Z`: dry run 61 to mark, then applied, 61 marked; live count 61 of 61, the 18 owned shops included.
+- Pause job dry run: 18 owned shops read, 0 candidates, 18 left as legacy. The timer is NOT enabled.
+- Plan Tienda monthly seeded: Stripe price `price_1UaQRHL2vn3I7zOLhkXUyV13` ($29 MXN/month, lookup key `tienda_monthly`), Medusa plan `subplan_01M743X2D8K26WZ4ZSCS8DVAM2`; the backend read answers it with `price_cents: 2900`.
+- Subscription repair pass (Backend #229): nothing to repair; production holds no subscriptions on any platform plan.
+
+**Live data read on 2026-11-09 (Supabase, production):** 61 shops, 18 owned. All 18 owned shops carry a trial and
+every trial ends `2026-12-05T02:18:22Z`. 0 shops hold a `negocio_grant`. 0 owned shops lack a trial.
+`marketplace_promoter_commission_rates.rate_pct` is an **integer**; rows today: `negocio_anual=55`,
+`negocio_arranque=50`, `setup_gratis=80`, `negocio_renewal=10`, `migration=50`, `custom_domain=0`, `print_ad=0`.
+1 transfer exists (`negocio_anual`, pending). Attributions: 7, all `custom_domain`. 4 promoters. Re-read every one of
+these at apply time.
+
+| # | Decision |
+|---|---|
+| D1 | **Plan vocabulary.** `PlanName` becomes `gratis · trial · tienda · negocio · unpaid`. `gratis` now means legacy Plan Gratis only. `unpaid` is a shop with no live grant, subscription or trial and no legacy marker. New reasons: `tienda_one_time`, `tienda_subscription`, `legacy`, `unpaid`. `unavailable` keeps its meaning and is never turned into `unpaid`. The one home is `lib/plan.ts`. |
+| D2 | **Legacy marker.** `marketplace_shops.metadata.plan_legacy = { marked_at }`, written on every shop whose `created_at` is before the `--cutoff` instant passed to the script (**amended 2026-11-10:** a required argument, never a code constant, and never in the future; the marker runs the moment sprint 2 deploys, because the live pricing page promises «gratis para siempre» until then, and in any case **before 2026-12-05**, when the 18 trials end). All 61 rows today, owned or not: an imported shop claimed later was promised the same page. Script `scripts/mark-plan-legacy.ts`, modelled on `scripts/backfill-negocio-trial.ts`: pure planner, guard `absent`, `.select()` back, `--dry-run` read-only and printing the count. The cutoff stops a rerun from marking a new shop. |
+| D3 | **Tienda's records.** `metadata.tienda_grant`, the same shape as `NegocioGrant` with `type: one_time` only. The monthly plan is a Medusa Commerce plan of kind `tienda_plan`. The grant builders in `lib/plan.ts` are made plan-neutral and reused; nothing is copied. |
+| D4 | **Precedence.** Negocio (comp, dated grant, subscription) › trial › Tienda (dated grant, subscription) › legacy `gratis` › `unpaid`. **Tienda time under Negocio:** when a dated Negocio grant is written for a shop with a live Tienda grant, the Tienda grant's end moves forward by the Negocio months granted, in the same conditional write. **Deviation from the pitch:** under a MONTHLY Negocio subscription the Tienda clock keeps running; the months are not known in advance. |
+| D5 | **Prices.** `lib/tienda-pricing.ts`: `TIENDA_PRICE_YEARLY_MXN = 228`, `TIENDA_PRICE_MONTHLY_MXN = 29`; «desde $19 al mes» is `yearlyAsMonthly(228)`, never typed. Prices include IVA (Daniel, 2026-11-09); the pages say «IVA incluido» for both plans. |
+| D6 | **Buying.** `lib/negocio-checkout.ts` and `lib/negocio-webhook.ts` take the plan as a parameter; Tienda gets its own thin route beside Negocio's. Refusals (pure, in the checkout rules): a live Tienda subscription refuses both cadences; any paid Negocio refuses Tienda; `unavailable` refuses both; a trial, legacy, unpaid or a live Tienda year may buy the year (added after the current end and after a live trial). |
+| D7 | **Trial.** `NEGOCIO_TRIAL_DAYS` 30 → 90. A stamped trial stores its own `expires_at`, so the 18 live trials are untouched; nothing else is needed for them. `canStartTrial` is unchanged. |
+| D8 | **Notices.** Thresholds 15 and 5 days; a new `notified_15d_at` beside `notified_5d_at`. The end notice has two variants chosen by the legacy marker. Claims stay in `merge_shop_metadata` with the `equals` guard. |
+| D9 | **Pause.** A pure `decidePlanPause` returns pause · leave · unavailable. The job pauses only an owned shop whose plan resolved (uncached) to `unpaid` with reason `unpaid`. It first claims `metadata.plan_pause = { paused_at }` (guard `absent`, read back), then calls `POST /internal/sellers/:id/status { status: 'paused', reason: 'plan_unpaid' }`. The claim is the record that this pause is the plan's. Exposed as a cron route like the trial notices; Daniel enables the timer by hand. |
+| D10 | **Restore.** After a Tienda or Negocio payment or subscription activation is recorded, a shop holding `plan_pause` is set `active` (reason `plan_paid`) and the claim is cleared afterwards, relink first. No `plan_pause`, no restore. The builder verifies in live code that a paused seller's owner can still open `/shop/manage/negocio`; if not, that page and its checkout routes are opened to them and nothing else. |
+| D11 | **Packages.** `PACKAGES` gains a `grants` list per package, dated from the payment day: `tienda_anual` $500 → Negocio 3 months, then Tienda 12; `negocio_semestral` $1,100 → Negocio 9; `negocio_anual` $2,000 → Negocio 15. `negocio_arranque` and `setup_gratis` move to `RETIRED_PACKAGE_SKUS`: the sale answers 410, every read still works. The one pending `negocio_anual` transfer grants 15 months if approved after the deploy. |
+| D12 | **Rates.** `tienda_anual = 60`, `negocio_anual = 55` (unchanged), `tienda_renewal = 10`, `negocio_upgrade = 20`. **`negocio_semestral = 55`** (Daniel, 2026-11-10): $600 of $1,100 is 54.54% and the column is an integer, so the package is charge $1,100, pass $495, keep $605. No schema change. |
+| D12b | **Migration M0 (sprint 1), added at review 2026-11-10.** `merge_shop_metadata_guards`: a new function beside `merge_shop_metadata` that lands a patch only if every listed key is still as read. Needed because a Plan Negocio payment rewrites the Plan Tienda grant in the same statement, and a single guard would let it erase a concurrent Plan Tienda payment (Codex, #484). Additive; service role only. |
+| D19 | **Moving up from Plan Tienda (added 2026-11-10).** A shop on a live monthly Plan Tienda subscription may buy Plan Negocio. When Plan Negocio activates (monthly or yearly), the webhook sets the Plan Tienda subscription to cancel at its period end: no refund, no double charge after that period. A dated Plan Tienda grant is kept and moved forward under a dated Plan Negocio grant (D4). |
+| D20 | **Sprints 2 and 3 deploy together (added 2026-11-10).** Sprint 2's pages say «3 meses gratis», which is only true once sprint 3 sets the trial to 90 days. Neither deploys alone. The legacy marker runs at that joint deploy, with `--cutoff` set to that instant, and in any case before 2026-11-20, when the first 15-day notice would reach the 18 trial shops (verifier, #487; a code guard in sprint 3 also refuses pause-wording notices and the pause job while no shop is marked). If sprint 3 slips past 2026-11-17, deploy sprint 1 alone and run the marker then. |
+| D21 | **An unpaid monthly plan (Daniel, 2026-11-10).** While Stripe retries the card (`past_due`) the plan stays live; when Stripe gives up (`unpaid`), or the subscription is paused or incomplete, the plan ends and can come back when paid. `canceled` and `incomplete_expired` are final. Built in Backend #228. |
+| D22 | **Only Mexico shops are paused (orchestrator, 2026-11-10; reversible by Daniel).** The plan code had no market check, so a US shop opened after the change would have been paused although the US has no paid plans (a no-go). The pause job and its notices act only on a shop known to be in Mexico; a US shop is left alone, and a shop whose market cannot be read is never paused. |
+| D14b | **The renewal window follows the package's end (Daniel, 2026-11-10).** Packages now run 9 or 15 months, so a renewal share measured as months 12–24 from the sale would pay nothing on a six-month shop's first renewal. The 10% (`negocio_renewal`, `tienda_renewal`) covers the 12 months after the package's paid time ends, derived from its granted months: months 9–21 for `negocio_semestral`, 15–27 for `negocio_anual` and `tienda_anual`. Packages sold before this deploy keep months 12–24. The 20% upgrade window (12 months from the `tienda_anual` payment) is unchanged. |
+| D13 | **Migration M1 (sprint 4).** Widen the transfers `sku` CHECK with the two new packages; insert the four rate rows `on conflict do nothing`; widen any other `sku` CHECK the builder finds by reading `pg_constraint` live. Applied by the orchestrator through MCP before the PR merges; `schema_migrations` realigned. |
+| D14 | **Renewal and upgrade.** `tienda_renewal`: a Tienda payment in months [12, 24) after the promoter's first package payment for that shop. `negocio_upgrade`: the first Negocio payment within 12 months of a `tienda_anual` package payment for that shop. Each accrues once, keyed by `payment_ref`. |
+| D15 | **AI report.** `scripts/ai-usage-report.ts` reads `ai_allowance` (kinds `chat_month`, `photo`) for a month. Cost is printed only if the builder finds it logged; otherwise «no registrado», and the gap is named in the retro. |
+| D16 | **No flag.** Operating posture. The pause job is guarded by D2, D9 and its hand-enabled timer. |
+| D17 | **Routing.** Sprint 1 and every money, pause and commission story: the strongest model. S1.3, S1.4, S2.3, S3.2, S4.4: a Sonnet-class builder. Every PR: the fresh verifier, then `review-route.mjs`. |
+| D18 | **Where each contract lives.** Plan rules: `lib/plan.ts`. Prices: `lib/tienda-pricing.ts`, `lib/negocio-pricing.ts`. Packages and splits: `lib/promoter-packages.ts` plus the rates table. Seller status: the backend's `seller-status.ts`. Builders import these; nothing restates them. |
+
+**Scope the live system corrected:** the pitch's "check the column's precision" is answered (D12, integer; the six-month split is $495 / $605, not $500 / $600). The
+pitch's "keeps its remaining Tienda time" holds for dated Negocio grants only (D4).
+
+**Found while building (2026-11-10), fixed after sprint 2 on Daniel's instruction:** five backend routes call
+`updateSubscriptions(id, { status })`, a shape Medusa's generated method does not accept, so their status writes never
+land: the custom-domain, subdomain and Mercado Libre sync subscription routes, `store/subscriptions` (replay path) and
+the buyer's own cancel. Plan Negocio's lapse write had the same fault and is fixed in Backend #228.
+
 ## Scope — stories
 | Sprint | Story | Risk |
 |---|---|---|
@@ -115,9 +167,18 @@ United States plans. No feature flag.
 1. Migrations first, applied by the orchestrator through the Supabase MCP before the code that needs them merges
    (the transfer SKU check, the commission rates, the attribution kind if needed). Never `supabase db push`.
 2. Backend before storefront in sprints 2 and 3 (the Plan Tienda plan route; any change to the status route).
-3. The legacy marker script runs in production and is verified BEFORE sprint 3 deploys.
-4. The pause timer is enabled by Daniel by hand, after a dry run he has read.
-5. A merge builds the image; the deploy is `update.sh` on the VM. Prove the running container equals the merge SHA.
+3. The legacy marker script runs in production the moment sprint 2 deploys, with `--cutoff` set to that instant, and
+   is verified by a live count. Hard deadline: before 2026-11-20 (the first 15-day notice to the 18 trial shops). An unmarked shop whose trial ends resolves to
+   unpaid, loses its «ya estás en Plan Gratis» notice and reads «no tiene un plan activo» (verifier, #484).
+   Between the sprint 1 deploy and the marker, the only visible difference is the agent tool `get_plan` answering
+   `unpaid` for unclaimed shops; no gate differs.
+4. Seed the monthly Plan Tienda plan once the backend runs #228: `node --env-file=<VM prod env> scripts/seed-tienda-plan.mjs`
+   from a storefront checkout (needs `STRIPE_SECRET_KEY`, `MEDUSA_STORE_URL`, `MEDUSA_INTERNAL_SECRET` from the VM env
+   files, never `.env.local`). Verify `GET /internal/tienda-subscription` returns a `stripe_price_id` with
+   `price_cents: 2900`. Until then the monthly button refuses with 503 and the yearly one works (verifier, #485).
+5. The pause timer is enabled by Daniel by hand, after a dry run he has read.
+6. A merge builds the image; the deploy is `update.sh` on the VM. Prove the running container equals the merge SHA.
+7. After the backend deploy: repair pass for custom-domain, subdomain and Mercado Libre sync subscriptions whose status changed in Stripe while their writes were dead (Backend #229): list live rows, fetch each Stripe subscription, replay its status through the PATCH routes.
 
 ## Definition of Done (epic)
 - [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)

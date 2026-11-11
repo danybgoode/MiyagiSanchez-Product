@@ -291,3 +291,20 @@ test('decideSecurityPass: the config loader and the router trigger the lens too 
   for (const file of ['scripts/lib/config.mjs', 'scripts/lib/review-guard.mjs', 'scripts/review-route.mjs', 'scripts/cross-review.mjs'])
     assert.equal(decideSecurityPass({ files: [file], securityPaths: [] }).run, true, file);
 });
+
+// checkout-trust-hardening S1.4: the backend's main charge route (`start-checkout`) and the offer check sat OUTSIDE the
+// security lens, because `**/checkout/**` needs a path segment named exactly `checkout` (fresh review of backend #231,
+// 2026-11-11). Read the REAL config, not a fixture, so a later narrowing of securityPaths turns this red.
+test('every checkout path triggers the security lens (real review-config.json)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { fileURLToPath } = await import('node:url');
+  const cfg = JSON.parse(readFileSync(fileURLToPath(new URL('../review-config.json', import.meta.url)), 'utf8'));
+  for (const path of [
+    'src/api/store/carts/[id]/start-checkout/route.ts',
+    'src/lib/offer-checkout.ts',
+    'lib/checkout-zero.ts',
+  ]) {
+    const verdict = decideSecurityPass({ files: [path], securityPaths: cfg.securityPaths });
+    assert.equal(verdict.run, true, `${path} must trigger the security lens`);
+  }
+});

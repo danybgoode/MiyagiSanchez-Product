@@ -3,7 +3,7 @@ epic: merchant-features-surfaced-by-promoter-kit
 sprint: 2
 title: "One Evento"
 risk: high
-phase: Locking architecture
+phase: In review
 stories_total: 1
 stories:
   - id: S2.1
@@ -12,11 +12,11 @@ stories:
     i_want: "to create it from the same wizard as everything else, free or paid"
     so_that: "I manage one thing, not two systems"
     risk: high
-    status: planned
+    status: in-progress
 ---
 # Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop — Sprint 2: One Evento
 
-**Status:** ⬜ not started
+**Status:** 🟡 in review — storefront #491 (stacked on #490)
 
 ## Stories
 

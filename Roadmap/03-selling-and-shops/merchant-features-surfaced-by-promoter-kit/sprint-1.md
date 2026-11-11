@@ -3,7 +3,7 @@ epic: merchant-features-surfaced-by-promoter-kit
 sprint: 1
 title: "Seats"
 risk: high
-phase: Locking architecture
+phase: In review
 stories_total: 1
 stories:
   - id: S1.1
@@ -12,11 +12,11 @@ stories:
     i_want: "to set «Cupo» when I create or edit an event listing"
     so_that: "it sells out at that number instead of overselling"
     risk: high
-    status: planned
+    status: in-progress
 ---
 # Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop — Sprint 1: Seats
 
-**Status:** ⬜ not started
+**Status:** 🟡 in review — backend #230, storefront #490
 
 ## Stories
 

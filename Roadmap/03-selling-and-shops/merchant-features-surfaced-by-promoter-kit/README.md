@@ -1,6 +1,6 @@
 ---
 status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+phase: In review       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: merchant-features-surfaced-by-promoter-kit
 title: "Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop"

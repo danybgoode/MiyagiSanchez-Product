@@ -3,7 +3,7 @@ epic: merchant-features-surfaced-by-promoter-kit
 sprint: 3
 title: "Comparte into Canales and the field loop"
 risk: low
-phase: Locking architecture
+phase: Shipped
 stories_total: 2
 stories:
   - id: S3.1
@@ -12,27 +12,27 @@ stories:
     i_want: "to find my catalog link, PDF and Meta feed in Canales"
     so_that: "I can share my shop without knowing a hidden URL"
     risk: low
-    status: planned
+    status: done
   - id: S3.2
     title: "Promoter field reports are counted"
     as_a: "a field promoter"
     i_want: "to send what a merchant asked for from my panel in under a minute"
     so_that: "it is counted in one place, not lost in WhatsApp"
     risk: low
-    status: planned
+    status: done
 ---
 # Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop — Sprint 3: Comparte into Canales and the field loop
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-11-11 — storefront #489 `f664098`, deployed; migration `20261111010000` applied live
 
 ## Stories
 
-### Story 3.1 — Share tools live in Canales
+### Story 3.1 — Share tools live in Canales ✅ `f664098`
 **As** a merchant, **I want** to find my catalog link, PDF and Meta feed in Canales, **so that** I can share my shop without knowing a hidden URL.
 **Acceptance:** Canales (`/shop/manage/canal-propio`) shows the catalog link, the PDF and the Meta feed tiles; `/shop/manage/comparte` redirects to Canales; the business-plan engine links point to Canales; `ConnectAgentPanel` is imported only by Configuración › Agentes and `/sell/setup`.
 **Risk:** low
 
-### Story 3.2 — Promoter field reports are counted
+### Story 3.2 — Promoter field reports are counted ✅ `f664098`
 **As** a field promoter, **I want** to send what a merchant asked for from my panel in under a minute, **so that** it is counted in one place, not lost in WhatsApp.
 **Acceptance:** A «Reportar» form in `/promotor/cerrar` writes `platform_feedback` with `author_kind = 'promoter'` (CHECK migration applied by the orchestrator first); the report appears in `/admin/feedback` labelled promoter.
 **Risk:** low

@@ -1431,6 +1431,12 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   mid-build. *(2026-07-10, frontend-vercel-to-cloudrun S4.3.)*
 
 ## Repo & deploy hygiene
+- **When a change gives an existing field NEW meaning, the OLD caller in the other repo becomes the danger —
+  derive the deploy order from what the old version sends.** Backend-first is the habit, but the new backend
+  read "a quantity was sent" on an event as "these are its seats", and the old storefront sent a defaulted
+  `quantity: 1` for every non-product. Backend-first would have made every event created in the window a
+  one-seat event; storefront-first only left seats untracked for minutes. Caught by the fresh reviewer, not
+  by the builder or the lock. *(merchant-panel-gaps, 2026-11-11.)*
 - **A deploy step inside `$(…)` does not inherit `set -e` — a failed image pull reported success on the OLD
   build.** `update.sh` resolved `:main` with `docker pull` inside a command substitution. When the pull timed out,
   it fell through to the locally cached image, and the deploy printed ✓ for the previous commit. Check every pull
@@ -2869,6 +2875,12 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   pricing-money-path-remediation S1 — backend PR #89.)*
 
 ## Architecture
+- **A guard that exempts on request-body flags is not a guard — decide from what the server can see.** The
+  $0-checkout refusal exempted offers, support and rentals by flags in the body, so `support: {}` skipped it.
+  The fix was to drop every exemption and read the cart's own line prices, since none of those flows has a $0
+  line. The same review round found the backend charging whatever `offer_amount_cents` a caller sent, live, so
+  a buyer could pay one centavo. An amount or exemption the caller can name is only usable once the server has
+  re-derived it. *(merchant-panel-gaps + backend #231, 2026-11-11.)*
 
 - **A webhook step that alerts and answers 200 never heals.** If a later delivery could fix it, answer 500 so Stripe
   retries; order the idempotent records before the one-time messages, and run "after payment" hooks (restore, shares) on

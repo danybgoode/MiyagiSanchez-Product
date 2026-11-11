@@ -1,6 +1,6 @@
 ---
-status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: merchant-features-surfaced-by-promoter-kit
 title: "Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop"
@@ -110,19 +110,19 @@ Medusa owns inventory: seats are tracked variant inventory (`manage_inventory`),
 | 3 | S3.2 Promoter field reports are counted | low |
 
 ## Deploy order
-Storefront only, except two Supabase migrations the orchestrator applies before the code that needs them deploys: S2's RSVP re-key (`marketplace_event_registrations` → listing; re-verify 0 rows at apply time) and S3's `platform_feedback.author_kind` CHECK adding `promoter`. Merge builds the image; deploy with the VM `update.sh`; prove the running container's SHA equals the merge SHA.
+Backend first? No — **storefront #490 first, then backend #230 straight after** (fresh review, 2026-11-11): the old storefront sends a defaulted `quantity: 1` for every non-product, so a backend-first window would turn new events into one-seat events, while the new storefront against the old backend just leaves seats untracked. One Supabase migration: S3's `platform_feedback.author_kind` CHECK adding `promoter` (applied live 2026-11-11, `20261111010000`). S2 needs none (D6). Merge builds the image; deploy with the VM `update.sh`; prove the running container's SHA equals the merge SHA.
 
 ## Definition of Done (epic)
-- [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
-- [ ] Each `sprint-N.md` has its smoke walkthrough (real URLs)
-- [ ] This README marked ✅; every sprint status ticked with commit refs
-- [ ] `RETROSPECTIVE.md` written
-- [ ] Product poster (`Roadmap/README.md`) updated
+- [x] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
+- [x] Each `sprint-N.md` has its smoke walkthrough (real URLs)
+- [x] This README marked ✅; every sprint status ticked with commit refs
+- [x] `RETROSPECTIVE.md` written
+- [x] Product poster (`Roadmap/README.md`) updated
 - [ ] Team memory + `MEMORY.md` index updated
-- [ ] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
+- [x] Durable learnings promoted to `Roadmap/LEARNINGS.md` (dedupe — sharpen, don't append)
 - [ ] **Kill-switch (only if one was planned at refining — Stage 6b):** the flag slice shipped, the flag
       exists **in Golden Frijoles, in every env**, with the stated polarity, **and its switch is set there** —
       `frijoles flags get <key>` must print `on vN` or `off vN` in its PRODUCTION row (a bare `off` with no version
       means nothing is served there, so the app runs on its own built-in default). A newly synced flag goes live as written in its file; a sync never switches an existing one. *Verify-only — not a new gate; whether a high-risk epic needs one
       is decided at refining, not here.*
-- [ ] Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)
+- [x] Feature branch deleted; **this README's frontmatter `status: shipped`** (the SSOT — the board & Notion derive from it; run `node scripts/build-order.mjs`)

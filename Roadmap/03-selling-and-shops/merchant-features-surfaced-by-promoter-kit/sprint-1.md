@@ -3,7 +3,7 @@ epic: merchant-features-surfaced-by-promoter-kit
 sprint: 1
 title: "Seats"
 risk: high
-phase: Locking architecture
+phase: Shipped
 stories_total: 1
 stories:
   - id: S1.1
@@ -12,15 +12,15 @@ stories:
     i_want: "to set «Cupo» when I create or edit an event listing"
     so_that: "it sells out at that number instead of overselling"
     risk: high
-    status: planned
+    status: done
 ---
 # Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop — Sprint 1: Seats
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-11-11 — storefront #490 `d0d6ab1` + backend #230 `9fa411f`, deployed storefront-first
 
 ## Stories
 
-### Story 1.1 — A seat limit on every event listing
+### Story 1.1 — A seat limit on every event listing ✅ `d0d6ab1`
 **As** a merchant selling a play or a workshop, **I want** to set «Cupo» when I create or edit an event listing, **so that** it sells out at that number instead of overselling.
 **Acceptance:** An event listing (digital or service with the event block) created with Cupo 40 shows 40 available; the 41st ticket is refused on the PDP, `/checkout` and UCP checkout; lowering Cupo below tickets sold is refused with a plain message; an MCP-created event honours `capacity`; a money-path spec goes red when the inventory write is removed.
 **Risk:** high

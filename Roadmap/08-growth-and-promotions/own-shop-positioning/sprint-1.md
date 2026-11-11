@@ -3,7 +3,7 @@ epic: own-shop-positioning
 sprint: 1
 title: "The definition"
 risk: low
-phase: Locking architecture
+phase: Shipped
 stories_total: 1
 stories:
   - id: S1.1
@@ -12,15 +12,15 @@ stories:
     i_want: "to hear «your own shop, built with you, 0% commission»"
     so_that: "the site backs what the promoter told me"
     risk: low
-    status: planned
+    status: done
 ---
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Sprint 1: The definition
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-11-11 — storefront #492 `0616a71`, deployed and verified live (55/55 specs against production)
 
 ## Stories
 
-### Story 1.1 — Every surface says «your own shop»
+### Story 1.1 — Every surface says «your own shop» ✅ `0616a71`
 **As** a merchant reading the site or asking my AI about Miyagi Sánchez, **I want** to hear «your own shop, built with you, 0% commission», **so that** the site backs what the promoter told me.
 **Acceptance:** `lib/about-content.ts` (es + en) and its fan-out (`/acerca`, `/agent`, UCP manifest/profile, `llms.txt`, `about_miyagi`) lead with the own-shop definition; no public surface says marketplace-as-identity or P2P; the header CTA, footer and `/mx/vende` CTAs read «Abrir mi tienda»; the marketplace moves from the main navigation to the footer; home and `/mx/vende` keep one Vecindario-as-benefit line; a support block names the promoter (on their WhatsApp) and the merchant's AI agent, no platform number; `/` stays static.
 **Risk:** low

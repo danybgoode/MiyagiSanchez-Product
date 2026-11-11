@@ -3,7 +3,7 @@ epic: own-shop-positioning
 sprint: 2
 title: "What the shop already does"
 risk: low
-phase: Locking architecture
+phase: Shipped
 stories_total: 1
 stories:
   - id: S2.1
@@ -12,15 +12,15 @@ stories:
     i_want: "to see what the shop already does for me"
     so_that: "I understand it is more than a catalog"
     risk: low
-    status: planned
+    status: done
 ---
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Sprint 2: What the shop already does
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-11-11 — storefront #492 `0616a71`, deployed and verified live (55/55 specs against production)
 
 ## Stories
 
-### Story 2.1 — Six features merchants never see, said in our words
+### Story 2.1 — Six features merchants never see, said in our words ✅ `0616a71`
 **As** a merchant deciding whether to open a shop, **I want** to see what the shop already does for me, **so that** I understand it is more than a catalog.
 **Acceptance:** `/mx/vende` and `about_miyagi` carry six stories, each linking to the real feature: omnichannel («un inventario para cada mostrador»), financial intelligence (Tu plan, Analíticas, Ganancias), offers and haggling, AI (shop chat, Import, the merchant's own agent as a support channel, true to what the MCP can do), sorteos, «pon tu negocio en línea»; `/mx/precios` gets a short «Qué incluye tu tienda» list; no hand-typed price; copy polished and logged in the copy bank.
 **Risk:** low

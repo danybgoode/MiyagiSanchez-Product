@@ -3,7 +3,7 @@ epic: own-shop-positioning
 sprint: 3
 title: "Pages by business type"
 risk: low
-phase: Locking architecture
+phase: Shipped
 stories_total: 1
 stories:
   - id: S3.1
@@ -12,15 +12,15 @@ stories:
     i_want: "to send a merchant one link that speaks to their business"
     so_that: "they see their kind of shop working"
     risk: low
-    status: planned
+    status: done
 ---
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Sprint 3: Pages by business type
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-11-11 — storefront #492 `0616a71`, deployed and verified live (55/55 specs vs production)
 
 ## Stories
 
-### Story 3.1 — One page per business type
+### Story 3.1 — One page per business type ✅ `0616a71`
 **As** a field promoter, **I want** to send a merchant one link that speaks to their business, **so that** they see their kind of shop working.
 **Acceptance:** From `page-config.ts`: inmuebles, servicios con reservas, comida (autos gets the new copy) and the promoter zones imprentas, vestidos de novia, plomería y baños, ropa interior por mayoreo, materiales e interiorismo, bazar y artesanos; each renders without JS, has its OG card and canonical, shows a demo shop labelled «ejemplo», and an empty proof slot that renders nothing until a consenting real shop is attached. If S3 overflows the appetite, cut to the three zones with the most promoter visits.
 **Risk:** low

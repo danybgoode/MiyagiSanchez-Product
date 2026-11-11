@@ -43,7 +43,7 @@ stories:
 
 ### Story 1.1 — A shipping price is charged only when the server issued it
 **As** a merchant shipping a sale, **I want** shipping to be charged at the rate our server quoted, **so that** I never absorb a forged shipping price.
-**Acceptance:** `/store/envia/rates` returns each rate with a signature over rate_id, carrier, service, amount, currency, the cart id and an expiry; start-checkout charges shipping only for a valid, unexpired signature matching that cart, else 422 «Vuelve a elegir el envío.»; the storefront passes the signature through unchanged; a forged amount_cents is refused (unit spec).
+**Acceptance:** `/store/envia/rates` returns each rate with a signature over rate_id, carrier, service, amount, currency, the sorted product ids, the destination postcode and an expiry (not the cart id: rates are quoted before a cart exists); start-checkout charges shipping only for a valid, unexpired signature matching that cart, else 422 «Vuelve a elegir el envío.»; the storefront passes the signature through unchanged; a forged amount_cents is refused (unit spec).
 **Risk:** high
 
 ### Story 1.2 — The backend refuses a $0 item amount

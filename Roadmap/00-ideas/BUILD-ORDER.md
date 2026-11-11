@@ -191,7 +191,7 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (14)
+## ⬜ Funnel — seeds not yet scaffolded (15)
 
 - [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [A merchant pays a promoter's package by card, through Miyagi Sánchez](seeds/merchant-pays-promoter-by-card.md) — Raw · Feature
@@ -204,6 +204,7 @@
 - [Ink + highlight — a visual language that doesn't read as AI-default, and the copy that goes with it](seeds/ink-highlight-ui-upgrade.md) — Ready · Feature
 - [Measure AI cost per shop for a month](seeds/ai-cost-per-shop.md) — Raw · Chore
 - [Plan Tienda follow-ups: finish a partial pause, restore sweep, approval repair, US welcome email](seeds/plan-tienda-follow-ups.md) — Raw · Chore
+- [Shipping quotes that count units: a 5-unit order is quoted as one package today](seeds/quantity-aware-shipping-quotes.md) — Raw · Feature
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
@@ -221,4 +222,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 175 · seeds in funnel: 14 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 175 · seeds in funnel: 15 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._

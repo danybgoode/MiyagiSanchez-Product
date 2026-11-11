@@ -58,6 +58,31 @@ The site, `/acerca` and every agent surface still call Miyagi Sánchez a P2P mar
 ## Platform-first note
 Copy only, on surfaces that already exist: one source (`lib/about-content.ts`) projects onto five agent surfaces; the vertical pages come from `page-config.ts`; prices read `pricing-catalog.ts`. Nothing new in the data model.
 
+## Architecture lock (2026-11-11, against storefront `b7a4862`)
+
+- **D1 · The definition, one source.** `lib/about-content.ts` (es + en) leads with: «Miyagi Sánchez es tu propia
+  tienda en línea, armada contigo, sin comisión por venta.» The Vecindario appears once, as a benefit: «Tus productos
+  también aparecen en el Vecindario de Miyagi Sánchez.» Every agent surface inherits it through `lib/about-agent.ts`.
+  «P2P» and «marketplace nativo» leave `lib/ucp/schema.ts`, `public/.well-known/ucp-agent-profile.json`,
+  `app/(shell)/agent/page.tsx` and both locales.
+- **D2 · CTAs.** `buyerShell.publishFree`, `buyerShell.footer.sellFree`, `sellerAcquisition.anchor.primaryCta`,
+  `sellerAcquisition.us.primaryCta` (es only; the US keeps English) and `acerca.page.primaryCtaLabel` read «Abrir mi
+  tienda». Each points where the shop builder starts (`/`, the shop builder since 2026-10-30), never `/sell`'s
+  classifieds form.
+- **D3 · Navigation.** The marketplace entries leave the header for the footer. The `/mx/vende` «¿Vienes a comprar?» and
+  «Explora el marketplace» lines collapse to the single Vecindario-benefit line.
+- **D4 · Support promise (Daniel, 2026-11-11).** «Tu promotor te arma la tienda y te atiende por su WhatsApp; entre
+  visitas, tu agente de IA responde.» No platform phone number and no promised hours. A self-serve page reads the agent
+  line only.
+- **D5 · The static `/` stays static.** No new dynamic read on `/`. After deploy, purge the CDN for `/`, `/acerca` and
+  `/mx/vende` and check `x-nextjs-cache`.
+- **D6 · Business-type pages are `page-config.ts` entries.** Ten slugs: `inmuebles`, `servicios`, `comida`,
+  `imprentas`, `vestidos-de-novia`, `plomeria`, `ropa-interior-mayoreo`, `materiales-e-interiorismo`, `bazar`, plus
+  `autos` rewritten. Each has a demo shop labelled «ejemplo» (copy only; no real merchant named) and a proof slot that
+  renders nothing while empty.
+- **D7 · Copy rail.** Merchant-facing copy goes through the prose rail and is logged in the copy bank. Prices only from
+  `pricing-catalog.ts`. No new flags.
+
 ## What already exists (reuse, don't rebuild)
 <!-- Concrete files / routes / primitives the platform-first reframe surfaced. -->
 -

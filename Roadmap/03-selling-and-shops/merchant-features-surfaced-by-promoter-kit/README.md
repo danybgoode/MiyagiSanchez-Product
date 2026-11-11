@@ -58,6 +58,45 @@ Promoters now sell to plays, workshops and service businesses. Today an event li
 ## Platform-first note
 Medusa owns inventory: seats are tracked variant inventory (`manage_inventory`), the same primitive physical products use; the cap read (`available_quantity` → `ticketQuantityCap`) already exists on the PDP, `/checkout` and UCP. Free registrations stay on the Supabase RSVP machinery (no $0 Medusa checkout), re-keyed to the listing. Field reports reuse `platform_feedback`.
 
+## Architecture lock (2026-11-11, against storefront `b7a4862`, backend `origin/main`, live DB)
+
+- **D1 · Seats are Medusa inventory, written by the backend.** `isStockableListingType` (backend
+  `src/api/store/_utils/inventory.ts`) returns true only for `product`. It gains an event case: a `service` or
+  `digital` listing whose `attrs` carry the event block (`event_date` or `venue_name`) AND a `quantity` is stockable.
+  Create (`seller-product-create.ts`) and update (`seller-product-update.ts:980–1013`, today 422 «Only physical products
+  can have a stock quantity») share that one predicate. Update flips `manage_inventory` on and provisions the level
+  when an existing event listing first gets seats (`provisionVariantInventory`).
+- **D2 · The field is «Lugares disponibles», not total seats.** `setVariantAvailableQuantity` sets *available*
+  (stocked = available + reserved), the same semantics as product stock. Corrects the pitch: "lowering below tickets
+  sold" cannot happen by construction; the edit refuses negatives only. Daniel's "refuse" call (2026-11-11) holds.
+- **D3 · No change to the buyer cap.** PDP, `/checkout` and UCP already read `available_quantity` via
+  `ticketQuantityCap`; once tracked, the cap is the seats. Medusa's `reserveInventoryStep` blocks the oversell at
+  cart completion. The money-path spec proves it end to end.
+- **D4 · Storefront sends quantity for events.** `SellWizard.tsx:1461` sends `quantity` only for `product`; it also
+  sends it when the event block is filled. The listing edit form and the MCP listing tools (`capacity` → `quantity`)
+  follow the same rule.
+- **D5 · «Evento» is a wizard preset, not a new `listing_type`.** It sets `listing_type: 'service'` with the event block
+  required and «Lugares disponibles» required. A new type value would ripple through every renderer, filter and UCP
+  schema.
+- **D6 · A $0 Evento reuses the RSVP system unchanged.** The create route also writes a `marketplace_events` row
+  (capacity = seats, same title/venue/start) and stores its slug in the listing's `metadata.rsvp_event_slug`. The PDP
+  for a $0 event renders the existing registration form instead of the buy box. Verification, QR tickets, the roster and
+  Wall references (by slug) work as they do today. **No re-keying migration** (corrects the pitch). Live rows:
+  0 events, 0 registrations.
+- **D7 · Eventos leaves the nav, the roster stays.** Remove `eventos` from `SELLER_NAV`. `/shop/manage/eventos` keeps
+  the per-event roster and check-in, reached from the event listing's row in the catalog; its create form goes, and
+  its «Nuevo evento» sends to `/sell?tipo=evento`. Bare `/shop/manage/eventos` with no events redirects to the catalog.
+- **D8 · Comparte moves into Canales.** The three tiles from `ComparteClient.tsx` render inside
+  `/shop/manage/canal-propio`. `/shop/manage/comparte` redirects there (target asserted by spec). The engine
+  hrefs (`lib/business-plan/engine.ts:216,223,226`) and `e2e/business-plan-engine.spec.ts:50` move with it.
+  `ConnectAgentPanel` is dropped from Comparte; it stays in Agentes and `/sell/setup`.
+- **D9 · Promoter reports.** Migration: `platform_feedback_author_kind_check` gains `'promoter'` (live CHECK today:
+  seller, partner, agent). The orchestrator applies it before S3 merges. The form lives in `/promotor/cerrar`
+  and writes `author_kind='promoter'`, `author_id` = the promoter's id, `category` from the existing CHECK
+  (feature, bug).
+- **D10 · Repos and order.** S1 is backend (D1, D2) and then storefront (D4); the backend deploys first. S2 and S3 are
+  storefront-only, plus the D9 migration. No new flags.
+
 ## What already exists (reuse, don't rebuild)
 <!-- Concrete files / routes / primitives the platform-first reframe surfaced. -->
 -

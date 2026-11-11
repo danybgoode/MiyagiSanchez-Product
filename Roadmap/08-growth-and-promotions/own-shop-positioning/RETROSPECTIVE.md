@@ -1,25 +1,24 @@
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Retrospective
 
-_Closed: <date>_
-_Intent: yes | mostly | no_
-<!-- Did we build what the product owner meant? One word, THEIR answer: yes, mostly or no. Required by `epic-dod` only
-     when the epic's seed or README carries a numeric `intent_match:` (intent-match D17); the calibration learns from
-     it. Keep the line and leave exactly one of the three words between `_Intent: ` and the closing underscore. -->
-_Quote vs actual: <quote $lo–hi (basis), or "not quoted"> → <actual ≈$n> (<Δ% vs the quote's top, or "—">)_
-<!-- The actual is STAMPED, never typed: `node scripts/epic-actuals.mjs --epic <slug> --write` writes actual_* into
-     the README (finops S2.5); copy its numbers here. -->
-_Crew (actual): <each model and its ≈$, from actual_models> · reviewers <from the PR's review records> · prose <who wrote it> — <one line: where it differed from the plan, and why>_
-<!-- The models are STAMPED, never typed: `node scripts/epic-actuals.mjs --epic <slug> --write` writes actual_models
-     into the README (why-as-a-story D6). Codex, agy, Devin and other outside tools are not in the transcripts; name
-     them from the PR's review records. -->
+_Closed: 2026-11-11_
+_Intent: owed_
+_Quote vs actual: $27–40 (M, n=3) → not measured on this machine (—)_
+_Crew (actual): Opus 5.5 orchestrator · one Sonnet 5.5 builder for all three sprints · reviewers: deterministic gate (low risk, no security path) · prose: the builder — the copy-bank log and the prose rail (D7) were not run._
 
 ## What shipped
-<!-- The capability now live, by sprint, with commit/PR refs. -->
+- **S1 · The definition** — `lib/about-content.ts` (es + en) leads with «Miyagi Sánchez es tu propia tienda en línea, armada contigo, sin comisión por venta.» `/acerca`, `/agent`, `llms.txt`, the UCP manifest and `about_miyagi` inherit it, and «P2P» and «marketplace nativo» are gone. Every CTA reads «Abrir mi tienda» and points at the shop builder. The Vecindario moved to the footer and appears as one benefit line. The support block names the promoter, on their own WhatsApp, and the merchant's AI agent.
+- **S2 · Six features** — `lib/shop-features.ts` covers omnichannel, finances, offers and haggling, AI, sorteos and «pon tu negocio en línea». They appear on `/`, `/acerca` and the agent surfaces, and `/mx/precios` gets «Qué incluye tu tienda».
+- **S3 · Ten business-type pages** — inmuebles, comida, imprentas, vestidos-de-novia, plomeria, ropa-interior-mayoreo, materiales-e-interiorismo, bazar, plus autos and servicios. Each has its own OG image and canonical, and a demo shop labelled «Ejemplo». The proof slot stays empty until a real shop consents.
+- Storefront #492 `0616a71`, deployed. 55/55 specs pass against production, and `llms.txt` has no «P2P».
 
 ## What went well
+- One source fans out to five agent surfaces, so the definition changed in one place.
+- Cloudflare does not cache these pages (BYPASS/DYNAMIC), so no purge was needed.
 
 ## What we learned
-<!-- Promote the durable, generalizable items to Roadmap/LEARNINGS.md (one-liner + why + date). Dedupe. -->
+- CodeQL flags regex-based HTML stripping even in a test helper. An index scan satisfies it and reads more clearly.
 
 ## Gaps / follow-ups
-<!-- Smoke gaps owed to the product owner, deferred slices, known limitations. -->
+- **Owed to Daniel:** a phone walkthrough of the header, footer, `/acerca` and two business-type pages; an AI ask-test («¿qué es miyagisanchez.com?»); the Intent answer.
+- **Calls for Daniel:** the servicios page still says «Publicar mi servicio», and the English `/en` and `/us` CTAs are unchanged.
+- **Not done:** the copy-bank log and the prose-rail pass on the merchant copy (D7).

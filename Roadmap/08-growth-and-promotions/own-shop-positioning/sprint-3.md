@@ -16,7 +16,7 @@ stories:
 ---
 # Own-shop positioning: the site says what Miyagi Sánchez is now — Sprint 3: Pages by business type
 
-**Status:** ✅ shipped 2026-11-11 — storefront #492 `0616a71`, deployed and verified live (55/55 specs vs production)
+**Status:** ✅ shipped 2026-11-11 — storefront #492 `0616a71`, deployed and verified live (55/55 specs against production)
 
 ## Stories
 

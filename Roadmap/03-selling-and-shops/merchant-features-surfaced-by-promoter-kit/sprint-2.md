@@ -3,7 +3,7 @@ epic: merchant-features-surfaced-by-promoter-kit
 sprint: 2
 title: "One Evento"
 risk: high
-phase: In review
+phase: Shipped
 stories_total: 1
 stories:
   - id: S2.1
@@ -12,15 +12,15 @@ stories:
     i_want: "to create it from the same wizard as everything else, free or paid"
     so_that: "I manage one thing, not two systems"
     risk: high
-    status: in-progress
+    status: done
 ---
 # Merchant panel gaps: seats, one Evento, Comparte into Canales, the field loop — Sprint 2: One Evento
 
-**Status:** 🟡 in review — storefront #491 (stacked on #490)
+**Status:** ✅ shipped 2026-11-11 — storefront #491 `28ddd82`, deployed
 
 ## Stories
 
-### Story 2.1 — «Evento» is one choice in the wizard, free or paid
+### Story 2.1 — «Evento» is one choice in the wizard, free or paid ✅ `28ddd82`
 **As** a merchant hosting an event, **I want** to create it from the same wizard as everything else, free or paid, **so that** I manage one thing, not two systems.
 **Acceptance:** «Evento» appears in the `/sell` wizard with date, time, venue, Cupo and price (≥ 0, required event fields); a $0 Evento shows «Registrarme», verifies the email and issues the existing QR ticket, counted against Cupo; a paid Evento goes through checkout; Eventos leaves `SELLER_NAV` and `/shop/manage/eventos` redirects to the catalog; a Wall event entry renders the listing; the redirect target is asserted by spec.
 **Risk:** high

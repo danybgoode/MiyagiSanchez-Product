@@ -75,7 +75,13 @@ export const CANONICAL_OWN_RULES = [
   {
     expression: PUBLIC_READ_RULE_EXPRESSION,
     action: 'set_cache_settings',
-    action_parameters: { cache: true, edge_ttl: { mode: 'bypass_by_default' } },
+    // browser_ttl respect_origin: without it the ZONE Browser Cache TTL (4h) rewrites every
+    // matched response to `max-age=14400` — Cloudflare overrides any origin lifetime SHORTER
+    // than the zone setting, so an origin `max-age=0` cannot fix it. That pinned an ISR-cached
+    // 404 in the buyer's BROWSER for 4 hours after the product went live (a «Solo mi tienda»
+    // product published to the marketplace; reported live 2026-11-11, miel-verduras) — and no
+    // CDN purge reaches a browser. The edge still caches per the origin's s-maxage.
+    action_parameters: { cache: true, edge_ttl: { mode: 'bypass_by_default' }, browser_ttl: { mode: 'respect_origin' } },
     description: PUBLIC_READ_RULE_DESCRIPTION,
     enabled: true,
   },

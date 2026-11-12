@@ -10,6 +10,8 @@
     "scripts/lib/**",
     "app/api/**",
     "**/checkout/**",
+    "**/*checkout*",
+    "**/*checkout*/**",
     "**/*stripe*",
     "**/*stripe*/**",
     "**/*mercadopago*",

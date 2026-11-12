@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-11-11 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-11-12 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -22,7 +22,7 @@
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
-## ✅ Shipped (165)
+## ✅ Shipped (166)
 
 - [Cars vertical — tratocar-grade browse & trust](../../01-discovery-and-shopping/cars-vertical-tratocar-parity/README.md) — 01 Discovery · 8/8 stories
 - [Discovery Polish](../../01-discovery-and-shopping/discovery-polish/README.md) — 01 Discovery · 7/7 stories
@@ -38,6 +38,7 @@
 - [PDP redesign: "decide, then act"](../../01-discovery-and-shopping/pdp-redesign/README.md) — 01 Discovery · 18/18 stories
 - [Selección: make admin pins authoritative](../../01-discovery-and-shopping/seleccion-pins-authoritative/README.md) — 01 Discovery · 5/5 stories
 - [Checkout & Manual-Payment State Hardening](../../02-checkout-and-payments/checkout-state-hardening/README.md) — 02 Checkout & Payments · 9/9 stories · risk: High · Wave 2
+- [Checkout trusts nothing the caller names](../../02-checkout-and-payments/checkout-trust-hardening/README.md) — 02 Checkout & Payments · 4/4 stories · risk: High
 - [Delivery & Manual-Money Polish](../../02-checkout-and-payments/delivery-money-polish/README.md) — 02 Checkout & Payments · 8/8 stories · risk: High · Wave 3
 - [In person: POS-lite and payment links](../../02-checkout-and-payments/in-person-sales/README.md) — 02 Checkout & Payments · 12/12 stories · risk: High
 - [Rental line-item pricing — charge nights × rate + deposit online](../../02-checkout-and-payments/rental-backend-line-item-pricing/README.md) — 02 Checkout & Payments · 7/7 stories · risk: High · backlog
@@ -197,13 +198,13 @@
 - [Affinity marketplace infrastructure — partner-operated markets](seeds/affinity-marketplace-infrastructure.md) — Raw · Epic
 - [AI-adoption guardrails — close the step-1/2 gaps the ladder names (browser smoke · security review · proactive monitor · OTel)](seeds/ai-adoption-maturity-benchmark.md) — Ready · Chore
 - [Business data consolidation — one place for the tools a business already uses](seeds/business-data-consolidation.md) — Raw · Epic
-- [Checkout trusts nothing the caller names: zero totals, shipping quotes, offer reuse](seeds/checkout-trust-hardening.md) — Raw · Feature
 - [Custom static pages for seller shops](seeds/custom-static-pages.md) — Raw · Feature
 - [Designer collaboration portal (deferred from #4)](seeds/designer-collaboration-portal.md) — Raw · Feature
 - [Flag lane cleanup — drop the parked platform_flags + legacy mirror, retire dead env vars](seeds/flag-lane-cleanup.md) — Raw · Chore
 - [Ink + highlight — a visual language that doesn't read as AI-default, and the copy that goes with it](seeds/ink-highlight-ui-upgrade.md) — Ready · Feature
 - [Measure AI cost per shop for a month](seeds/ai-cost-per-shop.md) — Raw · Chore
 - [Plan Tienda follow-ups: finish a partial pause, restore sweep, approval repair, US welcome email](seeds/plan-tienda-follow-ups.md) — Raw · Chore
+- [Shipping quotes that count units: a 5-unit order is quoted as one package today](seeds/quantity-aware-shipping-quotes.md) — Raw · Feature
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
@@ -220,4 +221,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 174 · seeds in funnel: 15 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 175 · seeds in funnel: 15 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

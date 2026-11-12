@@ -3,7 +3,7 @@ epic: listing-readiness
 sprint: 1
 title: "One rule, every door"
 risk: high
-phase: Building
+phase: Shipped
 stories_total: 3
 stories:
   - id: S1.1
@@ -12,40 +12,40 @@ stories:
     i_want: "one rule for 'can this product be bought online'"
     so_that: "every door gives the same answer"
     risk: high
-    status: planned
+    status: done
   - id: S1.2
     title: "The new-listing form and activation ask the rule"
     as_a: "a merchant"
     i_want: "to be told what is missing before an unbuyable product goes live, or to choose catalog on purpose"
     so_that: "nothing is published unbuyable by accident"
     risk: high
-    status: planned
+    status: done
   - id: S1.3
     title: "Offers only where the shop can collect"
     as_a: "a buyer"
     i_want: "no offer path on a shop that cannot take payment"
     so_that: "an accepted price is always payable"
     risk: high
-    status: planned
+    status: done
 ---
 # Guided listing readiness — Sprint 1: One rule, every door
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped — storefront #497 (`b8729e5`), backend #234 (`d35a7d6`)
 
 ## Stories
 
-### Story 1.1 — One readiness rule
+### Story 1.1 — One readiness rule ✅ `b8729e5`
 **As** the platform, **I want** `lib/listing-readiness.ts` (pure rule + `ownerShopFacts` + `publicShopFacts`), **so that**
 `deriveCheckoutViability`, `checkCheckoutViability`, `listingActivationBlock` and `shopAcceptsAnyPayment` all delegate.
 **Acceptance:** rule table spec (payment × delivery × arranged × type); each old entry point returns the same as before for the cases it already covered; the CLABE/`configured` drift is gone.
 **Risk:** high
 
-### Story 1.2 — The new-listing form and activation ask the rule
+### Story 1.2 — The new-listing form and activation ask the rule ✅ `b8729e5`
 **As a** merchant, **I want** `POST /api/sell/create` to refuse an unready product with 422 `LISTING_NOT_READY` + what is missing, unless I sent `publish_as_catalog: true`; the single activate accepts the same flag.
 **Acceptance:** a no-payment shop's product create → 422 naming «cobro»; with the flag → published; a ready shop → unchanged.
 **Risk:** high
 
-### Story 1.3 — Offers only where the shop can collect
+### Story 1.3 — Offers only where the shop can collect ✅ `b8729e5`
 **As a** buyer, **I want** no «Hacer oferta» on a shop that can't collect, and the server to refuse creating, accepting or countering an offer there (Medusa read; unreadable = 503).
 **Acceptance:** offer create on a no-payment shop → 409 with a plain message; seller accept/counter → refused with a link to Pagos; decline still works; a transfer-only shop is NOT refused.
 **Risk:** high

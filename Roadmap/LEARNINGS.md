@@ -2879,6 +2879,20 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   pricing-money-path-remediation S1 — backend PR #89.)*
 
 ## Architecture
+- **A gate that reads through a published-only endpoint fails OPEN for drafts — the one case it exists for.** The
+  activation gate read `/store/listings/:id` (published only); activating a draft got a 404 and was allowed, so it
+  had never fired. Read the thing being decided through a route that can see it in every state. *(listing-readiness,
+  2026-11-12.)*
+- **A recorded product decision goes stale when a flag changes what the backend does.** "Arranged delivery is
+  additive" (2026-07-11) stayed in a spec and a comment after `shipping.arranged_only_enabled` (ON since 09-22) made
+  checkout manual-only for those listings — so card shops published unbuyable products. Before arguing a finding down
+  with an old decision, read what the backend does TODAY. *(listing-readiness, 2026-11-12 — the fresh reviewer and the
+  cross-family pass both caught it; my first answer was wrong.)*
+- **Every producer of one payload must share its derivation.** `/messages/[id]` was built twice (first render + the
+  refresh the client swaps in seconds later); a field set in one producer only vanished — twice in two days
+  (`checkout_available`, then `medusa_product_id` → a 404 link). One helper, and a sweep over the producers.
+  *(PR 496 + listing-readiness, 2026-11-11/12.)*
+
 - **A guard that exempts on request-body flags is not a guard — decide from what the server can see.** The
   $0-checkout refusal exempted offers, support and rentals by flags in the body, so `support: {}` skipped it.
   The fix was to drop every exemption and read the cart's own line prices, since none of those flows has a $0

@@ -5,14 +5,13 @@
 
 # Build order — generated status board
 
-> **Generated 2026-11-11 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-11-12 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
 
-## 🏗️ Building now (4)
+## 🏗️ Building now (3)
 
-- [Checkout trusts nothing the caller names](../../02-checkout-and-payments/checkout-trust-hardening/README.md) — 02 Checkout & Payments · 0/4 stories · risk: High
 - [Panfleto — the first premium shop](../../03-selling-and-shops/panfleto-premium-shop/README.md) — 03 Selling & Shops · 5/8 stories · risk: High · Wave 1
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
@@ -23,7 +22,7 @@
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
-## ✅ Shipped (165)
+## ✅ Shipped (166)
 
 - [Cars vertical — tratocar-grade browse & trust](../../01-discovery-and-shopping/cars-vertical-tratocar-parity/README.md) — 01 Discovery · 8/8 stories
 - [Discovery Polish](../../01-discovery-and-shopping/discovery-polish/README.md) — 01 Discovery · 7/7 stories
@@ -39,6 +38,7 @@
 - [PDP redesign: "decide, then act"](../../01-discovery-and-shopping/pdp-redesign/README.md) — 01 Discovery · 18/18 stories
 - [Selección: make admin pins authoritative](../../01-discovery-and-shopping/seleccion-pins-authoritative/README.md) — 01 Discovery · 5/5 stories
 - [Checkout & Manual-Payment State Hardening](../../02-checkout-and-payments/checkout-state-hardening/README.md) — 02 Checkout & Payments · 9/9 stories · risk: High · Wave 2
+- [Checkout trusts nothing the caller names](../../02-checkout-and-payments/checkout-trust-hardening/README.md) — 02 Checkout & Payments · 4/4 stories · risk: High
 - [Delivery & Manual-Money Polish](../../02-checkout-and-payments/delivery-money-polish/README.md) — 02 Checkout & Payments · 8/8 stories · risk: High · Wave 3
 - [In person: POS-lite and payment links](../../02-checkout-and-payments/in-person-sales/README.md) — 02 Checkout & Payments · 12/12 stories · risk: High
 - [Rental line-item pricing — charge nights × rate + deposit online](../../02-checkout-and-payments/rental-backend-line-item-pricing/README.md) — 02 Checkout & Payments · 7/7 stories · risk: High · backlog
@@ -209,7 +209,7 @@
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
 
-## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (3)
+## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
 These epics’ authoritative README-frontmatter `status:` disagrees with what the sprint/retro
 derivation infers. The board trusts the **frontmatter**; a mismatch usually means a close-out
@@ -217,9 +217,8 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 
 | Epic | frontmatter (used) | sprint/retro-derived |
 |---|---|---|
-| Checkout trusts nothing the caller names | In progress | Scaffolded |
 | Merchant lifecycle projection — the Miyagi half of Golden Beans' event router | Shipped | Scaffolded |
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 175 · seeds in funnel: 15 · status drift: 3. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 175 · seeds in funnel: 15 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

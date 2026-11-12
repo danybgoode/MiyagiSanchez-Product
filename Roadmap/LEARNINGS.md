@@ -1431,6 +1431,10 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   mid-build. *(2026-07-10, frontend-vercel-to-cloudrun S4.3.)*
 
 ## Repo & deploy hygiene
+- **A GitHub run stuck `queued` with ZERO jobs is not a backlog — make a fresh run.** For ~18 h every CI run on two
+  public repos sat `queued` with no jobs, and `gh run cancel` answered "Cannot cancel a workflow run that is completed".
+  GitHub status showed no incident, and minutes were unlimited (public repos). An empty commit created fresh runs, which
+  started within a minute. Check `gh api …/runs/<id>/jobs --jq .total_count` before blaming billing. *(checkout-trust-hardening, 2026-11-12.)*
 - **When a change gives an existing field NEW meaning, the OLD caller in the other repo becomes the danger —
   derive the deploy order from what the old version sends.** Backend-first is the habit, but the new backend
   read "a quantity was sent" on an event as "these are its seats", and the old storefront sent a defaulted

@@ -98,6 +98,9 @@ test('public-read rule uses fail-closed origin TTL policy and the default host/f
   assert.deepEqual(publicRule.action_parameters, {
     cache: true,
     edge_ttl: { mode: 'bypass_by_default' },
+    // The browser keeps what the ORIGIN says, never the zone's 4h default: a 4h browser copy of
+    // an ISR-cached 404 outlived the product going live (2026-11-11). A purge cannot reach it.
+    browser_ttl: { mode: 'respect_origin' },
   })
   assert.equal('cache_key' in publicRule.action_parameters, false)
   assert.equal(CANONICAL_OWN_RULES.filter((rule) => rule.description === PUBLIC_READ_RULE_DESCRIPTION).length, 1)

@@ -86,7 +86,16 @@ derived at read time.
 | 2 | S2.1 wizard readiness panel · S2.2 panel banner, badges, guide | low |
 
 ## Deploy order
-Storefront only — one PR, one `update.sh`. No backend change, no migration, no flag (operating posture).
+**Backend first** (MiyagiSanchez-Backend #234 — the owner product read returns `listing_type` + `delivery_mode`), then the
+storefront (#497), in one `update.sh`. Either order is safe: an older backend reads as "unknown" and activation fails
+open (D3). No migration, no flag (operating posture); rollback = revert.
+
+## Recorded scope decisions (from review)
+- **Doors left as they were, made visible by S2.2:** CSV/Shopify import publishes by default (a bulk migration — gating it
+  would silently draft whole catalogs); promoter preview activation has its own consent checklist; promoter close and
+  launchpad create on unclaimed shops / for print editions where the claim gates already stop buying.
+- **Bulk activate stays strict** (no catalog acknowledgement); single activate in Catálogo offers «Publicar como catálogo».
+- **MCP** keeps its existing strict gate (callers do not pass a delivery mode).
 
 ## Definition of Done (epic)
 - [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)

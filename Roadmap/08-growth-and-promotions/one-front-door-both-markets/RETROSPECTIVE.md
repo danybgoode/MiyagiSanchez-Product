@@ -25,8 +25,9 @@ mismo» is gone, and merchants with a shop get «Crear con IA» on the dashboard
 - **A US shop's only payment option created a MEXICAN Stripe account.** `/api/stripe/connect` hardcoded
   `country: 'MX'`; the backend's US v2 route had no storefront caller. The fresh `pr-reviewer` found it by following
   the link one hop further than the builder did. D15's premise ("the existing Connect flow") was false.
-- **Shopify's UCP endpoint now refuses anonymous agents** («Missing profile uri») — the shipped migration connector is
-  likely dead; the intake reads the public `/products.json` instead.
+- **A false alarm, corrected:** a probe of Shopify's UCP endpoint without the agent profile got «Missing profile uri»
+  and was reported as "the migration connector is dead". The connector sends the profile and works. A finding from a
+  hand-made probe must be re-run with the real call shape before it is reported.
 - **Security lens, in rounds:** redirect ports, row-15 screen truncation, out-of-range entities, unbounded request
   bodies, an XLSX zip bomb, CSRF on a GET, a month-boundary refund. Each round found the NEXT door; the last fix put
   the prohibited-goods screen at the one door every import shares (`/api/sell/import`).
@@ -36,10 +37,8 @@ mismo» is gone, and merchants with a shop get «Crear con IA» on the dashboard
 - Two subagents stopped on the 5-hour usage limit mid-task and were resumed after the reset.
 
 ## Gaps / follow-ups
-Builder network-failure fallbacks and photo/publish refusals still Spanish · the Shopify/ML supply-pipeline imports
-are not screened · no lifecycle rule for `p2s/` signed-out photos on the public bucket · the shipped Shopify migration
-connector vs «Missing profile uri» · `/api/stripe/connect` redirects a signed-out caller to `https://0.0.0.0:8080/sign-in`
-(pre-existing) · the sibling ideas `show-the-product-not-a-wall-of-text` and `us-commerce-parity`.
+All closed in storefront #502 (2026-11-13) except the R2 lifecycle rule for `p2s/` (owed to Daniel: dashboard, no
+API scope). The sibling ideas `show-the-product-not-a-wall-of-text` and `us-commerce-parity` are in the backlog.
 
 ## Intent
 _Owed to Daniel — one word for how close this landed to the ask._

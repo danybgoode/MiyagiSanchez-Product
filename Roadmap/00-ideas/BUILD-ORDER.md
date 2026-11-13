@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-11-12 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-11-13 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -22,7 +22,7 @@
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
-## ✅ Shipped (167)
+## ✅ Shipped (168)
 
 - [Cars vertical — tratocar-grade browse & trust](../../01-discovery-and-shopping/cars-vertical-tratocar-parity/README.md) — 01 Discovery · 8/8 stories
 - [Discovery Polish](../../01-discovery-and-shopping/discovery-polish/README.md) — 01 Discovery · 7/7 stories
@@ -119,6 +119,7 @@
 - [Merchant activation scorecard](../../08-growth-and-promotions/merchant-activation-scorecard/README.md) — 08 Growth · 6/6 stories · risk: Low · #4-fm
 - [Merchant lifecycle projection — the Miyagi half of Golden Beans' event router](../../08-growth-and-promotions/merchant-lifecycle-projection/README.md) — 08 Growth · 0 sprints
 - [Merchant Partner lifecycle](../../08-growth-and-promotions/merchant-partner-lifecycle/README.md) — 08 Growth · 18/18 stories · risk: High · #5-fm
+- [One front door for both markets](../../08-growth-and-promotions/one-front-door-both-markets/README.md) — 08 Growth · 14/14 stories · risk: High
 - [Operator program — one offering, two markets, new voice ✅ shipped 2026-08-17](../../08-growth-and-promotions/operator-program-copy/README.md) — 08 Growth · 0 sprints
 - [Own-shop positioning: the site says what Miyagi Sánchez is now](../../08-growth-and-promotions/own-shop-positioning/README.md) — 08 Growth · 3/3 stories · risk: Low
 - [Plan Tienda, three free months, and the promoter packages that follow](../../08-growth-and-promotions/plan-tienda-three-free-months/README.md) — 08 Growth · 15/15 stories · risk: High
@@ -192,7 +193,7 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (15)
+## ⬜ Funnel — seeds not yet scaffolded (17)
 
 - [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [A merchant pays a promoter's package by card, through Miyagi Sánchez](seeds/merchant-pays-promoter-by-card.md) — Raw · Feature
@@ -206,9 +207,11 @@
 - [Measure AI cost per shop for a month](seeds/ai-cost-per-shop.md) — Raw · Chore
 - [Plan Tienda follow-ups: finish a partial pause, restore sweep, approval repair, US welcome email](seeds/plan-tienda-follow-ups.md) — Raw · Chore
 - [Shipping quotes that count units: a 5-unit order is quoted as one package today](seeds/quantity-aware-shipping-quotes.md) — Raw · Feature
+- [Show the product, not a wall of text: real example shops on our templates, and features as they look](seeds/show-the-product-not-a-wall-of-text.md) — Raw · Feature
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
+- [US commerce parity: shipping, plans, tax and the tools Mexican shops already have](seeds/us-commerce-parity.md) — Raw · Feature
 
 ## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
@@ -222,4 +225,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 176 · seeds in funnel: 15 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 177 · seeds in funnel: 17 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

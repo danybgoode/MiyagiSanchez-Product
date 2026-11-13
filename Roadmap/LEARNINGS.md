@@ -3511,6 +3511,26 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   the next read of the catalog would have called it measured. Carry the estimate beside the record (here, the photo
   product names the example it replaced) and keep its label.
 
+### A "reuse the existing flow" decision is a claim about the flow's DESTINATION — follow it one hop (one-front-door-both-markets, 2026-11-13)
+D15 locked "a US shop connects Stripe through the existing Connect flow". The link existed; the route behind it
+hardcoded `country: 'MX'`, and the backend's US route had no storefront caller at all. Every spec passed, because they
+asserted the link, not where it went. The fresh reviewer found it by reading the route the link opens. When a locked
+decision says "the existing X", open X's handler and check it does the right thing **for the new case** — a market,
+a role, a currency — before the decision is written.
+
+### Record a model's real answers once; replay them in CI (one-front-door-both-markets, 2026-11-13)
+Thresholds on a model's output (Jev's confidence, a prohibited-goods probability) are policy, and policy needs a spec.
+Calling the model in CI is slow, flaky and costs money; inventing fixtures proves nothing. Record the live answers for
+a labelled set with a script (it fails loudly on any failed call and stores the questions it asked), commit them, and
+have the spec (a) fail when the questions change, (b) replay every recorded answer through the pure decision. 44
+cases pinned the screen against real output with zero network in the suite.
+
+### A security lens finds the NEXT door; put the guard where all the doors meet (one-front-door-both-markets, 2026-11-13)
+Six security rounds on one PR each found another path for prohibited goods to reach Medusa — a file picker, a
+description under a benign title, a connector. Guarding each door is a chase. The bulk importer was the one route
+every one of them shared; screening there ended it. Before adding a check to a new door, ask which route the doors
+converge on, and guard that.
+
 ## Working efficiently across a long epic
 - **EPIC-MODE IS THE DEFAULT NOW (2026-07-24). The single highest-leverage act in a whole-epic run is the
   architect's locking pass BEFORE any builder starts: numbered decisions in the epic README + a per-sprint

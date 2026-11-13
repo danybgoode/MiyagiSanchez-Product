@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-11-12 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-11-13 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -16,9 +16,10 @@
 - [Miyagi Partners proposition and recruiting portal v3](../../08-growth-and-promotions/miyagi-partners-recruiting-v3/README.md) — 08 Growth · 8/8 stories · risk: High · Wave 1
 - [ReportHub as the Notion replacement](../../09-platform-infra/reporthub-as-notion/README.md) — 09 Platform-infra · 5/7 stories · risk: High · #5
 
-## 📋 Ready to build (scaffolded, not started) (3)
+## 📋 Ready to build (scaffolded, not started) (4)
 
 - [BYO Envía connect](../../04-shipping-and-delivery/envia-byo-connect/README.md) — 04 Shipping · 0/11 stories · risk: High
+- [One front door for both markets](../../08-growth-and-promotions/one-front-door-both-markets/README.md) — 08 Growth · 0/14 stories · risk: High
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
@@ -192,7 +193,7 @@
 - [Events & Ticketing](../../10-events-and-ticketing/events-and-ticketing/README.md) — 10 Events & Ticketing · 7/7 stories · risk: High · Wave 4
 - [Events: quantity selector (buy N admissions in one order)](../../10-events-and-ticketing/events-quantity-selector/README.md) — 10 Events & Ticketing · 3/3 stories · risk: High · backlog
 
-## ⬜ Funnel — seeds not yet scaffolded (15)
+## ⬜ Funnel — seeds not yet scaffolded (17)
 
 - [«Crea tu link de pago» on the landing page — payment links as the way in](seeds/payment-link-landing-hook.md) — Raw · Feature
 - [A merchant pays a promoter's package by card, through Miyagi Sánchez](seeds/merchant-pays-promoter-by-card.md) — Raw · Feature
@@ -206,9 +207,11 @@
 - [Measure AI cost per shop for a month](seeds/ai-cost-per-shop.md) — Raw · Chore
 - [Plan Tienda follow-ups: finish a partial pause, restore sweep, approval repair, US welcome email](seeds/plan-tienda-follow-ups.md) — Raw · Chore
 - [Shipping quotes that count units: a 5-unit order is quoted as one package today](seeds/quantity-aware-shipping-quotes.md) — Raw · Feature
+- [Show the product, not a wall of text: real example shops on our templates, and features as they look](seeds/show-the-product-not-a-wall-of-text.md) — Raw · Feature
 - [Spike — CFDI autopilot for RESICO micro-merchants (multi-RFC PAC)](seeds/spike-cfdi-autopilot.md) — Ready · Spike
 - [Spike — Compra protegida (buyer protection)](seeds/spike-compra-protegida.md) — Ready · Spike
 - [Spike — should Supabase (non-commerce) co-locate onto GCP, like commerce did?](seeds/spike-supabase-colocation.md) — Ready · Spike
+- [US commerce parity: shipping, plans, tax and the tools Mexican shops already have](seeds/us-commerce-parity.md) — Raw · Feature
 
 ## ⚠️ Status drift — README frontmatter vs sprint/retro-derived (2)
 
@@ -222,4 +225,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 176 · seeds in funnel: 15 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 177 · seeds in funnel: 17 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

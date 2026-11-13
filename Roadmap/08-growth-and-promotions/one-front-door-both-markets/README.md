@@ -1,6 +1,6 @@
 ---
-status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Locking architecture       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: shipped   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Shipped # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: one-front-door-both-markets
 title: "One front door for both markets"
@@ -163,8 +163,35 @@ new code. Drafts, allowances and the screen's log stay in Supabase (`shop_drafts
   `PhotoSheet` path and monthly allowance), file and link (D7/D8 handlers reused signed-in, rows → the existing
   import staging at `/shop/manage/import`). Every path through the screen.
 
-**Deviations from the pitch:** S1.5 Mercado Libre is the generic-page path (needs OAuth); photo refunds are not
-offered (D6); the hero-only removal keeps the steps section's agent prompt (D18).
+**Deviations from the pitch:** S1.5 Mercado Libre is the generic-page path (needs OAuth); the hero-only removal keeps
+the steps section's agent prompt (D18). **Found while building S1 (2026-11-12):** the photo AND a PDF share ONE
+signed-out AI intake per device and one daily budget (`anon_intake` / `anon_intake_budget`, default 100) instead of a
+photo-only allowance — both cost a Gemini read, a CSV/XLSX or a link costs nothing; a day that refuses gives the
+device its intake back (a plain conditional UPDATE, no new RPC). Intakes do not screen: the box's drafts request
+screens the description AND the rows' titles (`screenTextFor`), so one screen call covers every input. Each intake
+spends its own Turnstile token; the box remounts the widget (`resetKey`) for the next request.
+
+**Found while building S1–S4 (each answered on its PR):**
+- **D6 kinds.** The photo/PDF allowance uses the kinds `ai_allowance_kind_check` allows (`photo`, `daily_budget`) on
+  subjects of their own (`intake-device:<id>`, `global:anon_intake`); a new kind failed CLOSED live. A spec reads the
+  constraint from the migrations.
+- **D8.** Store links read the storefront's public `/products.json` (any Shopify domain, Big Cartel), because Shopify's
+  UCP `search_catalog` now answers an anonymous agent with «Missing profile uri». **That also means the shipped
+  migration connector (`lib/shopify-mcp-client.ts`) likely returns nothing today: follow-up.**
+- **D13.** The market question is asked on the claim screen after `findSeller`, only when the keep would CREATE a shop
+  (a merchant with a shop, or resuming a keep that already made it, is never asked); the choice is written to the
+  draft BEFORE the shop is created; a backend 409/422 re-asks the question with its message.
+- **D15.** `/api/stripe/connect` created `country: 'MX'` Express accounts for every shop; a US shop now onboards
+  through the backend's Accounts v2 route (`POST /store/sellers/me/stripe-connect`), same-origin navigations only.
+- **D16.** `/` and `/en` carry their own hreflang pair (`builderLanguageMetadata`: es `/`, en `/en`, x-default `/`).
+- **D17.** `/us/vende` renders in the US market's English chrome with its body `lang="es"`.
+- **D18.** The steps section carried a twin of the copy-prompt block under «Compruébalo tú mismo»; it is gone too.
+- **D20.** «Crear con IA» spends the merchant's PLAN photos (the PhotoSheet pool, `ownerPhotoCap`); the signed-in mode is
+  for shop owners only (seller read from Medusa); `/api/sell/import` — the one door every bulk import shares — screens
+  prohibited goods, rate-limited per seller.
+- **Follow-ups (not in this epic):** builder client-side network fallbacks and the photo/publish route refusals are
+  still Spanish; the Shopify/Mercado Libre supply-pipeline imports are not screened; signed-out photos on the public
+  bucket under `p2s/` have no lifecycle rule.
 
 ## Scope — stories
 | Sprint | Story | Risk |
@@ -184,10 +211,22 @@ the VM storefront env BEFORE S1 deploys (without it D4 degrades to today's guard
 Storefront only; no backend change. Each sprint PR: merge → image build green → `update.sh` → verify the container
 serves the merge SHA → prod smoke.
 
+## Shipped (2026-11-13)
+| Sprint | PR | Merge | Deployed |
+|---|---|---|---|
+| S1 The screen and the intake | #498 | `ccd98a0` | ✅ |
+| S2 Two languages, two markets | #499 | `b429945` | ✅ |
+| S3 Every landing, one hero | #500 | `25889ab` | ✅ |
+| S4 Existing merchants | #501 | `f3a7996` | ✅ VM container `miyagi-web-1` serves `f3a7996` |
+
+Migration D10 applied live and recorded under `20261112000000`. `TYPESAFE_API_KEY` added to the VM `web.env`
+(product owner, 2026-11-13) and verified from inside the production container (Jev answers). **Owed to Daniel:**
+add `TYPESAFE_API_KEY` to the password manager; the auth/money walkthrough steps in sprint-2 and sprint-4.
+
 ## Definition of Done (epic)
-- [ ] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
-- [ ] Each `sprint-N.md` has its smoke walkthrough (real URLs)
-- [ ] This README marked ✅; every sprint status ticked with commit refs
+- [x] All sprints merged to `main` + smoke-tested (gaps stated — `node scripts/owed-ledger.mjs` counts what is still owed)
+- [x] Each `sprint-N.md` has its smoke walkthrough (real URLs)
+- [x] This README marked ✅; every sprint status ticked with commit refs
 - [ ] `RETROSPECTIVE.md` written
 - [ ] Product poster (`Roadmap/README.md`) updated
 - [ ] Team memory + `MEMORY.md` index updated

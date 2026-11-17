@@ -2879,6 +2879,16 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
   pricing-money-path-remediation S1 — backend PR #89.)*
 
 ## Architecture
+- **An exemption must clear EVERY guard on the request path, not just the one you changed.** The ticket exemption
+  went into start-checkout's product guard, but a cheaper client-trusting pre-check earlier in the same route still
+  refused the `service` method by card — every predicate spec green, every card ticket refused. Trace the request
+  top to bottom and test the guards TOGETHER. *(coordinated-sales-readiness, 2026-11-16 — fresh-review catch.)*
+- **"Is the stock capped?" is a property of every variant and every inventory mode.** `manage_inventory` alone let a
+  backorder variant (and an unlimited sibling) through an oversell guard. Require `manage_inventory && !allow_backorder`
+  on EVERY variant. *(coordinated-sales-readiness, 2026-11-16 — two security-lens rounds.)*
+- **A new request hint needs its SENDER changed in the same epic.** The backend learned `is_event` for checkout-options
+  but no storefront caller sent it, so a ticket buyer would still have seen SPEI/cash only. Grep the callers of
+  every endpoint you extend. *(coordinated-sales-readiness, 2026-11-16.)*
 - **A gate that reads through a published-only endpoint fails OPEN for drafts — the one case it exists for.** The
   activation gate read `/store/listings/:id` (published only); activating a draft got a 404 and was allowed, so it
   had never fired. Read the thing being decided through a route that can see it in every state. *(listing-readiness,

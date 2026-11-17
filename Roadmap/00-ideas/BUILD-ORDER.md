@@ -5,7 +5,7 @@
 
 # Build order — generated status board
 
-> **Generated 2026-11-13 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
+> **Generated 2026-11-17 — do not hand-edit.** Epic status SSOT = the epic `README.md` frontmatter
 > `status:` field (set at epic close). To change what this shows, edit that field (or a seed for the
 > funnel), then run `node scripts/build-order.mjs`. This board and the Notion "Marketplace Roadmap"
 > DB are both *derived views* — never hand-edit the board.
@@ -22,7 +22,7 @@
 - [Plugin audit + medusa extraction — pay the dark-skill debt, port what's stranded](../../09-platform-infra/plugin-audit-and-extraction/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 - [The build view — a machine-readable frontmatter contract, rendered in the CLI as a Claude Mod](../../09-platform-infra/build-visualization-claude-mods/README.md) — 09 Platform-infra · 0 sprints · risk: Low · wave-2026-09-16
 
-## ✅ Shipped (168)
+## ✅ Shipped (169)
 
 - [Cars vertical — tratocar-grade browse & trust](../../01-discovery-and-shopping/cars-vertical-tratocar-parity/README.md) — 01 Discovery · 8/8 stories
 - [Discovery Polish](../../01-discovery-and-shopping/discovery-polish/README.md) — 01 Discovery · 7/7 stories
@@ -50,6 +50,7 @@
 - [Catalog management — one Catálogo home for every product, channel, price & quantity ✅](../../03-selling-and-shops/catalog-management/README.md) — 03 Selling & Shops · 16/16 stories · risk: High · Wave 1
 - [Catalog shop-slug invariant — the “orphan” was a null-slot read failure](../../03-selling-and-shops/catalog-orphan-listing-sweep/README.md) — 03 Selling & Shops · 3/3 stories · risk: High
 - [Configurable & Personalized Products](../../03-selling-and-shops/configurable-personalized-products/README.md) — 03 Selling & Shops · 10/10 stories · risk: High
+- [Coordinated sales readiness](../../03-selling-and-shops/coordinated-sales-readiness/README.md) — 03 Selling & Shops · 5/5 stories · risk: High
 - [Custom print products — the sticker-shop buy experience](../../03-selling-and-shops/custom-print-products/README.md) — 03 Selling & Shops · 13/13 stories
 - [Gem → Claimable Shop Loop (Ask-Claude / Mexico 26)](../../03-selling-and-shops/gem-claim-loop/README.md) — 03 Selling & Shops · 9/9 stories
 - [Guided listing readiness](../../03-selling-and-shops/listing-readiness/README.md) — 03 Selling & Shops · 5/5 stories · risk: High
@@ -225,4 +226,4 @@ forgot to set `status:` (or the README is stale). Reconcile the README, then thi
 | Miyagi Partners proposition and recruiting portal v3 | In progress | Shipped |
 
 ---
-_Epics: 177 · seeds in funnel: 17 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._
+_Epics: 178 · seeds in funnel: 17 · status drift: 2. Regenerate with `node scripts/build-order.mjs`._

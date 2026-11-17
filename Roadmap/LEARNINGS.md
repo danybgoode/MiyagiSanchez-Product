@@ -2786,6 +2786,19 @@ rule here is now wrong, fix or delete it. Keep it short — a long digest is an 
 
 ## Medusa gotchas
 
+- **The legacy `remoteQuery({ entity: … })` call returns a BARE ARRAY; `const { data } = …` on it is always empty.**
+  Checkout's "which shop owns this product" fallback did exactly that, so it found no owner for any product
+  from July to 2026-11-17, and every checkout without a `seller_id` failed with «no tiene vendedor». Its unit
+  fake returned `{ data: [...] }`, the shape the code expected rather than the one the engine returns, so it
+  stayed green the whole time. Use `.graph({ entity, fields, filters })` and fake THAT. Only a
+  real-engine test (the money-path runner) caught it. *(checkout-trust-hardening follow-up, Backend #238)*
+- **A caller-named `seller_id` decides who gets PAID, so it is a hint to verify, not a fact.** Start-checkout
+  took `body.seller_id` as the receiver without checking ownership. Naming your own shop for someone else's
+  product sent the money to you while the real owner saw the order. Keep a named seller only when it owns every
+  cart product. The first fix paid "the owner of the first cart line" instead, so the caller could still choose by
+  ORDERING the lines. Both reviewers caught that one. Read every line's owner (product→`seller.id`, one query) and
+  refuse a cart linked to two shops. Found by writing the rates→checkout integration test, not by any earlier review.
+  *(Backend #238)*
 - **A generated `update<Model>s` takes ONE argument; `(id, patch)` never writes.** The id string is read as the data and
   the patch as the shared context, so the call throws not-found, and behind `.catch(() => {})` nothing reports it. Six
   subscription routes had been dead this way since launch (found 2026-11-10, Backend #228/#229). Fixing a dead write makes

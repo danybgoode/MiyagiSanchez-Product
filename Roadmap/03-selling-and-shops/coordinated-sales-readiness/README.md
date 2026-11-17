@@ -71,6 +71,16 @@ drives seats. No model change, no migration.
 - **D2 verified at lock (2026-11-16):** backend `_utils/inventory.ts` `hasEventBlock` and storefront
   `lib/event-seats.ts` `hasEventBlock` are identical (`event_date` OR `venue_name`, trimmed, in `metadata.attrs`).
   Both sides reuse their own copy; a parity spec pins them.
+- **D5 — a ticket is a SEATED event (added during the build, 2026-11-16):** an event block AND capped seats on every
+  variant (`manage_inventory` and not `allow_backorder`). An event with no seats, a backorder variant or an unlimited
+  variant stays coordinated (SPEI/cash) so card sales can't oversell — two security-lens rounds on backend #237.
+  Backend `isSeatedEvent` (`_utils/inventory.ts`) and storefront `isSeatedEvent` (`lib/event-seats.ts`) mirror it.
+  This supersedes D2's "hasEventBlock alone" for the payment decision; `hasEventBlock` stays the seats/stock predicate.
+- **D6 — start-checkout's early pre-check** no longer lists `service` (a seated Evento's only delivery method — it
+  refused every card ticket before the product guard ran; fresh-review catch). The product guard decides.
+- **Known residual (product call, follow-up):** a card buyer who loses a race for the last seats is charged and the
+  cart fails to complete (reconcile retries + Telegram alert, no automatic refund) — shared with physical products;
+  newly exposed for tickets. Fix: authorize-only payment for tickets, or reserve seats before payment.
 - **D4 — deploy order:** backend first (events become card-payable; nothing else changes), then storefront (the gate).
 
 ## What already exists (reuse, don't rebuild)

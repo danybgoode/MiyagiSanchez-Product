@@ -37,7 +37,7 @@ stories:
 ### Story 2.1 — The readiness rule covers services, rentals and events
 **As a** merchant, **I want** `listingReadiness` (storefront) to take the price and the event flag: a priced `service`
 or `rental` → online only with SPEI or cash (`manual_payment`), a paid event → online with any rail, `price_cents`
-null or 0 → online (contact/RSVP). `listingCanBePaid` delegates to it. The event predicate is the backend's (D2).
+null or 0 → online (contact/RSVP). `listingCanBePaid` delegates to it. The event predicate is the seated-event rule (D5), mirrored from the backend.
 **Acceptance:** rule table spec; a sweep that the storefront event predicate equals the backend's definition.
 **Risk:** high
 

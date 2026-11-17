@@ -3,7 +3,7 @@ epic: coordinated-sales-readiness
 sprint: 2
 title: "Services and rentals publish as buyable only where they can be paid"
 risk: high
-phase: Shaping
+phase: Shipped
 stories_total: 3
 stories:
   - id: S2.1
@@ -12,25 +12,25 @@ stories:
     i_want: "a priced service or rental to need SPEI or cash, a paid event any rail, and an unpriced service nothing"
     so_that: "nothing publishes as buyable where checkout refuses it"
     risk: high
-    status: planned
+    status: done
   - id: S2.2
     title: "Every door and surface follows the rule"
     as_a: "a merchant and a buyer"
     i_want: "the form, activation, PDP buttons, offers, banner and badges to agree"
     so_that: "the shop never promises a payment it cannot take"
     risk: high
-    status: planned
+    status: done
   - id: S2.3
     title: "Owed money smokes are run or handed over"
     as_a: "the product owner"
     i_want: "a real paid Evento bought by card and a service publish on a card-only shop walked"
     so_that: "the money path is proven live"
     risk: high
-    status: planned
+    status: done
 ---
 # Coordinated sales readiness — Sprint 2: Services and rentals publish as buyable only where they can be paid
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-11-17 (storefront #505, `94e1694`); S2.3 smokes owed to Daniel
 
 ## Stories
 

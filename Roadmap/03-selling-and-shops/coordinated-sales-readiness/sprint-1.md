@@ -3,7 +3,7 @@ epic: coordinated-sales-readiness
 sprint: 1
 title: "Event tickets sell by card"
 risk: high
-phase: Building
+phase: Shipped
 stories_total: 2
 stories:
   - id: S1.1
@@ -12,18 +12,18 @@ stories:
     i_want: "to pay a paid event ticket by card, Mercado Pago, SPEI or DiMo"
     so_that: "a ticket is bought like any other ticket"
     risk: high
-    status: planned
+    status: done
   - id: S1.2
     title: "The owner product read says whether it is an event and priced"
     as_a: "the storefront activation gate"
     i_want: "is_event and priced for a product in any status"
     so_that: "a service draft is gated by the same rule as checkout"
     risk: high
-    status: planned
+    status: done
 ---
 # Coordinated sales readiness — Sprint 1: Event tickets sell by card
 
-**Status:** ⬜ not started
+**Status:** ✅ shipped 2026-11-17 (backend #237, `81bec0d`)
 
 ## Stories
 

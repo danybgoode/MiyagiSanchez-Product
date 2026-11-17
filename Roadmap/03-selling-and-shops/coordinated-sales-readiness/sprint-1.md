@@ -3,7 +3,7 @@ epic: coordinated-sales-readiness
 sprint: 1
 title: "Event tickets sell by card"
 risk: high
-phase: Shaping
+phase: Building
 stories_total: 2
 stories:
   - id: S1.1

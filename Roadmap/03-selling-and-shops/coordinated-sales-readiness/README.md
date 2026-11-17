@@ -1,6 +1,6 @@
 ---
-status: scaffolded   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
-phase: Shaping       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
+status: in-progress   # AUTHORITATIVE epic status (SSOT) — scaffolded | in-progress | shipped | archived. Set shipped at epic close.
+phase: Building       # the executive ladder — Shaping | Locking architecture | Building | Verifying | In review | Shipped.
                      # WRITTEN at each cadence event, never inferred. Shipped = merged AND deployed.
 slug: coordinated-sales-readiness
 title: "Coordinated sales readiness"
@@ -68,6 +68,9 @@ drives seats. No model change, no migration.
   must use the same definition, or publish and checkout disagree.
 - **D3 — price shapes:** `price_cents` null («precio a consultar») = contact-only, ungated; 0 (free event) = RSVP, no
   rail needed; > 0 = needs a rail (any for an event, SPEI/cash for a service or rental).
+- **D2 verified at lock (2026-11-16):** backend `_utils/inventory.ts` `hasEventBlock` and storefront
+  `lib/event-seats.ts` `hasEventBlock` are identical (`event_date` OR `venue_name`, trimmed, in `metadata.attrs`).
+  Both sides reuse their own copy; a parity spec pins them.
 - **D4 — deploy order:** backend first (events become card-payable; nothing else changes), then storefront (the gate).
 
 ## What already exists (reuse, don't rebuild)
